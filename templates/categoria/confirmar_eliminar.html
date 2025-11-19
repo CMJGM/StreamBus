@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block contenedor %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eliminar Categoría</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>¿Estás seguro que deseas eliminar la categoría "{{ object }}"?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Sí, eliminar</button>
+            <a href="{% url 'lista_categorias' %}">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>
+
+{% endblock %}    

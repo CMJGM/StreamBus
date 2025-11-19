@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 800px;">
+    <div class="card shadow">
+        <div class="card-header text-white" style="background-color: #5bc0de;">
+            <h5 class="mb-0">📄 Crear Informe</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+
+                <!-- Título -->
+                <div class="col-12">
+                    <label for="id_titulo" class="form-label fw-semibold">Título</label>
+                    {{ form.titulo }}
+                    {% if form.titulo.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.titulo.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-12">
+                    <label for="id_descripcion" class="form-label fw-semibold">Descripción</label>
+                    {{ form.descripcion }}
+                    {% if form.descripcion.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.descripcion.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Fecha y Hora -->
+                <div class="col-md-6">
+                    <label for="id_fecha_hora" class="form-label fw-semibold">Fecha y Hora</label>
+                    {{ form.fecha_hora }}
+                    {% if form.fecha_hora.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.fecha_hora.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>               
+
+                <!-- Sucursal -->
+                <div class="col-md-6">
+                    <label for="id_sucursal" class="form-label fw-semibold">Sucursal</label>
+                    {{ form.sucursal }}
+                    {% if form.sucursal.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.sucursal.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>             
+
+                <!-- Bus -->
+                <div class="col-md-6">
+                    <label for="id_bus" class="form-label fw-semibold">Ficha</label>
+                    {{ form.bus }}
+                    {% if form.bus.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.bus.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="id_origen" class="form-label fw-semibold">Origen</label>
+                    {{ form.origen }}
+                    {% if form.origen.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.origen.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Empleado -->
+                <div class="col-12">
+                    <label for="id_empleado" class="form-label fw-semibold">Empleado</label>
+                    {{ form.empleado }}
+                    {% if form.empleado.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.empleado.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Botón Guardar -->
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Guardar Informe </button>
+                    <a href="{% url 'informes:lista_informes' %}" class="btn btn-success ms-2"> ← Volver a la lista </a>                    
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

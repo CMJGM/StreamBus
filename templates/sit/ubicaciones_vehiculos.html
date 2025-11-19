@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+        .contenedor {
+            display: flex;
+            position: relative;
+        }
+        .lista-vehiculos {
+            width: 15%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 10px;
+            border-right: 1px solid #ccc;
+            transition: all 0.3s ease;
+        }
+        .mapa {
+            width: 85%;
+            transition: all 0.3s ease;
+        }
+        .table-sm td, .table-sm th {
+           padding: 0.3rem;
+           word-wrap: break-word;
+        }
+        .vehiculo {
+            cursor: pointer;
+            padding: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px dashed #999;
+        }
+        .vehiculo:hover {
+            background-color: #eef;
+        }
+        .oculto {
+            display: none;
+        }
+        .btn-toggle-filtros {
+            transform: rotate(180deg);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            height: 200px;
+            width: 20px;
+            z-index: 999;
+            background-color:darkslategray;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px 5px 5px 5px;
+            font-weight: bold;
+            transition: left 0.3s ease;
+        }
+        .sin-filtros .lista-vehiculos {
+            display: none;
+        }
+        .sin-filtros .mapa {
+            width: 100%;
+        }
+        .flecha {
+            display: block;
+            font-size: 0.8rem;
+        }
+
+        .ficha-tooltip-gris,
+        .ficha-tooltip-rojo,
+        .ficha-tooltip-morado,
+        .ficha-tooltip-azul,
+        .ficha-tooltip-verde {
+            background: none ;
+            border: none ;
+            box-shadow: none ;
+            padding: 0 ;
+            margin: 0 ;
+            margin-top: 10px ;
+            color: #28a745; 
+            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .ficha-tooltip-gris { color:#333;}
+        .ficha-tooltip-rojo { color:brown;}
+        .ficha-tooltip-morado { color:blueviolet;}
+        .ficha-tooltip-azul { color:darkblue;}
+
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+    <!-- Izquierda: título y filtros resumidos -->
+    <div class="d-flex align-items-center">
+      <h3 class="mb-0 me-3">Monitoreo de Flota</h3>
+      <div id="resumenFiltros" class="d-none fw-bold small px-2 py-1 rounded"
+           style="background-color: #e0f3ff; color: #333; border: 1px solid #b6e0ff;">
+      </div>
+    </div>
+  
+    <!-- Medio: Botón Centrar -->
+    <div class="d-flex justify-content-center flex-grow-1">
+      <button class="btn btn-outline-primary btn-sm" onclick="actualizamapa()" style="min-width: 120px;">
+        <i class="bi bi-geo-alt-fill me-1"></i> 
+        Centrar
+      </button>
+    </div>
+  
+    <!-- Derecha: recuadro vehículos -->
+    <div class="fw-bold small px-2 py-1 rounded mb-0 pe-3" 
+         style="background-color: #e0f3ff; color: #333; border: 1px solid #b6e0ff; font-size: 0.9rem; min-width: 180px; text-align: center;">
+      Vehículos: {{ vehiculos|length }}
+    </div>
+  </div>
+  
+
+
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<div class="contenedor" id="contenedorPrincipal">
+    <div class="lista-vehiculos">
+        <!-- Filtro por empresa -->
+        <form method="get" class="mb-2 d-flex align-items-center" style="gap: 5px;">
+            <label for="empresa" style="font-size: 0.75rem; white-space: nowrap; margin-bottom: 0;">Empresa:</label>
+            <select name="empresa" id="empresa" class="form-control form-control-sm" style="width: 100px;">
+                <option value="">-- Todas --</option>
+                {% for empresa in empresas %}
+                    <option value="{{ empresa.id }}" {% if empresa_seleccionada == empresa.id|stringformat:"s" %}selected{% endif %}>
+                        {{ empresa.nm }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+        </form>
+        <div class="mb-2 d-flex align-items-center" style="gap: 5px;">
+            <input type="text" id="filtro" class="form-control form-control-sm" placeholder="Buscar por ficha..." style="width: 130px;" onkeyup="filtrarTabla()">
+            <button type="button" onclick="aplicarFiltroBackend()" class="btn btn-secondary btn-sm">Aplicar</button>
+        </div>
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <table class="table table-sm table-striped table-hover" id="tablaVehiculos" style="font-size: 0.65rem; table-layout: fixed; width: 100%;">
+            <thead>
+                <tr>
+                    <th onclick="ordenarTabla(0)">Ficha &#x25B2;&#x25BC;</th>
+                    <th onclick="ordenarTabla(1)">Dispositivo &#x25B2;&#x25BC;</th>
+                    <th onclick="ordenarTabla(2)">Conectado &#x25B2;&#x25BC;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehiculo in vehiculos %}
+                    <tr>
+                        <td style="width: 30%;">{{ vehiculo.ficha }}</td>
+                        <td style="width: 30%;">{{ vehiculo.dispositivo }}</td>
+                        <td style="width: 40%;">{{ vehiculo.tiempo_conectado }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">No hay vehículos disponibles</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>            
+    </div>
+
+    <div class="mapa">
+        <button class="btn-toggle-filtros" onclick="toggleFiltros()" id="iconoFlecha">⮞</button>
+        <div id="map"></div>
+    </div>
+
+</div>
+
+<script>
+    let map = L.map("map").setView([-24.78, -65.41], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    let marcadores = [];
+    let zoomInicialAplicado = false;
+    let filtroGlobal = "";
+    const vehiculos = JSON.parse('{{ vehiculos_json|default:"[]"|escapejs }}');
+
+    function toggleFiltros() {
+        const contenedor = document.getElementById("contenedorPrincipal");
+        const flecha = document.getElementById("iconoFlecha");
+        const resumen = document.getElementById("resumenFiltros");
+
+        contenedor.classList.toggle("sin-filtros");
+        const oculto = contenedor.classList.contains("sin-filtros");
+        flecha.textContent = oculto ? "⮜" : "⮞";
+
+        if (oculto) {
+            // Mostrar resumen de filtros
+            const empresaSelect = document.getElementById("empresa");
+            const empresaNombre = empresaSelect.options[empresaSelect.selectedIndex].text;
+            const filtroTexto = document.getElementById("filtro").value.trim();
+
+            let resumenTexto = "";
+            resumenTexto += empresaSelect.value ? `Empresa: ${empresaNombre}` : "Empresas: Todas";
+            if (filtroTexto) {
+                resumenTexto += ` | Filtro: ${filtroTexto}`;
+            }
+
+            resumen.textContent = resumenTexto;
+            resumen.classList.remove("d-none");
+        } else {
+            // Ocultar resumen de filtros
+            resumen.classList.add("d-none");
+        }
+    }
+
+
+    function aplicarFiltroBackend() {
+        filtroGlobal = document.getElementById("filtro").value.trim().toLowerCase();
+        actualizarDatos();
+    }
+
+    function actualizamapa() {
+        if (marcadores.length === 0) return;
+        const bounds = L.latLngBounds(marcadores.map(m => m.getLatLng()));
+        map.fitBounds(bounds, { padding: [20, 20] });
+}
+    function actualizarDatos() {
+        const empresa = document.getElementById("empresa").value;
+        const filtro = filtroGlobal;
+
+        let url = `/sit/ubicaciones_vehiculos_json/?empresa=${empresa}`;
+        if (filtro) {
+            url += `&filtro=${encodeURIComponent(filtro)}`;
+        }
+
+        fetch(url)
+            .then(res => res.json())
+            .then(vehiculos => {
+                actualizarTabla(vehiculos);
+                actualizarMapa(vehiculos);
+            })
+            .catch(err => console.error("Error al actualizar datos:", err));
+    }
+
+    function actualizarTabla(vehiculos) {
+        const tbody = document.querySelector("#tablaVehiculos tbody");
+        tbody.innerHTML = "";
+
+        vehiculos.forEach(veh => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+                <td>${veh.ficha}</td>
+                <td>${veh.dispositivo}</td>
+                <td>${veh.tiempo_conectado}</td>
+            `;
+            tbody.appendChild(fila);
+        });
+    }
+
+    async function obtenerDireccion(lat, lon) {
+        try {
+            const response = await fetch(`/sit/direccion/?lat=${lat}&lon=${lon}`);
+            if (!response.ok) throw new Error('Error en la solicitud');
+            const data = await response.json();
+
+            if (data.error) return "Dirección no disponible";
+
+            return  `<div>
+                <strong>Dirección:</strong> ${data.direccion}<br>
+                <strong>Barrio:</strong> ${data.barrio}<br>
+                <strong>Ciudad:</strong> ${data.ciudad}
+                </div>`;
+        } catch (error) {
+            console.error("Error al obtener dirección:", error);
+            return "Error al obtener dirección";
+        }
+    }
+
+    function actualizarMapa(vehiculos) {
+        marcadores.forEach(m => map.removeLayer(m));
+        marcadores = [];
+
+        vehiculos.forEach(veh => {
+            if (veh.lat && veh.lon) {
+                const icono = (veh.segundos_desde_reporte > 300) ? busIconGris : busIconVerde;
+                const marcador = L.marker([veh.lat, veh.lon], { icon: icono }).addTo(map);
+
+                // Mostrar número de ficha debajo del ícono
+                marcador.bindTooltip(veh.ficha.toString(), {
+                    permanent: true,
+                    direction: "bottom",
+                    className: (veh.segundos_desde_reporte > 300) ? "ficha-tooltip-gris" : "ficha-tooltip-verde"
+                });
+
+                marcador.on("click", async () => {
+                    const direccionHTML = await obtenerDireccion(veh.lat, veh.lon);
+                    marcador.bindPopup(`
+                        <div style="
+                            font-family: Arial, sans-serif;
+                            background: #f9f9f9;
+                            border: 1px solid #ccc;
+                            border-radius: 10px;
+                            padding: 8px 6px;
+                            box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+                            font-size: 12px;
+                            max-width: 300px;
+                        ">
+                            <div style="
+                                background-color: #e0f0ff;
+                                text-align: center;
+                                font-weight: bold;
+                                padding: 2px;
+                                border-radius: 6px;
+                                margin-bottom: 8px;
+                            ">
+                                FICHA: ${veh.ficha}
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span><strong>ID:</strong> ${veh.dispositivo}</span>
+                                <span><strong>Activo:</strong> ${veh.tiempo_conectado}</span>
+                            </div>
+                            <hr style="margin: 5px 0;">
+                            ${direccionHTML}
+                        </div>
+                    `, {closeButton: false}).openPopup();
+                });
+
+
+                marcadores.push(marcador);
+            }
+        });
+
+
+        if (!zoomInicialAplicado && marcadores.length > 0) {
+            const bounds = marcadores.map(m => m.getLatLng());
+            map.fitBounds(bounds, { padding: [20, 20] });
+            zoomInicialAplicado = true;
+        }
+    }
+
+    setInterval(actualizarDatos, 15000);
+
+    const busIconAmarillo = L.icon({
+        iconUrl: "/static/media/bus-amarillo.png",
+        iconSize: [25, 25],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -10]
+    });
+
+    const busIconVerde = L.icon({
+        iconUrl: "/static/media/bus-verde.png",
+        iconSize: [25, 25],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -10]
+    });
+    const busIconGris = L.icon({
+        iconUrl: "/static/media/bus-gris_oscuro.png",
+        iconSize: [25, 25],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -10]
+    });
+
+    actualizarMapa(vehiculos);
+
+    if (vehiculos.length > 0) {
+        actualizarMapa(vehiculos);
+    }
+
+    function ordenarTabla(columna) {
+        const tabla = document.getElementById("tablaVehiculos");
+        const filas = Array.from(tabla.rows).slice(1);
+        const asc = tabla.getAttribute("data-orden") !== "asc";
+        filas.sort((a, b) => {
+            const valA = a.cells[columna].innerText.trim().toLowerCase();
+            const valB = b.cells[columna].innerText.trim().toLowerCase();
+            return asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        });
+
+        filas.forEach(fila => tabla.tBodies[0].appendChild(fila));
+        tabla.setAttribute("data-orden", asc ? "asc" : "desc");
+    }
+
+    function filtrarTabla() {
+        filtroGlobal = document.getElementById("filtro").value.trim().toLowerCase();
+        const filas = document.querySelectorAll("#tablaVehiculos tbody tr");
+        filas.forEach(fila => {
+            const texto = fila.innerText.toLowerCase();
+            fila.style.display = texto.includes(filtroGlobal) ? "" : "none";
+        });
+
+        if (!filtroGlobal) {
+            actualizarDatos();
+        }
+    }
+</script>
+{% endblock %}

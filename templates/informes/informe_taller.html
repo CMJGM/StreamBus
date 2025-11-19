@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+            <h4 class="card-title text-center mb-3">🔧 Crear Informe de Taller</h4>
+
+            <form method="post" enctype="multipart/form-data" id="form-informe">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>{{ form.titulo.label }}</strong></label>
+                        {{ form.titulo|add_class:"form-control form-control-sm" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>{{ form.origen.label }}</strong></label>
+                        <input type="text" name="origen" class="form-control form-control-sm" value="{{ form.initial.origen }}" readonly>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label"><strong>{{ form.descripcion.label }}</strong></label>
+                        {{ form.descripcion|add_class:"form-control form-control-sm" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>{{ form.sucursal.label }}</strong></label>
+                        {{ form.sucursal|add_class:"form-select form-select-sm" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>{{ form.bus.label }}</strong></label>
+                        {{ form.bus|add_class:"form-select form-select-sm" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>{{ form.empleado.label }}</strong></label>
+                        {{ form.empleado|add_class:"form-select form-select-sm" }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>{{ form.fecha_hora.label }}</strong></label>
+                        {{ form.fecha_hora }}
+                    </div>
+
+                </div>
+
+                <hr class="my-3">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>📷 Subir Imágenes (opcional):</strong></label>
+                        <input type="file" name="imagenes" multiple class="form-control form-control-sm">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label"><strong>🎥 Subir Videos (opcional):</strong></label>
+                        <input type="file" name="videos" id="id_videos" multiple class="form-control form-control-sm">
+                        <div id="video-error" class="text-danger mt-2 d-none">
+                            Uno o más archivos superan el tamaño máximo permitido de 60 MB. No se pueden subir.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4 py-2 rounded-pill shadow-sm" id="submit-button">
+                        💾 Guardar Informe
+                    </button>
+                    <img id="loading-indicator" src="{% static 'ruta/a/tu/loading.gif' %}" alt="Enviando..." style="display: none; margin-left: 10px;">
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("form-informe").addEventListener("submit", function(event) {
+        const input = document.getElementById("id_videos");
+        const files = input.files;
+        const errorDiv = document.getElementById("video-error");
+        const maxSizeMB = 60;
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+        const submitButton = document.getElementById("submit-button");
+        const loadingIndicator = document.getElementById("loading-indicator");
+
+        errorDiv.classList.add("d-none");
+
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].size > maxSizeBytes) {
+                errorDiv.classList.remove("d-none");
+                event.preventDefault();
+                return; // Detener el envío si hay errores de tamaño
+            }
+        }
+
+        // Desactivar el botón y mostrar el indicador de carga
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Enviando...'; // Opcional: cambiar el texto del botón
+        loadingIndicator.style.display = 'inline';
+    });
+</script>
+{% endblock %}

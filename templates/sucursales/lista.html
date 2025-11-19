@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 70%;">
+    <h2 class="mb-4">Listado de Sucursales</h2>
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Abreviatura</th>
+                <th>Descripción</th>
+                <th style="width: 160px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sucursal in sucursales %}
+            <tr>
+                <td>{{ sucursal.id }}</td>
+                <td>{{ sucursal.abreviatura }}</td>
+                <td>{{ sucursal.descripcion }}</td>
+                <td>
+                    <a href="{% url 'editar_sucursal' sucursal.id %}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="{% url 'eliminar_sucursal' sucursal.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center">No hay sucursales registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Filtro debajo -->
+    <form method="get" class="mt-4 d-flex  gap-2">
+        <a href="{% url 'crear_sucursal' %}" class="btn btn-success">Agregar Sucursal</a>        
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" name="filtro" class="form-control form-control-sm" placeholder="Filtrar por descripción..." value="{{ request.GET.filtro }}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Filtrar</button>
+        </div>
+        <div>
+            <a href="?orden=descripcion" class="btn btn-outline-primary btn-sm">Ordenar</a>
+        </div>        
+    </form>
+</div>
+{% endblock %}

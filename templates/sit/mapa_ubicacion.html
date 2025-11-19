@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+{% endblock %}
+
+{% block content %}
+    <div id="form-container">
+        <form method="get" action="{% url 'sit:mapa_ubicacion' %}">
+            <label for="ficha">Número de Ficha:</label>
+            <input type="text" id="ficha" name="ficha" value="{{ request.GET.ficha|default:'' }}" required>
+            <button type="submit">Buscar</button>
+        </form>
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    <div id="map"></div>
+
+    <style>
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+
+        #form-container {
+            padding: 10px;
+            background: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+
+    {% if coordinates and request.GET.ficha %}
+        <script>
+            let map, marker;
+            const ficha = "{{ request.GET.ficha }}";
+            let currentZoom = 18;
+
+            function initMap() {
+                // Obtén las coordenadas desde la API
+                fetch(`/sit/ubicacion_json/?ficha=${ficha}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.latitud || !data.longitud) {
+                            alert("No se pudo obtener la ubicación.");
+                            return;
+                        }
+
+                        const lat = data.latitud;
+                        const lon = data.longitud;
+
+                        map = L.map("map").setView([lat, lon], currentZoom);
+                        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+                        // Crear el marcador con un icono personalizado
+                        marker = L.marker([lat, lon], {
+                            icon: L.icon({
+                                iconUrl: "/static/media/bus-amarillo.png",
+                                iconSize: [32, 32],
+                                iconAnchor: [16, 32]
+                            })
+                        }).addTo(map);
+
+                        // Añadir un popup al marcador que muestre la ficha y las coordenadas
+                        marker.bindPopup(`
+                            <b>Bus N° ${ficha}</b><br>
+                            Latitud: ${lat}<br>
+                            Longitud: ${lon}
+                        `).openPopup();
+
+                        // Actualizar la ubicación cada 10 segundos
+                        setInterval(actualizarUbicacion, 10000);  // 10000 ms = 10 segundos
+                    })
+                    .catch(error => {
+                        console.error("Error obteniendo ubicación:", error);
+                    });
+            }
+
+            function actualizarUbicacion() {
+                fetch(`/sit/ubicacion_json/?ficha=${ficha}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.latitud || !data.longitud) {
+                            console.error("No se pudieron obtener nuevas coordenadas.");
+                            return;
+                        }
+
+                        const nuevaLat = data.latitud;
+                        const nuevaLon = data.longitud;
+
+                        // Actualizar la posición del marcador
+                        marker.setLatLng([nuevaLat, nuevaLon]);
+
+                        // Actualizar el popup con las nuevas coordenadas
+                        marker.setPopupContent(`
+                            <b>Bus N° ${ficha}</b><br>
+                            Latitud: ${nuevaLat}<br>
+                            Longitud: ${nuevaLon}
+                        `);
+
+                        // Opcionalmente, centrar el mapa en la nueva ubicación
+                        const zoomActual = map.getZoom();
+                        map.setView([nuevaLat, nuevaLon], zoomActual);
+                    })
+                    .catch(error => console.error("Error al actualizar ubicación:", error));
+            }
+
+            // Ejecutar la inicialización del mapa cuando se cargue la página
+            window.onload = initMap;
+        </script>
+    {% endif %}
+{% endblock %}

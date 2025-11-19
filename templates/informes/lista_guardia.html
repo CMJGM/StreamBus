@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    form .form-label {
+        font-size: 12px;  /* Ajusta el tamaño de la fuente */
+    }
+
+    form .form-control, form .form-select {
+        height: 27px;     /* Ajusta el alto de los campos de entrada */
+        font-size: 12px;  /* Ajusta el tamaño de la fuente */
+    }
+</style>
+
+<div class="container-fluid mt-4"> 
+    {% if messages %}
+        <div class="mt-3">
+            {% for message in messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+   {% endif %}
+
+    <h2 class="mb-4">👮 Lista de Informes emitidos por la Guardia</h2>
+
+    <form method="get" class="mb-3">
+        <div class="card p-2 shadow-sm">
+            <div class="row g-2 align-items-end">
+
+                <!-- Filtro por título -->
+                <div class="col-md-2">
+                    <label for="filtro" class="form-label mb-0">Título</label>
+                    <input type="text" name="filtro" id="filtro" class="form-control"
+                           value="{{ request.GET.filtro }}" placeholder="Buscar por título">
+                </div>
+
+                <!-- Filtro por número de ficha del bus -->
+                <div class="col-md-1">
+                    <label for="numero_ficha" class="form-label mb-0">N° Ficha Bus</label>
+                    <input type="text" name="numero_ficha" id="numero_ficha" class="form-control"
+                        value="{{ request.GET.numero_ficha }}">
+                </div>
+
+                <!-- Filtro por legajo del empleado -->
+                <div class="col-md-1">
+                    <label for="id_legajo" class="form-label mb-0">Legajo</label>
+                    <input type="text" name="legajo" id="id_legajo" class="form-control" value="{{ request.GET.legajo }}">
+                </div>
+
+                <!-- Fecha Desde -->
+                <div class="col-md-2">
+                    <label for="fecha_desde" class="form-label mb-0">Desde</label>
+                    <input type="datetime-local" name="fecha_desde" id="fecha_desde" class="form-control"
+                           value="{{ request.GET.fecha_desde }}">
+                </div>
+
+                <!-- Fecha Hasta -->
+                <div class="col-md-2">
+                    <label for="fecha_hasta" class="form-label mb-0">Hasta</label>
+                    <input type="datetime-local" name="fecha_hasta" id="fecha_hasta" class="form-control"
+                           value="{{ request.GET.fecha_hasta }}">
+                </div>
+
+                <!-- Filtro por origen -->
+                <div class="col-md-2">
+                    <label for="origen" class="form-label mb-0">Origen</label>
+                    <input type="text" id="origen" class="form-control" value="Guardia" readonly>
+                </div>
+
+                <!-- Filtro por sucursal -->
+                <div class="col-md-2">
+                    <label for="sucursal" class="form-label mb-0">Sucursal</label>
+                    <select name="sucursal" id="sucursal" class="form-select">
+                        <option value="">Todas</option>
+                        {% for s in sucursales %}
+                            <option value="{{ s.id }}" {% if request.GET.sucursal == s.id|stringformat:"s" %}selected{% endif %}>
+                                {{ s.abreviatura }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <button type="submit" class="btn btn-primary">Filtrar</button>            
+
+            {% if is_paginated %}
+            <nav>
+                <ul class="pagination mb-2">
+        
+                    {% if page_obj.number > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&filtro={{ request.GET.filtro }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}&sucursal={{ request.GET.sucursal }}&legajo={{ request.GET.legajo }}&numero_ficha={{ request.GET.numero_ficha }}&origen={{ request.GET.origen }}" aria-label="Primero">
+                            ⏮
+                        </a>
+                    </li>
+                    {% endif %}
+        
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&filtro={{ request.GET.filtro }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}&sucursal={{ request.GET.sucursal }}&legajo={{ request.GET.legajo }}&numero_ficha={{ request.GET.numero_ficha }}&origen={{ request.GET.origen }}" aria-label="Anterior">
+                            ◀
+                        </a>
+                    </li>
+                    {% endif %}
+        
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if i >= page_obj.number|add:"-2" and i <= page_obj.number|add:"2" %}
+                            {% if i == page_obj.number %}
+                            <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                            {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}&filtro={{ request.GET.filtro }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}&sucursal={{ request.GET.sucursal }}&legajo={{ request.GET.legajo }}&numero_ficha={{ request.GET.numero_ficha }}&origen={{ request.GET.origen }}">{{ i }}</a>
+                            </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+        
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&filtro={{ request.GET.filtro }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}&sucursal={{ request.GET.sucursal }}&legajo={{ request.GET.legajo }}&numero_ficha={{ request.GET.numero_ficha }}&origen={{ request.GET.origen }}" aria-label="Siguiente">
+                            ▶
+                        </a>
+                    </li>
+                    {% endif %}
+        
+                    {% if page_obj.number < page_obj.paginator.num_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&filtro={{ request.GET.filtro }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}&sucursal={{ request.GET.sucursal }}&legajo={{ request.GET.legajo }}&numero_ficha={{ request.GET.numero_ficha }}&origen={{ request.GET.origen }}" aria-label="Último">
+                            ⏭
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Aviso de filtros activos -->
+    {% if request.GET.filtro or request.GET.fecha_desde or request.GET.fecha_hasta or request.GET.sucursal or request.GET.legajo or request.GET.numero_ficha or request.GET.origen  %}
+        <div class="alert alert-info d-flex justify-content-between align-items-center mt-3">
+            <div>
+                <strong>Filtros aplicados:</strong>
+                {% if request.GET.filtro %} Título: "{{ request.GET.filtro }}"{% endif %}
+                {% if request.GET.legajo %} | Legajo: {{ request.GET.legajo }}{% endif %}
+                {% if request.GET.fecha_desde %} | Desde: {{ request.GET.fecha_desde }}{% endif %}
+                {% if request.GET.fecha_hasta %} | Hasta: {{ request.GET.fecha_hasta }}{% endif %}
+                {% if request.GET.origen %} | Origen: {{ request.GET.origen }} {% endif %}
+                {% if request.GET.sucursal %}
+                    {% for s in sucursales %}
+                        {% if s.id|stringformat:"s" == request.GET.sucursal %}
+                            | Sucursal: {{ s.abreviatura }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% if request.GET.numero_ficha %} | N° Ficha Bus: {{ request.GET.numero_ficha }}{% endif %}
+            </div>
+            <a href="{% url 'informes:lista_informes' %}" class="btn btn-sm btn-outline-danger">Eliminar Filtros</a>
+        </div>
+    {% endif %}    
+
+    <table class="table table-bordered table-hover mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Nro.Informe</th>
+                <th>Título</th>
+                <th>Empleado</th>
+                <th>Bus</th>
+                <th>Sucursal</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for informe in page_obj %}
+            <tr>
+                <td class="col-1">{{ informe.id|stringformat:"010d" }}</td>
+                <td class="col-3">{{ informe.titulo }}</td>
+                <td class="col-3">
+                    {% if informe.empleado %}
+                        {{ informe.empleado }}
+                    {% endif %}
+                </td>
+                <td>{{ informe.bus.ficha }}</td>
+                <td>{{ informe.sucursal.abreviatura }}</td>
+                <td>{{ informe.fecha_hora|date:"d/m/Y H:i" }}</td>
+                <td class="d-flex gap-2" class="col-1">
+                    <a href="{% url 'informes:editar_informe' informe.pk %}?next={{ request.path }}" class="btn btn-sm btn-warning d-flex align-items-center">
+                        <i class="fas fa-pencil-alt me-1"></i> 📝 Editar
+                    </a>
+        
+                    <a href="{% url 'informes:cargar_fotos' informe.pk %}?next={{ request.path }}" class="btn btn-sm" style="background-color: #f8bbd0;">
+                        <i class="fas fa-camera me-1"></i> 📷 Imágenes ({{ informe.fotos.count }})                        
+                    </a>
+                    
+                    <a href="{% url 'informes:cargar_video' informe.pk %}?next={{ request.path }}" class="btn btn-sm" style="background-color: #b3e5fc;">
+                        <i class="fas fa-video me-1"></i> 🎥 Videos ({{ informe.videos.count }})
+                    </a>
+
+                    <a href="{% url 'informes:enviar_informe_email' informe.pk %}?next={{ request.get_full_path }}" class="btn btn-sm"  style="background-color: #d8b4fe;">
+                        <i class="fas fa-envelope"></i> 📧 Enviar 
+                    </a>
+
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No se encontraron informes.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

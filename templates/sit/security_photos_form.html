@@ -1,0 +1,1059 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <!-- Header mejorado -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center">
+                <div class="icon-container me-3">
+                    <i class="fas fa-camera-retro fa-3x text-primary"></i>
+                </div>
+                <div>
+                    <h2 class="text-primary mb-1">
+                        Buscar Fotos de Seguridad
+                    </h2>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Sistema optimizado de descarga con filtrado inteligente
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            {% if empresas %}
+            <div class="card border-info shadow-sm">
+                <div class="card-body py-3">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="stat-mini">
+                                <i class="fas fa-building text-primary fa-lg"></i>
+                                <div class="mt-1">
+                                    <strong class="d-block fs-5">{{ empresas|length }}</strong>
+                                    <small class="text-muted">Empresas</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 border-start">
+                            <div class="stat-mini">
+                                <i class="fas fa-bus text-success fa-lg"></i>
+                                <div class="mt-1">
+                                    <strong class="d-block fs-5">{{ total_vehiculos }}</strong>
+                                    <small class="text-muted">Vehículos</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Formulario optimizado -->
+    <form method="post" action="{% url 'sit:fetch_security_photos' %}" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <!-- SECCIÓN: Filtro por Empresa (Mejorada) -->
+        <div class="col-12 mb-4">
+            <div class="card border-primary shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-filter me-2"></i>Filtro por Empresa
+                    </h5>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="enable-company-filter" checked>
+                        <label class="form-check-label text-white" for="enable-company-filter">
+                            Activar filtro
+                        </label>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!-- Selector mejorado -->
+                        <div class="col-lg-6">
+                            <label for="empresa_id" class="form-label fw-bold">
+                                <i class="fas fa-building me-2"></i>Empresa:
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <select name="empresa_id" id="empresa_id" class="form-select form-select-lg" onchange="updateEmpresaInfo()">
+                                    <option value="">🌐 Todas las empresas (sin filtro)</option>
+                                    {% for empresa in empresas %}
+                                    <option value="{{ empresa.id }}" 
+                                            data-vehicles="{{ empresa.vehicle_count }}"
+                                            data-name="{{ empresa.nm }}"
+                                            data-efficiency="{{ empresa.vehicle_count|floatformat:0 }}">
+                                        🏢 {{ empresa.nm }} 
+                                        <span class="text-muted">({{ empresa.vehicle_count }} vehículo{{ empresa.vehicle_count|pluralize }})</span>
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-text">
+                                <i class="fas fa-lightbulb me-1"></i>
+                                <strong>Tip:</strong> Filtrar por empresa reduce significativamente el tiempo de descarga
+                            </div>
+                        </div>
+                        
+                        <!-- Card de información dinámico -->
+                        <div class="col-lg-6">
+                            <div id="empresa-info-card" class="card border-info bg-light h-100">
+                                <div class="card-body d-flex align-items-center justify-content-center">
+                                    <div id="empresa-info-content" class="text-center">
+                                        <i class="fas fa-globe fa-2x text-muted mb-2"></i>
+                                        <div class="fw-bold text-muted">Sin filtro de empresa</div>
+                                        <small class="text-muted">Se procesarán todas las empresas</small>
+                                        <div class="mt-2">
+                                            <span class="badge bg-secondary">Rendimiento: Estándar</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estimador de rendimiento -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div id="performance-estimate" class="alert alert-info">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-tachometer-alt fa-lg me-3"></i>
+                                    <div>
+                                        <strong>Estimación de rendimiento:</strong>
+                                        <div id="performance-text" class="mt-1">
+                                            Con filtro empresarial activo, la descarga será 3-5x más rápida
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: Fechas y Horas (Mejorada) -->
+        <div class="col-12 mb-4">
+            <div class="card border-secondary shadow-sm">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt me-2"></i>Rango de Fechas y Horas
+                    </h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="setQuickRange('today')">Hoy</button>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="setQuickRange('yesterday')">Ayer</button>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="setQuickRange('last24h')">24h</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Fecha y Hora de Inicio -->
+                        <div class="col-md-3">
+                            <label for="start_date" class="form-label fw-bold">
+                                <i class="fas fa-play text-success me-2"></i>Fecha de inicio:
+                            </label>
+                            <input type="date" 
+                                   id="start_date" 
+                                   name="start_date" 
+                                   class="form-control form-control-lg" 
+                                   value="{{ default_start_date }}"
+                                   onchange="validateDateRange()"
+                                   required>
+                            <div class="invalid-feedback">
+                                Por favor seleccione una fecha de inicio válida
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="start_time" class="form-label fw-bold">
+                                <i class="fas fa-clock text-success me-2"></i>Hora de inicio:
+                            </label>
+                            <input type="time" 
+                                   id="start_time" 
+                                   name="start_time" 
+                                   class="form-control form-control-lg" 
+                                   value="{{ default_start_time }}"
+                                   onchange="validateDateRange()"
+                                   required>
+                            <div class="invalid-feedback">
+                                Por favor seleccione una hora de inicio válida
+                            </div>
+                        </div>
+                        
+                        <!-- Fecha y Hora de Fin -->
+                        <div class="col-md-3">
+                            <label for="end_date" class="form-label fw-bold">
+                                <i class="fas fa-stop text-danger me-2"></i>Fecha de fin:
+                            </label>
+                            <input type="date" 
+                                   id="end_date" 
+                                   name="end_date" 
+                                   class="form-control form-control-lg" 
+                                   value="{{ default_end_date }}"
+                                   onchange="validateDateRange()"
+                                   required>
+                            <div class="invalid-feedback">
+                                Por favor seleccione una fecha de fin válida
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end_time" class="form-label fw-bold">
+                                <i class="fas fa-clock text-danger me-2"></i>Hora de fin:
+                            </label>
+                            <input type="time" 
+                                   id="end_time" 
+                                   name="end_time" 
+                                   class="form-control form-control-lg" 
+                                   value="{{ default_end_time }}"
+                                   onchange="validateDateRange()"
+                                   required>
+                            <div class="invalid-feedback">
+                                Por favor seleccione una hora de fin válida
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Validación en tiempo real -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div id="date-validation" class="alert d-none" role="alert">
+                                <!-- Se poblará dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Información y consejos -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="card border-info bg-light">
+                                <div class="card-body py-2">
+                                    <h6 class="text-info mb-2">
+                                        <i class="fas fa-info-circle me-2"></i>Información
+                                    </h6>
+                                    <ul class="list-unstyled small mb-0">
+                                        <li><i class="fas fa-clock me-2"></i>Duración: <span id="duration-display">-- horas</span></li>
+                                        <li><i class="fas fa-images me-2"></i>Fotos estimadas: <span id="estimated-photos">Calculando...</span></li>
+                                        <li><i class="fas fa-download me-2"></i>Tiempo est.: <span id="estimated-time">Calculando...</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success bg-light">
+                                <div class="card-body py-2">
+                                    <h6 class="text-success mb-2">
+                                        <i class="fas fa-lightbulb me-2"></i>Recomendaciones
+                                    </h6>
+                                    <ul class="list-unstyled small mb-0">
+                                        <li><i class="fas fa-check me-2"></i>Máximo recomendado: 24 horas</li>
+                                        <li><i class="fas fa-check me-2"></i>Horarios pico: 6AM-10PM</li>
+                                        <li><i class="fas fa-check me-2"></i>Usar filtro de empresa</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: Opciones Avanzadas (Nueva) -->
+        <div class="col-12 mb-4">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark" data-bs-toggle="collapse" data-bs-target="#advanced-options" style="cursor: pointer;">
+                    <h6 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>Opciones Avanzadas
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </h6>
+                </div>
+                <div id="advanced-options" class="collapse">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Calidad de descarga:</label>
+                                <select class="form-select" id="download-quality">
+                                    <option value="optimized" selected>Optimizada (recomendado)</option>
+                                    <option value="standard">Estándar</option>
+                                    <option value="high">Alta calidad</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Workers concurrentes:</label>
+                                <select class="form-select" id="concurrent-workers">
+                                    <option value="auto" selected>Automático</option>
+                                    <option value="10">10 workers</option>
+                                    <option value="15">15 workers</option>
+                                    <option value="20">20 workers</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Organización:</label>
+                                <select class="form-select" id="organization-mode">
+                                    <option value="by-vehicle" selected>Por vehículo</option>
+                                    <option value="by-date">Por fecha</option>
+                                    <option value="by-device">Por dispositivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="skip-existing" checked>
+                                    <label class="form-check-label" for="skip-existing">
+                                        <strong>Saltar fotos existentes</strong> (más rápido)
+                                    </label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="compress-images">
+                                    <label class="form-check-label" for="compress-images">
+                                        <strong>Comprimir imágenes</strong> (ahorra espacio)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción Mejorados -->
+        <div class="col-12 mb-4">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center py-4">
+                    <div class="d-grid gap-3 d-md-flex justify-content-md-center">
+                        <button type="submit" id="submit-btn" class="btn btn-primary btn-lg px-5" disabled>
+                            <i class="fas fa-rocket me-2"></i>
+                            <span class="btn-text">Configurar formulario</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="resetForm()">
+                            <i class="fas fa-undo me-2"></i>
+                            Reiniciar
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-lg px-4" onclick="previewSettings()">
+                            <i class="fas fa-eye me-2"></i>
+                            Vista Previa
+                        </button>
+                    </div>
+                    
+                    <!-- Indicador de estado del formulario -->
+                    <div class="mt-3">
+                        <div id="form-status" class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Complete los campos requeridos para continuar
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enlaces de Acceso Rápido -->
+        <div class="col-12">
+            <div class="card border-light bg-light">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'sit:view_security_photos' %}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-images me-2"></i>Ver Fotos
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'sit:security_photos_progress' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-tasks me-2"></i>Ver Progreso
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'sit:clear_security_photos_session' %}" class="btn btn-outline-danger w-100">
+                                <i class="fas fa-broom me-2"></i>Limpiar Datos
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <button type="button" class="btn btn-outline-secondary w-100" onclick="showHelp()">
+                                <i class="fas fa-question-circle me-2"></i>Ayuda
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal de Vista Previa -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-eye me-2"></i>Vista Previa de Configuración
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="preview-content">
+                    <!-- Se poblará dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="submitFromPreview()">
+                    <i class="fas fa-rocket me-2"></i>Iniciar Descarga
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Ayuda -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-question-circle me-2"></i>Ayuda - Sistema de Descarga de Fotos
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">🏢 Filtro por Empresa</h6>
+                        <ul class="small">
+                            <li>Reduce significativamente el tiempo de descarga</li>
+                            <li>Aplica filtrado PRE-API para mayor eficiencia</li>
+                            <li>Recomendado para empresas con muchos vehículos</li>
+                        </ul>
+                        
+                        <h6 class="text-primary mt-3">📅 Rango de Fechas</h6>
+                        <ul class="small">
+                            <li>Máximo recomendado: 24 horas por descarga</li>
+                            <li>Horarios pico generan más fotos: 6AM-10PM</li>
+                            <li>Use botones rápidos para rangos comunes</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">⚙️ Opciones Avanzadas</h6>
+                        <ul class="small">
+                            <li><strong>Calidad optimizada:</strong> Balance entre calidad y velocidad</li>
+                            <li><strong>Workers automático:</strong> Se ajusta según el servidor</li>
+                            <li><strong>Organización por vehículo:</strong> Más fácil navegación</li>
+                        </ul>
+                        
+                        <h6 class="text-primary mt-3">🚀 Rendimiento</h6>
+                        <ul class="small">
+                            <li>Con filtro empresarial: 3-5x más rápido</li>
+                            <li>Polling inteligente reduce carga del servidor</li>
+                            <li>Gestión automática de memoria y conexiones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Optimizado -->
+<style>
+/* Estilos base mejorados */
+.container {
+    max-width: 1200px;
+}
+
+.icon-container {
+    padding: 15px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+}
+
+.icon-container i {
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.stat-mini {
+    padding: 10px;
+    transition: transform 0.2s ease;
+}
+
+.stat-mini:hover {
+    transform: scale(1.05);
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.15);
+    transform: translateY(-1px);
+}
+
+.form-control-lg {
+    padding: 12px 16px;
+    font-size: 1.1rem;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-lg {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Animación de ondas para el botón principal */
+.btn-primary:not(:disabled)::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-primary:not(:disabled):hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Estados del formulario */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: 10px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: currentColor;
+    opacity: 0.6;
+}
+
+/* Validaciones */
+.was-validated .form-control:valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40,167,69,0.15);
+}
+
+.was-validated .form-control:invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.15);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Mejoras de accesibilidad */
+.form-label {
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Responsividad mejorada */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .icon-container {
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .stat-mini {
+        margin-bottom: 10px;
+    }
+}
+
+/* Estados interactivos */
+.input-group-text {
+    background: #f8f9fa;
+    border-color: #e9ecef;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus + .input-group-text,
+.form-control:focus ~ .input-group-text {
+    background: #e3f2fd;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+/* Efectos especiales */
+.border-start {
+    border-left: 2px solid #dee2e6 !important;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Loading states */
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+</style>
+
+<!-- JavaScript Optimizado -->
+<script>
+class FormManager {
+    constructor() {
+        this.form = document.querySelector('form');
+        this.submitBtn = document.getElementById('submit-btn');
+        this.formStatus = document.getElementById('form-status');
+        
+        this.initializeForm();
+        this.setupValidation();
+        this.updateEmpresaInfo();
+        this.validateDateRange();
+    }
+    
+    initializeForm() {
+        // Event listeners
+        document.getElementById('empresa_id').addEventListener('change', () => {
+            this.updateEmpresaInfo();
+            this.validateForm();
+        });
+        
+        ['start_date', 'start_time', 'end_date', 'end_time'].forEach(id => {
+            document.getElementById(id).addEventListener('change', () => {
+                this.validateDateRange();
+                this.validateForm();
+            });
+        });
+        
+        // Filtro de empresa toggle
+        document.getElementById('enable-company-filter').addEventListener('change', (e) => {
+            const empresaSelect = document.getElementById('empresa_id');
+            empresaSelect.disabled = !e.target.checked;
+            if (!e.target.checked) {
+                empresaSelect.value = '';
+                this.updateEmpresaInfo();
+            }
+            this.validateForm();
+        });
+        
+        this.validateForm();
+    }
+    
+    setupValidation() {
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (this.validateForm()) {
+                this.showSubmissionConfirmation();
+            }
+        });
+        
+        // Bootstrap validation
+        this.form.classList.add('was-validated');
+    }
+    
+    validateForm() {
+        const startDate = document.getElementById('start_date').value;
+        const startTime = document.getElementById('start_time').value;
+        const endDate = document.getElementById('end_date').value;
+        const endTime = document.getElementById('end_time').value;
+        
+        const allFieldsValid = startDate && startTime && endDate && endTime;
+        const dateRangeValid = this.isDateRangeValid();
+        
+        const isValid = allFieldsValid && dateRangeValid;
+        
+        // Actualizar botón
+        this.submitBtn.disabled = !isValid;
+        
+        if (isValid) {
+            this.submitBtn.querySelector('.btn-text').textContent = 'Iniciar Descarga';
+            this.submitBtn.className = 'btn btn-primary btn-lg px-5 pulse';
+            this.formStatus.className = 'alert alert-success';
+            this.formStatus.innerHTML = '<i class="fas fa-check-circle me-2"></i>Formulario completo y listo para enviar';
+        } else if (allFieldsValid) {
+            this.submitBtn.querySelector('.btn-text').textContent = 'Verificar fechas';
+            this.submitBtn.className = 'btn btn-warning btn-lg px-5';
+            this.formStatus.className = 'alert alert-warning';
+            this.formStatus.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Verifique el rango de fechas seleccionado';
+        } else {
+            this.submitBtn.querySelector('.btn-text').textContent = 'Complete los campos';
+            this.submitBtn.className = 'btn btn-secondary btn-lg px-5';
+            this.formStatus.className = 'alert alert-warning';
+            this.formStatus.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Complete todos los campos requeridos';
+        }
+        
+        return isValid;
+    }
+    
+    isDateRangeValid() {
+        const startDate = document.getElementById('start_date').value;
+        const startTime = document.getElementById('start_time').value;
+        const endDate = document.getElementById('end_date').value;
+        const endTime = document.getElementById('end_time').value;
+        
+        if (!startDate || !startTime || !endDate || !endTime) return false;
+        
+        const start = new Date(startDate + ' ' + startTime);
+        const end = new Date(endDate + ' ' + endTime);
+        
+        return start < end;
+    }
+    
+    updateEmpresaInfo() {
+        const select = document.getElementById('empresa_id');
+        const infoContent = document.getElementById('empresa-info-content');
+        const performanceText = document.getElementById('performance-text');
+        
+        if (select.value === '' || select.disabled) {
+            // Sin empresa seleccionada
+            infoContent.innerHTML = `
+                <i class="fas fa-globe fa-2x text-muted mb-2"></i>
+                <div class="fw-bold text-muted">Sin filtro de empresa</div>
+                <small class="text-muted">Se procesarán todas las empresas</small>
+                <div class="mt-2">
+                    <span class="badge bg-secondary">Rendimiento: Estándar</span>
+                </div>
+            `;
+            performanceText.textContent = 'Sin filtro empresarial - velocidad estándar de descarga';
+            return;
+        }
+        
+        const selectedOption = select.options[select.selectedIndex];
+        const empresaName = selectedOption.getAttribute('data-name');
+        const vehicleCount = selectedOption.getAttribute('data-vehicles');
+        
+        // Empresa seleccionada
+        infoContent.innerHTML = `
+            <i class="fas fa-building fa-2x text-primary mb-2"></i>
+            <div class="fw-bold text-primary">${empresaName}</div>
+            <div class="mt-1">
+                <span class="badge bg-success">${vehicleCount} vehículo${vehicleCount != 1 ? 's' : ''}</span>
+            </div>
+            <small class="text-muted mt-1 d-block">Filtro PRE-API activado</small>
+            <div class="mt-2">
+                <span class="badge bg-primary">Rendimiento: Optimizado</span>
+            </div>
+        `;
+        
+        const efficiency = vehicleCount < 50 ? '3-5x' : '2-3x';
+        performanceText.textContent = `Con filtro empresarial activo, la descarga será ${efficiency} más rápida`;
+    }
+    
+    validateDateRange() {
+        const startDate = document.getElementById('start_date').value;
+        const startTime = document.getElementById('start_time').value;
+        const endDate = document.getElementById('end_date').value;
+        const endTime = document.getElementById('end_time').value;
+        
+        const validation = document.getElementById('date-validation');
+        const durationDisplay = document.getElementById('duration-display');
+        const estimatedPhotos = document.getElementById('estimated-photos');
+        const estimatedTime = document.getElementById('estimated-time');
+        
+        if (!startDate || !startTime || !endDate || !endTime) {
+            validation.className = 'alert d-none';
+            durationDisplay.textContent = '-- horas';
+            estimatedPhotos.textContent = 'Calculando...';
+            estimatedTime.textContent = 'Calculando...';
+            return;
+        }
+        
+        const start = new Date(startDate + ' ' + startTime);
+        const end = new Date(endDate + ' ' + endTime);
+        const diffHours = (end - start) / (1000 * 60 * 60);
+        
+        // Actualizar duración
+        if (diffHours > 0) {
+            durationDisplay.textContent = `${diffHours.toFixed(1)} horas`;
+            
+            // Estimaciones
+            const photosPerHour = 50; // Estimación promedio
+            const estimatedPhotosCount = Math.round(diffHours * photosPerHour);
+            const downloadTimeMinutes = Math.round(estimatedPhotosCount / 5); // 5 fotos/seg estimado
+            
+            estimatedPhotos.textContent = `~${estimatedPhotosCount.toLocaleString()} fotos`;
+            estimatedTime.textContent = `~${downloadTimeMinutes} minutos`;
+        }
+        
+        // Validaciones
+        if (diffHours <= 0) {
+            validation.className = 'alert alert-danger';
+            validation.innerHTML = '<i class="fas fa-times-circle me-2"></i><strong>Error:</strong> La fecha de inicio debe ser anterior a la fecha de fin';
+        } else if (diffHours > 72) {
+            validation.className = 'alert alert-warning';
+            validation.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i><strong>Advertencia:</strong> Rango mayor a 72 horas. Esto puede generar muchas fotos y tomar mucho tiempo';
+        } else if (diffHours > 24) {
+            validation.className = 'alert alert-info';
+            validation.innerHTML = '<i class="fas fa-info-circle me-2"></i><strong>Recomendación:</strong> Para mejor rendimiento, considere dividir el rango en períodos de 24 horas';
+        } else {
+            validation.className = 'alert alert-success';
+            validation.innerHTML = '<i class="fas fa-check-circle me-2"></i><strong>Perfecto:</strong> Rango de fechas óptimo para descarga eficiente';
+        }
+    }
+    
+    showSubmissionConfirmation() {
+        const empresaSelect = document.getElementById('empresa_id');
+        const empresaText = empresaSelect.value === '' ? 'todas las empresas' : empresaSelect.options[empresaSelect.selectedIndex].text;
+        
+        const startDate = document.getElementById('start_date').value;
+        const startTime = document.getElementById('start_time').value;
+        const endDate = document.getElementById('end_date').value;
+        const endTime = document.getElementById('end_time').value;
+        
+        const start = new Date(startDate + ' ' + startTime);
+        const end = new Date(endDate + ' ' + endTime);
+        
+        const confirmMessage = `
+🚀 CONFIRMAR DESCARGA DE FOTOS
+
+📊 Configuración:
+• Empresa: ${empresaText}
+• Período: ${start.toLocaleString()} - ${end.toLocaleString()}
+• Duración: ${((end - start) / (1000 * 60 * 60)).toFixed(1)} horas
+
+⚡ Optimizaciones:
+• Filtrado PRE-API: ${empresaSelect.value ? 'Activado' : 'No aplicado'}
+• Polling inteligente: Activado
+• Workers paralelos: Automático
+
+¿Confirmar descarga?`;
+        
+        if (confirm(confirmMessage)) {
+            this.submitForm();
+        }
+    }
+    
+    submitForm() {
+        // Mostrar estado de carga
+        this.submitBtn.className = 'btn btn-primary btn-lg px-5 btn-loading';
+        this.submitBtn.disabled = true;
+        
+        // Enviar formulario
+        this.form.submit();
+    }
+}
+
+// Funciones globales
+function setQuickRange(range) {
+    const now = new Date();
+    let startDate, startTime, endDate, endTime;
+    
+    switch (range) {
+        case 'today':
+            startDate = now.toISOString().split('T')[0];
+            startTime = '00:00';
+            endDate = startDate;
+            endTime = '23:59';
+            break;
+        case 'yesterday':
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            startDate = yesterday.toISOString().split('T')[0];
+            startTime = '00:00';
+            endDate = startDate;
+            endTime = '23:59';
+            break;
+        case 'last24h':
+            endDate = now.toISOString().split('T')[0];
+            endTime = now.toTimeString().split(' ')[0].substr(0, 5);
+            const start24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            startDate = start24h.toISOString().split('T')[0];
+            startTime = start24h.toTimeString().split(' ')[0].substr(0, 5);
+            break;
+    }
+    
+    document.getElementById('start_date').value = startDate;
+    document.getElementById('start_time').value = startTime;
+    document.getElementById('end_date').value = endDate;
+    document.getElementById('end_time').value = endTime;
+    
+    // Trigger validation
+    window.formManager.validateDateRange();
+    window.formManager.validateForm();
+}
+
+function resetForm() {
+    if (confirm('¿Está seguro de que desea reiniciar el formulario?')) {
+        document.querySelector('form').reset();
+        window.formManager.updateEmpresaInfo();
+        window.formManager.validateDateRange();
+        window.formManager.validateForm();
+    }
+}
+
+function previewSettings() {
+    const empresaSelect = document.getElementById('empresa_id');
+    const empresaText = empresaSelect.value === '' ? 'Todas las empresas' : empresaSelect.options[empresaSelect.selectedIndex].text;
+    
+    const previewContent = document.getElementById('preview-content');
+    previewContent.innerHTML = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="text-primary">Configuración Principal</h6>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Empresa:</span>
+                        <strong>${empresaText}</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Fecha inicio:</span>
+                        <strong>${document.getElementById('start_date').value} ${document.getElementById('start_time').value}</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Fecha fin:</span>
+                        <strong>${document.getElementById('end_date').value} ${document.getElementById('end_time').value}</strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6 class="text-primary">Opciones Avanzadas</h6>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Calidad:</span>
+                        <strong>${document.getElementById('download-quality').options[document.getElementById('download-quality').selectedIndex].text}</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Workers:</span>
+                        <strong>${document.getElementById('concurrent-workers').options[document.getElementById('concurrent-workers').selectedIndex].text}</strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Organización:</span>
+                        <strong>${document.getElementById('organization-mode').options[document.getElementById('organization-mode').selectedIndex].text}</strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('previewModal')).show();
+}
+
+function submitFromPreview() {
+    bootstrap.Modal.getInstance(document.getElementById('previewModal')).hide();
+    window.formManager.submitForm();
+}
+
+function showHelp() {
+    new bootstrap.Modal(document.getElementById('helpModal')).show();
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 Inicializando formulario optimizado');
+    window.formManager = new FormManager();
+});
+</script>
+{% endblock %}

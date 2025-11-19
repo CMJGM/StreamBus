@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% load static %}
+
+{% block contenedor %}
+
+<style>
+    .carousel-item img {
+        height: 600px;                /* Altura aumentada */
+        object-fit: cover;            /* Que la imagen cubra bien */
+        border-radius: 30px;          /* Bordes redondeados */
+        opacity: 0.85;                /* 15% de transparencia */
+        transition: opacity 0.3s ease;
+    }
+
+    .carousel-inner {
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    #carouselExample {
+        position: relative;
+        padding: 0 60px; /* espacio a los costados para los botones */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5); /* fondo oscuro translúcido */
+        border-radius: 50%;
+        z-index: 10;
+    }
+
+    .carousel-control-prev {
+        left: -60px; /* desplazamiento fuera del carrusel */
+    }
+
+    .carousel-control-next {
+        right: -60px;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-size: 100% 100%;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-12 carousel-left">
+            <!-- Carousel de 3 imágenes -->
+            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{% static 'media/img01.png' %}" class="d-block w-100" alt="Imagen 1">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'media/img02.png' %}" class="d-block w-100" alt="Imagen 2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'media/img03.png' %}" class="d-block w-100" alt="Imagen 3">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}    

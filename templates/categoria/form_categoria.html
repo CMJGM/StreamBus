@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block contenedor %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nueva Categoría</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Crear nueva categoría</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'lista_categorias' %}" class="btn btn-success" style="background-color: #a4e1a4; color: #000; border-color: #a4e1a4;">
+                Volver a la lista
+            </a>       
+        </form>
+
+    </div>
+</body>
+</html>
+
+
+{% endblock %}
+

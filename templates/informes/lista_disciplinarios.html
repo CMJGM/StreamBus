@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+<div class="w-full px-6">
+  <h1 class="text-2xl font-bold mb-6">Informes Disciplinarios</h1>
+
+  <div class="grid grid-cols-3 gap-6">
+    <!-- Cards y Filtros -->
+    <div class="col-span-1 space-y-4 overflow-y-auto h-[80vh] pr-2">
+      <!-- Filtros en línea -->
+      <form method="get" class="flex flex-wrap items-end gap-4 mb-4">
+        <input type="text" name="mes" placeholder="Mes" class="border p-2 rounded w-28 text-black">
+        <input type="text" name="anio" placeholder="Año" class="border p-2 rounded w-28 text-black">
+        <input type="text" name="ficha" placeholder="Ficha" class="border p-2 rounded w-28 text-black">
+        <input type="text" name="legajo" placeholder="Legajo" class="border p-2 rounded w-28 text-black">        
+        <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700">
+          Filtrar
+        </button>          
+      </form>
+          <!-- Aviso de filtros activos -->
+    {% if request.GET.mes or request.GET.anio or request.GET.ficha or request.GET.legajo  %}
+    <div class="alert alert-info d-flex justify-content-between align-items-center mt-3">
+        <div>
+            <strong>Filtros aplicados:</strong>
+            {% if request.GET.mes %} Mes: "{{ request.GET.mes }}"{% endif %}
+            {% if request.GET.anio %} | Desde: {{ request.GET.anio }}{% endif %}
+            {% if request.GET.legajo %} | Legajo: {{ request.GET.legajo }}{% endif %}            
+            {% if request.GET.ficha %} | Ficha: {{ request.GET.ficha }}{% endif %}
+        </div>
+        <a href="{% url 'informes:informes_disciplinarios' %}" class="btn btn-sm btn-outline-danger">Eliminar Filtros</a>
+    </div>
+{% endif %}    
+
+      {% for informe in page_obj %}
+      <div class="bg-white rounded-lg shadow hover:shadow-md transition flex overflow-hidden">
+        {% with informe.fotos.first as foto %}
+            <img src="{{ foto.imagen.url }}" alt="Foto" class="w-28 h-28 object-cover">
+        {% endwith %}
+        <div class="p-3 flex-1">
+            <h2 class="text-sm font-semibold text-gray-800 truncate">{{ informe.titulo }}</h2>
+            <h3 class="text-xs text-gray-600">Ficha: {{ informe.bus.ficha }}</h3>
+            <h3 class="text-xs text-gray-600">Empleado: {{ informe.empleado.apellido }} ({{ informe.empleado.legajo }})</h3>
+            <p class="text-xs text-gray-600">Fecha: {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
+            <p class="text-xs text-gray-600">Expediente: {{ informe.expediente.nro_expediente }}</p>
+        </div>  
+        <div class="p-1 flex-1">
+            <button onclick="verPDF('{{ informe.expediente.nro_expediente }}')" class="mt-2 w-full bg-indigo-600 text-white text-sm px-2 py-1 rounded hover:bg-indigo-700">
+                Ver Informe Disciplinario
+            </button>
+        </div>
+      </div>
+    {% endfor %}
+  
+    <!-- Paginación -->
+    <div class="mt-6 flex justify-center space-x-2">
+        {% with querystring=request.GET.urlencode|cut:"page=" %}
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if querystring %}&{{ querystring }}{% endif %}" class="...">⏮</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if querystring %}&{{ querystring }}{% endif %}" class="...">◀</a>
+            {% endif %}
+  
+            <span class="...">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+  
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if querystring %}&{{ querystring }}{% endif %}" class="...">▶</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if querystring %}&{{ querystring }}{% endif %}" class="...">⏭</a>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+    
+
+    <!-- Visor de PDF y GIF de carga -->
+    <div class="col-span-2 relative">
+        <!-- GIF de carga oculto al principio -->
+        <div id="loading-gif" class="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 z-10 hidden">
+            <div class="tenor-gif-embed" data-postid="17904639" data-share-method="host" data-aspect-ratio="1.24514" data-width="150px">
+                <a href="https://tenor.com/view/section-load-loading-buffer-logo-gif-17904639">Section Load Loading Sticker</a>
+                    from <a href="https://tenor.com/search/section+load-stickers">Section Load Stickers</a>
+            </div>
+            <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+        </div>
+        
+        <iframe id="visor-pdf" width="100%" height="800px" class="border rounded shadow relative z-0" onload="ocultarCarga()"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<script>
+    function verPDF(expedienteId) {
+      // Mostrar GIF
+      document.getElementById('loading-gif').classList.remove('hidden');
+  
+      // Ocultar todos los botones
+      document.querySelectorAll('button').forEach(btn => {
+        btn.style.visibility = 'hidden';
+      });
+  
+      // Cargar el PDF
+      const iframe = document.getElementById('visor-pdf');
+      iframe.src = ''; // limpiar
+      setTimeout(() => {
+        iframe.src = `/informes/reporte-pdf/${expedienteId}/`;
+      }, 100);
+    }
+  
+    function ocultarCarga() {
+      // Ocultar el GIF
+      document.getElementById('loading-gif').classList.add('hidden');
+  
+      // Mostrar los botones otra vez
+      document.querySelectorAll('button').forEach(btn => {
+        btn.style.visibility = 'visible';
+      });
+    }
+  </script>
+  
+
+{% endblock %}

@@ -1,0 +1,19 @@
+body {
+  background-color: #e6e1d4;
+}
+
+.color_titulo {
+  color: darkslateblue;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+p {
+  font-size: 10px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding: 0;
+  line-height: 1.1;
+}

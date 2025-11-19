@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">    
+    <h2><i class="bi-file-earmark-text-fill me-1"></i>
+        Detalle de Informes por empleado</h2>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-auto">
+            <select name="empleado" class="form-select" required>
+                <option value="">Seleccione un empleado</option>
+                {% for emp in empleados %}
+                    <option value="{{ emp.id }}" {% if empleado and emp.id == empleado.id %}selected{% endif %}>{{ emp }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </form>
+
+    {% if empleado %}
+        <h4>Informes de {{ empleado }}</h4>
+
+        <div class="row">
+            {% for informe in informes %}
+                {% if informe.fotos.count == 1 %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #a2d9ff; color: gray;">
+                                <strong>{{ informe.fecha_hora|date:"d/m/Y H:i" }}</strong> - {{ informe.bus.ficha }} - {{ informe.titulo }}
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>{{ informe.descripcion }}</p>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <a href="{{ informe.fotos.first.imagen.url }}" data-lightbox="informe-{{ informe.id }}" data-title="{{ informe.fotos.first.descripcion }}">
+                                                    <img src="{{ informe.fotos.first.imagen.url }}" class="img-thumbnail" style="width: 250px; height: 160px;" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if informe.videos %}
+                                    <div class="row mt-3">
+                                        {% for video in informe.videos.all %}
+                                            <div class="col-md-6 mb-3">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        {% if '.mp4' in video.video.url %}
+                                                            <video width="100%" height="160" controls>
+                                                                <source src="{{ video.video.url }}" type="video/mp4">
+                                                                Tu navegador no soporta la reproducción de video.
+                                                            </video>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-md-12 mb-3">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #a2d9ff; color: gray;">
+                                <strong>{{ informe.fecha_hora|date:"d/m/Y H:i" }}</strong> - {{ informe.bus.ficha }} - {{ informe.titulo }}
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>{{ informe.descripcion }}</p>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            {% for foto in informe.fotos.all %}
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <a href="{{ foto.imagen.url }}" data-lightbox="informe-{{ informe.id }}" data-title="{{ foto.descripcion }}">
+                                                                <img src="{{ foto.imagen.url }}" class="img-thumbnail" style="width: 250px; height: 160px;" />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                            {% if informe.videos.exists %}
+                                                <div class="row mt-3">
+                                                    {% for video in informe.videos.all %}
+                                                        <div class="col-md-6 mb-3">
+                                                            <div class="card">
+                                                                <div class="card-body">
+                                                                    <video width="100%" height="160" controls>
+                                                                        <source src="{{ video.video.url }}" type="video/mp4">
+                                                                        Tu navegador no soporta la reproducción de video.
+                                                                    </video>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p>No hay informes para este empleado.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

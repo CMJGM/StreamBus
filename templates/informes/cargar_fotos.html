@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .card-body.texto-grande p,
+    .card-body.texto-grande p strong {
+        font-size: 1.2rem !important;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Columna izquierda: Galería de fotos + Formulario -->
+        <div class="col-md-8">
+            <h4 class="mb-3">📷 Fotos del informe</h4>
+
+            <!-- Galería de miniaturas -->
+            <div class="d-flex flex-wrap gap-3 mb-4">
+                {% if fotos %}
+                    {% for foto in fotos %}
+                        <div style="width: 120px;">
+                            <a href="{% url 'informes:ver_foto' foto.id %}">
+                                <img src="{{ foto.imagen.url }}" alt="Foto" class="img-thumbnail w-100">
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No hay fotos cargadas aún.</p>
+                {% endif %}
+            </div>
+
+            <!-- Formulario para agregar nueva foto -->
+            <form method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    {{ form.imagen.label_tag }}
+                    {{ form.imagen }}
+                </div>
+                <button type="submit" class="btn btn-primary">Agregar Foto</button>
+                <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-success ms-2">← Volver</a>
+            </form>
+        </div>
+
+        <!-- Columna derecha: Detalles del informe -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header text-white" style="background-color: #5bc0de;">
+                    <h5 class="mb-0">📝 Detalles del Informe Nº {{ informe.id|stringformat:"010d" }}</h5>
+                </div>
+                <div class="card-body texto-grande" >
+                    <p><strong>Título:</strong> {{ informe.titulo }}</p>
+                    <p><strong>Empleado:</strong> 
+                        {% if informe.empleado %}
+                            {{ informe.empleado }}
+                        {% else %}
+                            AUN NO DETERMINADO
+                        {% endif %}
+                    </p>
+                    <p><strong>Bus:</strong> {{ informe.bus.ficha }} - {{ informe.bus.marca.nombre }} {{ informe.bus.modelo.nombre }} ({{ informe.bus.dominio }})</p>
+
+                    <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
+                    <p><strong>Fecha y hora:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Descripción:</strong><br>{{ informe.descripcion }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
