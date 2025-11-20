@@ -247,16 +247,36 @@
 
     /* Modo Oscuro */
     @media (prefers-color-scheme: dark) {
+        .header-videos h2 {
+            color: #e9ecef;
+        }
+
+        .header-videos .text-muted {
+            color: #adb5bd !important;
+        }
+
         .gallery-container {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
         }
 
         .gallery-container h5 {
-            color: #e9ecef;
+            color: #e9ecef !important;
+        }
+
+        .gallery-container h5 i {
+            color: #e9ecef !important;
         }
 
         .video-card {
             background-color: #2c3e50;
+        }
+
+        .empty-gallery {
+            color: #adb5bd;
+        }
+
+        .empty-gallery small {
+            color: #adb5bd !important;
         }
 
         .form-upload-card {
@@ -280,6 +300,10 @@
         .file-input-label:hover {
             background: #34495e;
             border-color: #fa709a;
+        }
+
+        .file-input-label strong {
+            color: #e9ecef !important;
         }
 
         .file-input-label .text-muted {
@@ -311,9 +335,17 @@
             color: #e9ecef;
         }
 
-        .empty-gallery {
-            color: #adb5bd;
+        .detail-value strong {
+            color: #e9ecef;
         }
+    }
+
+    [data-bs-theme="dark"] .header-videos h2 {
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .header-videos .text-muted {
+        color: #adb5bd !important;
     }
 
     [data-bs-theme="dark"] .gallery-container {
@@ -321,11 +353,23 @@
     }
 
     [data-bs-theme="dark"] .gallery-container h5 {
-        color: #e9ecef;
+        color: #e9ecef !important;
+    }
+
+    [data-bs-theme="dark"] .gallery-container h5 i {
+        color: #e9ecef !important;
     }
 
     [data-bs-theme="dark"] .video-card {
         background-color: #2c3e50;
+    }
+
+    [data-bs-theme="dark"] .empty-gallery {
+        color: #adb5bd;
+    }
+
+    [data-bs-theme="dark"] .empty-gallery small {
+        color: #adb5bd !important;
     }
 
     [data-bs-theme="dark"] .form-upload-card {
@@ -349,6 +393,10 @@
     [data-bs-theme="dark"] .file-input-label:hover {
         background: #34495e;
         border-color: #fa709a;
+    }
+
+    [data-bs-theme="dark"] .file-input-label strong {
+        color: #e9ecef !important;
     }
 
     [data-bs-theme="dark"] .file-input-label .text-muted {
@@ -380,8 +428,8 @@
         color: #e9ecef;
     }
 
-    [data-bs-theme="dark"] .empty-gallery {
-        color: #adb5bd;
+    [data-bs-theme="dark"] .detail-value strong {
+        color: #e9ecef;
     }
 </style>
 
