@@ -413,6 +413,11 @@ class InformeUpdateView(SucursalAccessMixin, UpdateView):
     template_name = 'informes/editar_informe.html'
     success_url = reverse_lazy('informes:lista_informes')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
     def get_success_url(self):
         next_url = self.request.POST.get('next') or self.request.GET.get('next')
         return next_url or super().get_success_url()
