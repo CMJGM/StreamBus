@@ -11,7 +11,7 @@ from informes.models import Informe, FotoInforme, VideoInforme
 from empleados.models import Empleado
 from buses.models import Buses
 from sucursales.models import Sucursales
-from usuarios.models import Perfil
+from usuarios.models import UserProfile
 
 
 class AuthenticationTestCase(TestCase):
@@ -149,8 +149,8 @@ class SucursalAccessTestCase(TestCase):
         )
 
         # TODO: Crear perfiles y asignar sucursales
-        # Este test requiere que exista el modelo Perfil y sus métodos
-        # self.profile_a = Perfil.objects.create(user=self.user_a)
+        # Este test requiere que exista el modelo UserProfile y sus métodos
+        # self.profile_a = UserProfile.objects.create(user=self.user_a)
         # self.profile_a.sucursales.add(self.sucursal_a)
 
     def test_user_cannot_access_other_sucursal_photos(self):
@@ -159,11 +159,11 @@ class SucursalAccessTestCase(TestCase):
 
         NOTA: Este test está pendiente de implementación completa.
         Requiere:
-        - Modelo Perfil configurado
+        - Modelo UserProfile configurado
         - Informes de prueba
         - Fotos de prueba
         """
-        self.skipTest("Requiere configuración completa de Perfil y datos de prueba")
+        self.skipTest("Requiere configuración completa de UserProfile y datos de prueba")
 
     def test_user_with_puede_ver_todas_can_access_all(self):
         """
@@ -171,7 +171,7 @@ class SucursalAccessTestCase(TestCase):
 
         NOTA: Este test está pendiente de implementación completa.
         """
-        self.skipTest("Requiere configuración completa de Perfil")
+        self.skipTest("Requiere configuración completa de UserProfile")
 
 
 class AuditLoggingTestCase(TestCase):
