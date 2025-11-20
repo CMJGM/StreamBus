@@ -10,5 +10,9 @@ class Empleado(models.Model):
     sucursal = models.ForeignKey(Sucursales, on_delete=models.CASCADE)
     fecha_ingreso = models.DateField()
 
+    @property
+    def nombre_completo(self):
+        return f"{self.apellido}, {self.nombre}"
+
     def __str__(self):
         return f"{self.apellido}, {self.nombre} ({self.legajo})"
