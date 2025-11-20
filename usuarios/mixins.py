@@ -142,7 +142,12 @@ class InformeFilterMixin(SucursalFilterMixin):
             queryset = queryset.filter(fecha_hora__lte=fecha_hasta)
 
         if origen_filtro:
-            queryset = queryset.filter(origen=origen_filtro)
+            # Verificar que el usuario tenga acceso a este origen
+            if hasattr(self.request.user, 'profile'):
+                user_profile = self.request.user.profile
+                # Si puede usar todos los orígenes o tiene acceso a este origen específico
+                if user_profile.puede_usar_todos_origenes or user_profile.tiene_acceso_origen(int(origen_filtro)):
+                    queryset = queryset.filter(origen_id=origen_filtro)
 
         if sucursal_filtro:
             # Solo permitir filtrar por sucursales a las que tiene acceso
