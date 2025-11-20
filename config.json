@@ -1,0 +1,35 @@
+{
+  "gps": {
+    "base_url": "http://190.183.254.253:8088",
+    "account": "Admin",
+    "password": "Buses2024",
+    "timeout": 30,
+    "current_session": "26cc28a8f1c54b79a53dcb1379aea94c"
+  },
+  "download": {
+    "base_directory": "E:/http/StreamBus/media",
+    "max_workers": 13,
+    "concurrent_downloads": 10
+  },
+  "automation": {
+    "enabled": false,
+    "interval_hours": 3,
+    "start_hour": 6,
+    "end_hour": 22,
+    "initial_download_on_startup": true,
+    "smart_scheduling": true,
+    "initial_download_delay_minutes": 2
+  },
+  "filters": {
+    "default_empresa_id": null,
+    "default_hours_back": 6
+  },
+  "gui": {
+    "theme": "dark",
+    "window_geometry": "1200x800"
+  },
+  "logging": {
+    "level": "INFO",
+    "log_directory": "logs"
+  }
+}

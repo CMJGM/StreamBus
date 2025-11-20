@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 90%;">
+    <h2 class="mb-4">Lista de Buses</h2>
+
+    <!-- Filtros -->
+    <form method="get" class="row g-2 mb-3 align-items-end">
+        <div class="col-md-4">
+            <label for="filtro" class="form-label">Buscar por marca o modelo</label>
+            <input type="text" name="filtro" id="filtro" class="form-control" value="{{ filtro }}" placeholder="Ej: Mercedes o OF-1721">
+        </div>
+        <div class="col-md-4">
+            <label for="orden" class="form-label">Ordenar por</label>
+            <select name="orden" id="orden" class="form-select">
+                <option value="">-- Ordenar por ficha --</option>
+                <option value="ficha_asc" {% if orden == 'ficha_asc' %}selected{% endif %}>Ficha ↑</option>
+                <option value="ficha_desc" {% if orden == 'ficha_desc' %}selected{% endif %}>Ficha ↓</option>
+                <option value="ano_asc" {% if orden == 'ano_asc' %}selected{% endif %}>Año ↑</option>
+                <option value="ano_desc" {% if orden == 'ano_desc' %}selected{% endif %}>Año ↓</option>
+                <option value="dominio_asc" {% if orden == 'dominio_asc' %}selected{% endif %}>Dominio ↑</option>
+                <option value="dominio_desc" {% if orden == 'dominio_desc' %}selected{% endif %}>Dominio ↓</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    {% if hay_filtro %}
+    <div class="alert alert-info">
+        Mostrando resultados para: <strong>{{ filtro }}</strong>
+        <a href="{% url 'lista_buses' %}" class="btn btn-sm btn-outline-secondary ms-3">Quitar filtro</a>
+    </div>
+    {% endif %}
+
+    <!-- Tabla de Buses -->
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Ficha</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Año</th>
+                <th>Dominio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bus in buses %}
+            <tr>
+                <td>{{ bus.ficha }}</td>
+                <td>{{ bus.modelo.marca.nombre }}</td>
+                <td>{{ bus.modelo.nombre }}</td>
+                <td>{{ bus.ano }}</td>
+                <td>{{ bus.dominio }}</td>
+                <td>
+                    <a href="{% url 'editar_bus' bus.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No se encontraron buses.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+        <div class="btn-group mb-2">
+          <a href="{% url 'crear_bus' %}" class="btn btn-primary">Agregar bus</a>
+          <a href="{% url 'crear_marca' %}" class="btn btn-outline-primary">Nueva marca</a>
+          <a href="{% url 'crear_modelo' %}" class="btn btn-outline-primary">Nuevo modelo</a>
+        </div>
+      
+        <!-- Aquí insertamos el paginador en línea -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Paginación">
+          <ul class="pagination mb-0">
+      
+            {% if page_obj.number > 10 %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.number|add:"-10" }}{% if request.GET.filtro %}&filtro={{ request.GET.filtro }}{% endif %}{% if request.GET.orden %}&orden={{ request.GET.orden }}{% endif %}">&laquo; -10</a>
+            </li>
+            {% endif %}
+      
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.filtro %}&filtro={{ request.GET.filtro }}{% endif %}{% if request.GET.orden %}&orden={{ request.GET.orden }}{% endif %}">&laquo;</a>
+            </li>
+            {% endif %}
+      
+            {% for i in page_obj.paginator.page_range %}
+              {% if i >= page_obj.number|add:"-2" and i <= page_obj.number|add:"2" %}
+                {% if i == page_obj.number %}
+                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ i }}{% if request.GET.filtro %}&filtro={{ request.GET.filtro }}{% endif %}{% if request.GET.orden %}&orden={{ request.GET.orden }}{% endif %}">{{ i }}</a>
+                </li>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+      
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.filtro %}&filtro={{ request.GET.filtro }}{% endif %}{% if request.GET.orden %}&orden={{ request.GET.orden }}{% endif %}">&raquo;</a>
+            </li>
+            {% endif %}
+      
+            {% if page_obj.number|add:"10" <= page_obj.paginator.num_pages %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_obj.number|add:"10" }}{% if request.GET.filtro %}&filtro={{ request.GET.filtro }}{% endif %}{% if request.GET.orden %}&orden={{ request.GET.orden }}{% endif %}">+10 &raquo;</a>
+            </li>
+            {% endif %}
+      
+          </ul>
+        </nav>
+        {% endif %}
+      </div>
+      
+</div>
+
+{% endblock %}

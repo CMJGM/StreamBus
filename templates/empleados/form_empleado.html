@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container" style="max-width: 70%; margin: 0 auto;">
+    <h2 class="text-left">Crear Empleado</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form.sucursal.label_tag }} {{ form.sucursal }}
+            </div>
+            <div class="col-md-6">
+                {{ form.legajo.label_tag }} {{ form.legajo }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form.fecha_ingreso.label_tag }}
+                <input type="date" name="fecha_ingreso" value="{{ form.fecha_ingreso.value|date:'Y-m-d' }}" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                {{ form.categoria.label_tag }} {{ form.categoria }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form.apellido.label_tag }} {{ form.apellido }}
+            </div>
+            <div class="col-md-6">
+                {{ form.nombre.label_tag }} {{ form.nombre }}
+            </div>
+        </div>
+
+        <div class="text-left mt-4">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'lista_empleados' %}" class="btn btn-success ms-3">Volver a la lista</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

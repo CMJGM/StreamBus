@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <!-- Encabezado del informe -->
+    <div class="mb-4">
+        <h4 class="text-muted">
+            Informe: {{ informe.id|stringformat:"010d" }} |
+            🚌 Ficha: {{ informe.bus.ficha }} |
+            📅 Fecha: {{ informe.fecha_hora|date:"d/m/Y H:i" }} |
+            👤 Empleado: {{ informe.empleado|default:"AUN NO DETERMINADO" }}
+        </h4>
+    </div>
+
+    <!-- Imagen con botones de navegación -->
+    <div class="d-flex align-items-center justify-content-center">
+        <!-- Botón anterior -->
+        <a href="{% url 'informes:ver_foto' anterior_id %}" class="btn btn-outline-primary me-3">⏪ Anterior</a>
+
+        <!-- Imagen -->
+        <img src="{{ foto.imagen.url }}" class="img-fluid rounded shadow" style="max-height: 75vh; max-width: 90%;">
+
+        <!-- Botón siguiente -->
+        <a href="{% url 'informes:ver_foto' siguiente_id %}" class="btn btn-outline-primary ms-3">Siguiente ⏩</a>
+    </div>
+
+    <!-- Botón volver -->
+    <div class="mt-4">
+        <a href="{% url 'informes:cargar_fotos' informe.id %}" class="btn btn-secondary">← Volver a la lista de fotos</a>
+    </div>
+</div>
+{% endblock %}

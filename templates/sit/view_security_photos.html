@@ -1,0 +1,1160 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid mt-3" data-current-index="{{ current_index }}" data-total-photos="{{ total_photos }}">
+    <!-- Header optimizado -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-images fa-2x text-primary me-3"></i>
+                    <div>
+                        <h3 class="mb-0 text-primary">Visor de Fotos de Seguridad</h3>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-camera me-1"></i>
+                            {{ current_index|add:1 }} de {{ total_photos|floatformat:0 }} fotos
+                            <span class="ms-3">
+                                <i class="fas fa-car me-1"></i>
+                                Ficha: <strong>{{ current_photo.vehiIdno }}</strong>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Controles superiores -->
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group me-2" role="group">
+                        <button type="button" class="btn btn-outline-primary" onclick="toggleFullscreen()" title="Pantalla completa">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-info" onclick="toggleInfoPanel()" title="Mostrar/ocultar información">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="showFilters()" title="Filtros">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'sit:security_photos_form' %}" class="btn btn-outline-success" title="Nueva descarga">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                        <a href="{% url 'sit:clear_security_photos_session' %}" class="btn btn-outline-danger" title="Limpiar datos">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel de información lateral (colapsable) -->
+        <div class="col-lg-3" id="info-panel">
+            <div class="sticky-top" style="top: 20px;">
+                <!-- Información principal -->
+                <div class="card border-dark shadow-sm mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Información de la Foto
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-group mb-3">
+                            <label class="text-muted small">VEHÍCULO</label>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-bus text-primary me-2"></i>
+                                <strong class="fs-5">{{ current_photo.vehiIdno }}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="info-group mb-3">
+                            <label class="text-muted small">DISPOSITIVO</label>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-microchip text-success me-2"></i>
+                                <span>{{ current_photo.devIdno }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="info-group mb-3">
+                            <label class="text-muted small">FECHA Y HORA</label>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-clock text-warning me-2"></i>
+                                <div>
+                                    <div>{{ current_photo.updateTimeStr|date:"d/m/Y" }}</div>
+                                    <small class="text-muted">{{ current_photo.updateTimeStr|date:"H:i:s" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if current_photo.position %}
+                        <div class="info-group mb-3">
+                            <label class="text-muted small">UBICACIÓN</label>
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-map-marker-alt text-danger me-2 mt-1"></i>
+                                <div>
+                                    <small class="text-muted">{{ current_photo.position }}</small>
+                                    {% if current_photo.latitude and current_photo.longitude %}
+                                    <div class="mt-1">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="showMap()">
+                                            <i class="fas fa-map me-1"></i>Ver en Mapa
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Información adicional -->
+                        <div class="info-group">
+                            <label class="text-muted small">ARCHIVO</label>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <small class="text-muted photo-filename">{{ current_photo.local_path|slice:":30" }}...</small>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="downloadPhoto()" title="Descargar">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estadísticas de navegación -->
+                <div class="card border-info shadow-sm mb-3">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-chart-bar me-2"></i>Progreso
+                        </h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="progress mb-2" style="height: 8px;">
+                            <div class="progress-bar bg-info" id="progress-bar-info" style="width: 0%">
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="stat-mini">
+                                    <div class="stat-number text-primary" id="current-stat">{{ current_index|add:1 }}</div>
+                                    <div class="stat-label">Actual</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="stat-mini">
+                                    <div class="stat-number text-success" id="total-stat">{{ total_photos }}</div>
+                                    <div class="stat-label">Total</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navegación rápida -->
+                <div class="card border-secondary shadow-sm mb-3">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-search me-2"></i>Navegación Rápida
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label small">Ir a foto #:</label>
+                            <div class="input-group input-group-sm">
+                                <input type="number" class="form-control" id="goto-photo" 
+                                       min="1" max="{{ total_photos }}" value="{{ current_index|add:1 }}">
+                                <button class="btn btn-outline-primary" onclick="gotoPhoto()">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-info btn-sm" onclick="gotoFirst()">
+                                <i class="fas fa-fast-backward me-1"></i>Primera
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" onclick="gotoLast()">
+                                <i class="fas fa-fast-forward me-1"></i>Última
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" onclick="randomPhoto()">
+                                <i class="fas fa-random me-1"></i>Aleatoria
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones rápidas -->
+                <div class="card border-success shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0">
+                            <i class="fas fa-tools me-2"></i>Acciones
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="sharePhoto()">
+                                <i class="fas fa-share me-1"></i>Compartir
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="printPhoto()">
+                                <i class="fas fa-print me-1"></i>Imprimir
+                            </button>
+                            <button class="btn btn-outline-info btn-sm" onclick="showMetadata()">
+                                <i class="fas fa-tags me-1"></i>Metadatos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área principal de la imagen -->
+        <div class="col-lg-9" id="image-area">
+            <div class="image-container">
+                <!-- Imagen principal -->
+                <div class="main-image-wrapper">
+                    <img src="{{ MEDIA_URL }}{{ current_photo.local_path }}" 
+                         alt="Foto de seguridad - Vehículo {{ current_photo.vehiIdno }}" 
+                         class="main-image img-fluid rounded shadow-lg" 
+                         id="main-image"
+                         loading="lazy"
+                         onclick="toggleFullscreen()">
+                    
+                    <!-- Overlay de información en la imagen -->
+                    <div class="image-overlay" id="image-overlay">
+                        <div class="overlay-content">
+                            <div class="photo-info">
+                                <span class="vehicle-badge">
+                                    <i class="fas fa-bus me-1"></i>{{ current_photo.vehiIdno }}
+                                </span>
+                                <span class="time-badge">
+                                    <i class="fas fa-clock me-1"></i>{{ current_photo.updateTimeStr|date:"H:i:s" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Loading placeholder -->
+                    <div class="image-loading" id="image-loading" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controles de navegación principales -->
+                <div class="navigation-controls">
+                    <div class="nav-container">
+                        <button class="nav-btn nav-btn-prev {% if not has_prev %}disabled{% endif %}" 
+                                onclick="navigatePhoto('prev')" 
+                                title="Foto anterior (← flecha izquierda)">
+                            <i class="fas fa-chevron-left fa-2x"></i>
+                        </button>
+                        
+                        <div class="nav-center">
+                            <div class="photo-counter">
+                                {{ current_index|add:1 }} / {{ total_photos|floatformat:0 }}
+                            </div>
+                            <div class="quick-actions">
+                                <button class="btn btn-outline-light btn-sm me-1" onclick="toggleAutoplay()" title="Reproducción automática">
+                                    <i class="fas fa-play" id="autoplay-icon"></i>
+                                </button>
+                                <button class="btn btn-outline-light btn-sm me-1" onclick="zoomImage()" title="Zoom">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                                <button class="btn btn-outline-light btn-sm" onclick="rotateImage()" title="Rotar">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="nav-btn nav-btn-next {% if not has_next %}disabled{% endif %}" 
+                                onclick="navigatePhoto('next')" 
+                                title="Foto siguiente (→ flecha derecha)">
+                            <i class="fas fa-chevron-right fa-2x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Barra de progreso de navegación -->
+                <div class="progress-bar-container">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-primary" 
+                             id="main-progress-bar"
+                             style="width: 0%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Mapa -->
+<div class="modal fade" id="mapModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    Ubicación - Vehículo {{ current_photo.vehiIdno }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="map-container" style="height: 400px; background: #f8f9fa; border-radius: 8px;">
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <div class="text-center text-muted">
+                            <i class="fas fa-map fa-3x mb-3"></i>
+                            <div>Mapa se cargará aquí</div>
+                            <small>{{ current_photo.position }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Metadatos -->
+<div class="modal fade" id="metadataModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-tags me-2"></i>
+                    Metadatos de la Foto
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="metadata-content">
+                    <!-- Se poblará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Filtros -->
+<div class="modal fade" id="filtersModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-filter me-2"></i>
+                    Filtros de Fotos
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="filters-form">
+                    <div class="mb-3">
+                        <label class="form-label">Filtrar por vehículo:</label>
+                        <select class="form-select" id="filter-vehicle">
+                            <option value="">Todos los vehículos</option>
+                            <!-- Se poblará dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Filtrar por fecha:</label>
+                        <input type="date" class="form-control" id="filter-date">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ordenar por:</label>
+                        <select class="form-select" id="sort-order">
+                            <option value="chronological">Cronológico</option>
+                            <option value="vehicle">Por vehículo</option>
+                            <option value="reverse">Cronológico inverso</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="applyFilters()">Aplicar Filtros</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS Optimizado -->
+<style>
+/* Estilos base */
+.container-fluid {
+    max-width: 1400px;
+}
+
+/* Área de imagen */
+.image-container {
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.main-image-wrapper {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+}
+
+.main-image {
+    max-height: 80vh;
+    width: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    object-fit: contain;
+}
+
+.main-image:hover {
+    transform: scale(1.02);
+}
+
+/* Overlay de información en imagen */
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.7) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.overlay-content {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+}
+
+.photo-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.vehicle-badge, .time-badge {
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.vehicle-badge {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+.time-badge {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+
+/* Controles de navegación */
+.navigation-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    padding: 20px;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.nav-btn {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.nav-btn:hover:not(.disabled) {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+    transform: scale(1.1);
+}
+
+.nav-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-center {
+    text-align: center;
+    color: white;
+}
+
+.photo-counter {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.quick-actions {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Barra de progreso */
+.progress-bar-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Panel de información */
+#info-panel {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#info-panel.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.info-group {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-group:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-group label {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.stat-mini {
+    text-align: center;
+    padding: 5px;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Estados de imagen */
+.image-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* Fullscreen */
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fullscreen .main-image {
+    max-width: 95vw;
+    max-height: 95vh;
+    cursor: zoom-out;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .col-lg-3 {
+        order: 2;
+    }
+    
+    .col-lg-9 {
+        order: 1;
+    }
+    
+    #info-panel {
+        margin-top: 20px;
+    }
+    
+    .nav-btn {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .nav-btn i {
+        font-size: 1.2rem;
+    }
+    
+    .navigation-controls {
+        padding: 15px;
+    }
+    
+    .overlay-content {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+    }
+    
+    .photo-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+.slide-in {
+    animation: slideInRight 0.3s ease;
+}
+
+/* Zoom */
+.zoomed {
+    transform: scale(2) !important;
+    cursor: zoom-out !important;
+}
+
+/* Rotación */
+.rotated-90 { transform: rotate(90deg) !important; }
+.rotated-180 { transform: rotate(180deg) !important; }
+.rotated-270 { transform: rotate(270deg) !important; }
+
+/* Autoplay */
+.autoplay-active {
+    animation: autoplayPulse 2s infinite;
+}
+
+@keyframes autoplayPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Efectos adicionales */
+.btn-group .btn {
+    border-radius: 6px !important;
+}
+
+.btn-toolbar .btn-group:not(:last-child) {
+    margin-right: 10px;
+}
+
+.sticky-top {
+    z-index: 1000;
+}
+
+/* Fix para nombres de archivo largos */
+.photo-filename {
+    word-break: break-all;
+    font-family: monospace;
+}
+</style>
+
+<!-- JavaScript Optimizado -->
+<script>
+class PhotoViewer {
+    constructor() {
+        // Obtener valores desde data attributes para evitar problemas de template tags
+        this.currentIndex = parseInt(document.querySelector('[data-current-index]')?.dataset.currentIndex || '{{ current_index }}');
+        this.totalPhotos = parseInt(document.querySelector('[data-total-photos]')?.dataset.totalPhotos || '{{ total_photos }}');
+        this.rotation = 0;
+        this.isZoomed = false;
+        this.isFullscreen = false;
+        this.autoplayInterval = null;
+        this.autoplaySpeed = 3000; // 3 segundos
+        
+        this.initializeViewer();
+        this.setupKeyboardControls();
+        this.setupTouchControls();
+    }
+    
+    initializeViewer() {
+        // Precargar imágenes adyacentes
+        this.preloadAdjacentImages();
+        
+        // Configurar eventos
+        document.getElementById('main-image').addEventListener('error', this.handleImageError.bind(this));
+        document.getElementById('main-image').addEventListener('load', this.handleImageLoad.bind(this));
+        
+        // Actualizar counter y barras de progreso
+        this.updatePhotoCounter();
+    }
+    
+    setupKeyboardControls() {
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    this.navigatePhoto('prev');
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    this.navigatePhoto('next');
+                    break;
+                case 'Escape':
+                    if (this.isFullscreen) {
+                        this.toggleFullscreen();
+                    }
+                    break;
+                case 'f':
+                case 'F':
+                    this.toggleFullscreen();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    this.toggleAutoplay();
+                    break;
+                case 'r':
+                case 'R':
+                    this.rotateImage();
+                    break;
+                case 'z':
+                case 'Z':
+                    this.zoomImage();
+                    break;
+                case 'i':
+                case 'I':
+                    this.toggleInfoPanel();
+                    break;
+                case 'Home':
+                    this.gotoFirst();
+                    break;
+                case 'End':
+                    this.gotoLast();
+                    break;
+            }
+        });
+    }
+    
+    setupTouchControls() {
+        let startX = 0;
+        let startY = 0;
+        
+        const imageElement = document.getElementById('main-image');
+        
+        imageElement.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+        
+        imageElement.addEventListener('touchend', (e) => {
+            if (!startX || !startY) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) { // Mínimo 50px de swipe
+                    if (diffX > 0) {
+                        this.navigatePhoto('next');
+                    } else {
+                        this.navigatePhoto('prev');
+                    }
+                }
+            }
+            
+            startX = 0;
+            startY = 0;
+        });
+    }
+    
+    navigatePhoto(direction) {
+        if (direction === 'prev' && this.currentIndex > 0) {
+            window.location.href = `{% url 'sit:view_security_photos' %}?idx={{ prev_index }}`;
+        } else if (direction === 'next' && this.currentIndex < this.totalPhotos - 1) {
+            window.location.href = `{% url 'sit:view_security_photos' %}?idx={{ next_index }}`;
+        }
+    }
+    
+    gotoPhoto() {
+        const input = document.getElementById('goto-photo');
+        const photoNumber = parseInt(input.value);
+        
+        if (photoNumber >= 1 && photoNumber <= this.totalPhotos) {
+            const index = photoNumber - 1;
+            window.location.href = `{% url 'sit:view_security_photos' %}?idx=${index}`;
+        } else {
+            alert(`Por favor ingrese un número entre 1 y ${this.totalPhotos}`);
+        }
+    }
+    
+    gotoFirst() {
+        window.location.href = `{% url 'sit:view_security_photos' %}?idx=0`;
+    }
+    
+    gotoLast() {
+        window.location.href = `{% url 'sit:view_security_photos' %}?idx=${this.totalPhotos - 1}`;
+    }
+    
+    randomPhoto() {
+        const randomIndex = Math.floor(Math.random() * this.totalPhotos);
+        window.location.href = `{% url 'sit:view_security_photos' %}?idx=${randomIndex}`;
+    }
+    
+    toggleFullscreen() {
+        const container = document.querySelector('.image-container');
+        const image = document.getElementById('main-image');
+        
+        if (!this.isFullscreen) {
+            container.classList.add('fullscreen');
+            this.isFullscreen = true;
+            document.body.style.overflow = 'hidden';
+        } else {
+            container.classList.remove('fullscreen');
+            this.isFullscreen = false;
+            document.body.style.overflow = '';
+        }
+    }
+    
+    toggleInfoPanel() {
+        const panel = document.getElementById('info-panel');
+        const imageArea = document.getElementById('image-area');
+        
+        panel.classList.toggle('hidden');
+        
+        if (panel.classList.contains('hidden')) {
+            imageArea.className = 'col-12';
+        } else {
+            imageArea.className = 'col-lg-9';
+        }
+    }
+    
+    zoomImage() {
+        const image = document.getElementById('main-image');
+        
+        if (!this.isZoomed) {
+            image.classList.add('zoomed');
+            this.isZoomed = true;
+        } else {
+            image.classList.remove('zoomed');
+            this.isZoomed = false;
+        }
+    }
+    
+    rotateImage() {
+        const image = document.getElementById('main-image');
+        
+        // Limpiar rotaciones anteriores
+        image.classList.remove('rotated-90', 'rotated-180', 'rotated-270');
+        
+        this.rotation = (this.rotation + 90) % 360;
+        
+        if (this.rotation === 90) {
+            image.classList.add('rotated-90');
+        } else if (this.rotation === 180) {
+            image.classList.add('rotated-180');
+        } else if (this.rotation === 270) {
+            image.classList.add('rotated-270');
+        }
+    }
+    
+    toggleAutoplay() {
+        const icon = document.getElementById('autoplay-icon');
+        
+        if (this.autoplayInterval) {
+            clearInterval(this.autoplayInterval);
+            this.autoplayInterval = null;
+            icon.className = 'fas fa-play';
+            icon.parentElement.classList.remove('autoplay-active');
+        } else {
+            this.autoplayInterval = setInterval(() => {
+                if (this.currentIndex < this.totalPhotos - 1) {
+                    this.navigatePhoto('next');
+                } else {
+                    this.toggleAutoplay(); // Detener al llegar al final
+                }
+            }, this.autoplaySpeed);
+            
+            icon.className = 'fas fa-pause';
+            icon.parentElement.classList.add('autoplay-active');
+        }
+    }
+    
+    preloadAdjacentImages() {
+        // Precargar imagen anterior
+        if (this.currentIndex > 0) {
+            const prevImg = new Image();
+            // Aquí necesitarías la URL de la imagen anterior
+        }
+        
+        // Precargar imagen siguiente
+        if (this.currentIndex < this.totalPhotos - 1) {
+            const nextImg = new Image();
+            // Aquí necesitarías la URL de la imagen siguiente
+        }
+    }
+    
+    handleImageError() {
+        const container = document.querySelector('.main-image-wrapper');
+        container.innerHTML = `
+            <div class="text-center text-white p-4">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <h5>Error al cargar la imagen</h5>
+                <p>La imagen no se pudo cargar correctamente</p>
+                <button class="btn btn-outline-light" onclick="location.reload()">
+                    <i class="fas fa-redo me-2"></i>Reintentar
+                </button>
+            </div>
+        `;
+    }
+    
+    handleImageLoad() {
+        document.getElementById('image-loading').style.display = 'none';
+    }
+    
+    updatePhotoCounter() {
+        const progress = (this.currentIndex / Math.max(1, this.totalPhotos - 1)) * 100;
+        
+        // Actualizar barra de progreso principal
+        const mainProgressBar = document.getElementById('main-progress-bar');
+        if (mainProgressBar) {
+            mainProgressBar.style.width = `${progress}%`;
+        }
+        
+        // Actualizar barra de progreso del panel info
+        const infoProgressBar = document.getElementById('progress-bar-info');
+        if (infoProgressBar) {
+            infoProgressBar.style.width = `${progress}%`;
+        }
+    }
+}
+
+// Funciones globales
+function showMap() {
+    const modal = new bootstrap.Modal(document.getElementById('mapModal'));
+    modal.show();
+    
+    // Aquí podrías integrar Google Maps o similar
+    console.log('Mostrar mapa para:', {
+        vehicle: '{{ current_photo.vehiIdno }}',
+        position: '{{ current_photo.position }}'
+    });
+}
+
+function downloadPhoto() {
+    const link = document.createElement('a');
+    link.href = '{{ MEDIA_URL }}{{ current_photo.local_path }}';
+    link.download = `foto_{{ current_photo.vehiIdno }}_{{ current_photo.updateTimeStr|date:"Y-m-d_H-i-s" }}.jpg`;
+    link.click();
+}
+
+function sharePhoto() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Foto de Seguridad - Vehículo {{ current_photo.vehiIdno }}',
+            text: 'Foto del {{ current_photo.updateTimeStr }}',
+            url: window.location.href
+        });
+    } else {
+        // Fallback: copiar URL al clipboard
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('URL copiada al portapapeles');
+        });
+    }
+}
+
+function printPhoto() {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Foto de Seguridad - {{ current_photo.vehiIdno }}</title>
+            <style>
+                body { margin: 0; padding: 20px; text-align: center; }
+                img { max-width: 100%; height: auto; }
+                .info { margin-top: 20px; font-family: Arial, sans-serif; }
+            </style>
+        </head>
+        <body>
+            <img src="{{ MEDIA_URL }}{{ current_photo.local_path }}" alt="Foto de seguridad">
+            <div class="info">
+                <h3>Vehículo: {{ current_photo.vehiIdno }}</h3>
+                <p>Fecha: {{ current_photo.updateTimeStr }}</p>
+                <p>Dispositivo: {{ current_photo.devIdno }}</p>
+                {% if current_photo.position %}
+                <p>Ubicación: {{ current_photo.position }}</p>
+                {% endif %}
+            </div>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+function showMetadata() {
+    const metadataContent = document.getElementById('metadata-content');
+    metadataContent.innerHTML = `
+        <table class="table table-striped">
+            <tr><td><strong>Vehículo:</strong></td><td>{{ current_photo.vehiIdno }}</td></tr>
+            <tr><td><strong>Dispositivo:</strong></td><td>{{ current_photo.devIdno }}</td></tr>
+            <tr><td><strong>Fecha/Hora:</strong></td><td>{{ current_photo.updateTimeStr }}</td></tr>
+            <tr><td><strong>Archivo:</strong></td><td>{{ current_photo.local_path }}</td></tr>
+            {% if current_photo.position %}
+            <tr><td><strong>Ubicación:</strong></td><td>{{ current_photo.position }}</td></tr>
+            {% endif %}
+            <tr><td><strong>Índice:</strong></td><td>{{ current_index|add:1 }} de {{ total_photos }}</td></tr>
+        </table>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('metadataModal'));
+    modal.show();
+}
+
+function showFilters() {
+    const modal = new bootstrap.Modal(document.getElementById('filtersModal'));
+    modal.show();
+}
+
+function applyFilters() {
+    // Implementar lógica de filtros
+    alert('Funcionalidad de filtros en desarrollo');
+    bootstrap.Modal.getInstance(document.getElementById('filtersModal')).hide();
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🖼️ Inicializando visor de fotos optimizado');
+    window.photoViewer = new PhotoViewer();
+    
+    // Mostrar ayuda de controles al usuario nuevo
+    if (!localStorage.getItem('photo_viewer_help_shown')) {
+        setTimeout(() => {
+            alert(`📸 CONTROLES DEL VISOR:
+            
+🖱️ RATÓN:
+• Click en imagen: Pantalla completa
+• Rueda: Zoom (próximamente)
+
+⌨️ TECLADO:
+• ← → : Navegar fotos
+• F: Pantalla completa
+• Espacio: Reproducción automática
+• R: Rotar imagen
+• Z: Zoom
+• I: Mostrar/ocultar panel
+• ESC: Salir pantalla completa
+
+📱 TÁCTIL:
+• Swipe izq/der: Navegar
+• Doble tap: Zoom (próximamente)`);
+            
+            localStorage.setItem('photo_viewer_help_shown', 'true');
+        }, 1000);
+    }
+});
+
+// Calcular y establecer el progreso inicial
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Obtener valores desde data attributes
+        const container = document.querySelector('[data-current-index]');
+        if (!container) {
+            console.warn('⚠️ Container con data attributes no encontrado');
+            return;
+        }
+        
+        const currentIndex = Math.max(0, parseInt(container.dataset.currentIndex || '0'));
+        const totalPhotos = Math.max(1, parseInt(container.dataset.totalPhotos || '1'));
+        
+        // Validar que los valores sean razonables
+        if (currentIndex >= totalPhotos) {
+            console.warn(`⚠️ Índice actual (${currentIndex}) >= total fotos (${totalPhotos})`);
+            return;
+        }
+        
+        const progressPercent = totalPhotos > 0 ? Math.round((currentIndex / totalPhotos) * 100) : 0;
+        
+        // Actualizar barra de progreso
+        const progressBar = document.getElementById('progress-bar-info');
+        if (progressBar) {
+            progressBar.style.width = `${Math.min(100, Math.max(0, progressPercent))}%`;
+            console.log(`✅ Progreso inicial: ${currentIndex + 1}/${totalPhotos} (${progressPercent}%)`);
+        } else {
+            console.warn('⚠️ Barra de progreso no encontrada');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error configurando progreso inicial:', error);
+    }
+});
+
+// Funciones que faltaban del original
+function gotoPhoto() { window.photoViewer.gotoPhoto(); }
+function gotoFirst() { window.photoViewer.gotoFirst(); }
+function gotoLast() { window.photoViewer.gotoLast(); }
+function randomPhoto() { window.photoViewer.randomPhoto(); }
+function toggleFullscreen() { window.photoViewer.toggleFullscreen(); }
+function toggleInfoPanel() { window.photoViewer.toggleInfoPanel(); }
+function zoomImage() { window.photoViewer.zoomImage(); }
+function rotateImage() { window.photoViewer.rotateImage(); }
+function toggleAutoplay() { window.photoViewer.toggleAutoplay(); }
+function navigatePhoto(direction) { window.photoViewer.navigatePhoto(direction); }
+
+</script>
+{% endblock %}

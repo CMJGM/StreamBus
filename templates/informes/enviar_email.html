@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<style>
+    .input-compact {
+        height: 28px;
+        font-size: 0.85rem;
+        padding: 2px 8px;
+    }
+
+    .btn-purple {
+        background-color: #e0c7ff;
+        color: #4b0082;
+        border: none;
+    }
+
+    .btn-purple:hover {
+        background-color: #d6b5fc;
+    }
+
+    .sending-message {
+        display: none;
+        font-size: 0.9rem;
+        color: #4b0082;
+        margin-top: 12px;
+    }
+
+    .dot-flashing {
+        display: inline-block;
+        position: relative;
+        width: 1em;
+        height: 1em;
+    }
+
+    .dot-flashing::after {
+        content: '●';
+        animation: flash 1s infinite linear;
+        color: #4b0082;
+    }
+
+    @keyframes flash {
+        0% { opacity: 0.2; }
+        50% { opacity: 1; }
+        100% { opacity: 0.2; }
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Enviar Informe por Email</h2>
+
+    <!-- Card para destinatarios y botón -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="post" id="enviar-form">
+                {% csrf_token %}
+                <div class="row align-items-end">
+                    <div class="col-md-7">
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                        <label for="{{ form.destinatarios.id_for_label }}" class="form-label small">Destinatarios (separados por coma):</label>
+                        {{ form.destinatarios|add_class:"form-control input-compact" }}
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="submit" class="btn btn-purple w-100" id="enviar-btn">
+                            <i class="bi bi-envelope-fill"></i> Enviar
+                        </button>
+                    </div>                
+                    <!-- Botón Volver a la lista -->
+                    <div class="col-md-3 btn-success text-end">
+                        <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-success ms-2">← Volver</a>
+                    </div>
+                </div>                
+                <div class="text-center sending-message" id="sending-msg">
+                    <div class="spinner-border text-secondary small" role="status">
+                        <span class="visually-hidden">Enviando...</span>
+                    </div>
+                    <span class="ms-2">Enviando informe, por favor espere <span class="dot-flashing"></span></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Card con los datos del informe -->
+    <div class="card shadow mb-4">
+        <div class="card-header" style="background-color: #d4edfa;">
+            <h5 class="mb-0 text-dark">Informe Nº {{ informe.id|stringformat:"010d" }} - Titulo : {{ informe.titulo }}</h5>
+        </div>
+        <div class="card-body">
+            <p class="fs-5"><strong>Fecha:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
+            <p class="fs-5"><strong>Sucursal:</strong> {{ informe.sucursal.nombre }}</p>
+            <p class="fs-5"><strong>Bus:</strong> {{ informe.bus.ficha }}</p>
+            <p class="fs-5"><strong>Empleado:</strong> {{ informe.empleado.nombre_completo }}</p>
+            <p class="fs-5"><strong>Descripción:</strong> {{ informe.descripcion }}</p>
+
+            {% if informe.fotos.all %}
+                <hr>
+                <h5>Imágenes adjuntas</h5>
+                <div class="row">
+                    {% for foto in informe.fotos.all %}
+                        <div class="col-md-3 mb-3">
+                            <img src="{{ foto.imagen.url }}" alt="Foto" class="img-fluid rounded shadow-sm">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("enviar-form").addEventListener("submit", function () {
+        document.getElementById("enviar-btn").disabled = true;
+        document.getElementById("sending-msg").style.display = "block";
+    });
+</script>
+
+{% endblock %}

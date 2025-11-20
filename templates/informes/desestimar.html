@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .custom-checkbox input[type="checkbox"] {
+        width: 25px;
+        height: 25px;
+        accent-color: #dc3545;
+        border: 2px solid #888;
+        cursor: pointer;
+    }
+    .custom-checkbox input[type="checkbox"]:not(:checked) {
+        background-color: white;
+    }
+    .card-body.texto-grande p,
+    .card-body.texto-grande p strong {
+        font-size: 1rem !important;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-danger"><i class="bi-x-octagon-fill text-danger me-2"></i>
+        Desestimar Informe</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        {% if desestimar %}
+            {% for informe in desestimar %}
+                <div class="card mb-4 col-10 mx-auto shadow">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- IZQUIERDA -->
+                            <div class="col-md-6">
+                                <div class="form-check mb-3 custom-checkbox d-flex align-items-center">
+                                    <input class="form-check-input me-2" type="checkbox" name="informes_ids" value="{{ informe.id }}" id="check{{ informe.id }}">
+                                    <label class="form-check-label fw-bold me-3 mb-2" for="check{{ informe.id }}">
+                                        Informe Nº {{ informe.id|stringformat:"010d" }}
+                                    </label>
+                                    <span class="tipo-informe 
+                                        {% if informe.origen == 'Sistemas' %}tipo-sistemas
+                                        {% elif informe.origen == 'Guardia' %}tipo-guardia
+                                        {% elif informe.origen == 'RRHH' %}tipo-rrhh
+                                        {% elif informe.origen == 'Siniestros' %}tipo-siniestros
+                                        {% elif informe.origen == 'Taller' %}tipo-taller
+                                        {% else %}bg-secondary text-white
+                                        {% endif %}">
+                                        {{ informe.origen }}
+                                    </span>  
+                                </div>
+
+                                <div class="mb-3 comentario-input" id="comentario_div_{{ informe.id }}" style="display: none;">
+                                    <label for="comentario_{{ informe.id }}" class="form-label fw-bold text-danger">Motivo de Desestimación</label>
+                                    <textarea class="form-control comentario-textarea" name="comentario_{{ informe.id }}" id="comentario_{{ informe.id }}" rows="3" placeholder="Explica el motivo de la desestimación..."></textarea>
+                                </div>
+
+                                <div class="card-body texto-grande">
+                                    <p><strong>Título:</strong> {{ informe.titulo }}</p>                                    
+                                    <p><strong>Descripción:</strong> {{ informe.descripcion }}</p>
+                                    <p><strong>Empleado:</strong>
+                                        {% if informe.empleado %}
+                                            {{ informe.empleado }}
+                                        {% else %}
+                                            <em class="text-muted">No asignado</em>
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>Bus:</strong> {{ informe.bus.ficha }} - {{ informe.bus.marca.nombre }} {{ informe.bus.modelo.nombre }} ({{ informe.bus.dominio }})</p>
+                                    <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
+                                    <p><strong>Fecha y hora:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
+                                    <p><strong>Enviado por mail:</strong>
+                                        {% if informe.historial_envios.exists %}
+                                            ✅ <span class="text-success">Sí</span>
+                                        {% else %}
+                                            ❌ <span class="text-danger">No</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- DERECHA: Imagen -->
+                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                {% if informe.fotos.first %}
+                                    <img src="{{ informe.fotos.first.imagen.url }}" class="img-fluid rounded shadow" style="max-height: 300px;" alt="Foto del informe {{ informe.id }}">
+                                {% else %}
+                                    <p class="text-muted text-center">📷 Sin imagen disponible</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-danger mt-3">❌ Desestimar Seleccionados</button>
+            </div>
+        {% else %}
+            <p>No hay informes sin generar.</p>
+        {% endif %}
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('input[name="informes_ids"]');
+    
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                const id = this.value;
+                const comentarioDiv = document.getElementById(`comentario_div_${id}`);
+                const textarea = document.getElementById(`comentario_${id}`);
+    
+                if (this.checked) {
+                    comentarioDiv.style.display = 'block';
+                    textarea.disabled = false;
+                    textarea.required = true;
+                } else {
+                    comentarioDiv.style.display = 'none';
+                    textarea.disabled = true;
+                    textarea.required = false;
+                    textarea.value = '';
+                }
+            });
+        });
+    });
+</script>
+    
+    
+{% endblock %}

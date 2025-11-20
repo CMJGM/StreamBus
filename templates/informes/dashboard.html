@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="text-center">📈 Dashboard de Informes</h3>
+
+    <form method="get" class="row g-2 align-items-end justify-content-center mb-4">
+        <div class="col-md-3">
+            <label class="form-label">Año</label>
+            <select name="anio" class="form-select">
+                {% for a in anios %}
+                    <option value="{{ a }}" {% if a == anio %}selected{% endif %}>{{ a }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Mes</label>
+            <select name="mes" class="form-select">
+                <option value="">-- Todos --</option>
+                {% for n, nombre in meses %}
+                    <option value="{{ n }}" {% if n == mes %}selected{% endif %}>{{ nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Sucursal</label>
+            <select name="sucursal" class="form-select">
+                <option value="">-- Todas --</option>
+                {% for s in sucursales %}
+                    <option value="{{ s.id }}" {% if s.id == sucursal_id %}selected{% endif %}>{{ s.descripcion }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">Filtrar</button>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div style="max-width: 400px; margin: auto;">
+                <canvas id="graficoTorta" width="400" height="400"></canvas>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <h5 class="text-center">Top 10 Buses</h5>
+            <ul class="list-group">
+                {% for bus, cantidad in ranking_buses %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ bus }}<span class="badge bg-primary rounded-pill">{{ cantidad }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h5 class="text-center">Top 10 Choferes</h5>
+            <ul class="list-group">
+                {% for empleado, cantidad in ranking_choferes %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ empleado }}<span class="badge bg-success rounded-pill">{{ cantidad }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+{% if labels and datos %}
+<script>
+    const labels = JSON.parse("{{ labels|escapejs }}");
+    const datos = JSON.parse("{{ datos|escapejs }}");
+    const total = datos.reduce((a, b) => a + b, 0);
+    const ctx = document.getElementById('graficoTorta').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Informes por Origen',
+                data: datos,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8BC34A', '#03A9F4']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 16
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#000',
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    },
+                    formatter: (value) => {
+                        return (value * 100 / total).toFixed(1) + '%';
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+</script>
+{% endif %}
+
+{% endblock %}

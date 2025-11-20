@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">❓👤 Informes sin Legajo</h2>
+
+    {% if informes %}
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Título</th>
+                <th>Empleado</th>
+                <th>Bus</th>
+                <th>Sucursal</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for informe in informes %}
+            <tr>
+                <td>{{ informe.titulo }}</td>
+                <td>No asignado</td>
+                <td>{{ informe.bus.ficha }}</td>
+                <td>{{ informe.sucursal.abreviatura }}</td>
+                <td>{{ informe.fecha_hora|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'informes:editar_informe' informe.pk %}" class="btn btn-sm btn-warning">
+                        📝 Editar
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay informes sin legajo.</p>
+    {% endif %}
+</div>
+{% endblock %}

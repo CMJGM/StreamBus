@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4" style="max-width: 70%;">
+    <h2>{{ view.object.pk|yesno:"Editar Bus,Nuevo Bus" }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'lista_buses' %}" class="btn btn-secondary">Volver</a>
+    </form>
+</div>
+{% endblock %}

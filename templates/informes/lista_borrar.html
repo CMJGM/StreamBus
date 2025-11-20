@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Informes{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1>Lista de Informes</h1>
+
+    <form method="get" class="mb-3">
+      <div class="row g-3 align-items-center">
+        <div class="col-auto">
+          <label for="id_desde" class="form-label">Informe ID Desde:</label>
+        </div>
+        <div class="col-auto">
+          <input type="number" class="form-control form-control-sm" id="id_desde" name="id_desde" value="{{ request.GET.id_desde }}">
+        </div>
+        <div class="col-auto">
+          <label for="id_hasta" class="form-label">Hasta:</label>
+        </div>
+        <div class="col-auto">
+          <input type="number" class="form-control form-control-sm" id="id_hasta" name="id_hasta" value="{{ request.GET.id_hasta }}">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-primary btn-sm">Filtrar por ID</button>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'informes:lista_borrar' %}" class="btn btn-secondary btn-sm">Limpiar Filtro</a>
+        </div>
+      </div>
+    </form>
+
+    {% if informes %}
+      <ul class="list-group">
+        {% for informe in informes %}
+          <li class="list-group-item d-flex align-items-start">
+            {% if informe.fotos.first %}
+              <img src="{{ informe.fotos.first.imagen.url }}" alt="Miniatura del informe {{ informe.id }}" class="me-3 rounded" style="max-width: 80px; max-height: 60px; object-fit: cover;">
+            {% else %}
+              <div class="me-3 bg-secondary text-white rounded d-flex align-items-center justify-content-center" style="width: 80px; height: 60px;">
+                Sin Foto
+              </div>
+            {% endif %}
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ informe.titulo }} (ID: {{ informe.id }})</div>
+              <small class="text-muted">{{ informe.descripcion|truncatechars:100 }}</small>
+              <div class="mt-1"><small class="text-muted">Fecha y Hora: {{ informe.fecha_hora|date:"d/m/Y H:i" }}</small></div>
+            </div>
+            <div>
+              <a href="{% url 'informes:borrar_informe' informe.id %}" class="btn btn-danger btn-sm">Borrar</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se encontraron informes.</p>
+    {% endif %}
+  </div>
+{% endblock %}

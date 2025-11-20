@@ -1,0 +1,828 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="progress-container">
+        <!-- Header con título y estado de conexión -->
+        <div class="text-center mb-4">
+            <h2 class="text-primary mb-3">
+                <i class="fas fa-download me-2"></i>
+                Descargando Fotos de Seguridad
+            </h2>
+            
+            <!-- Indicador de conexión -->
+            <div id="connection-status" class="connection-status connected">
+                <span class="status-dot"></span>
+                Conectado
+            </div>
+        </div>
+
+        <!-- Información de la descarga -->
+        <div class="row mb-4">
+            <div class="col-md-8 mx-auto">
+                <div class="card border-primary shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Información de la Descarga
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if job_info.empresa_info %}
+                        <div class="row text-center">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-building text-primary"></i>
+                                    <div class="info-label">Empresa</div>
+                                    <div class="info-value">{{ job_info.empresa_info.nombre }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-bus text-success"></i>
+                                    <div class="info-label">Vehículos</div>
+                                    <div class="info-value">{{ job_info.empresa_info.total_vehiculos }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center">
+                            <div class="info-item">
+                                <i class="fas fa-globe text-info"></i>
+                                <div class="info-label">Alcance</div>
+                                <div class="info-value">Todas las Empresas</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <hr class="my-3">
+                        
+                        <div class="row text-center">
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-calendar text-warning"></i>
+                                    <div class="info-label">Período</div>
+                                    <div class="info-value">{{ job_info.begin_time|slice:":10" }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-item">
+                                    <i class="fas fa-clock text-info"></i>
+                                    <div class="info-label">Horario</div>
+                                    <div class="info-value">{{ job_info.begin_time|slice:"11:16" }} - {{ job_info.end_time|slice:"11:16" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de progreso principal -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted fw-bold">Progreso General</span>
+                <span id="progress-text" class="text-muted">0 / 0 fotos (0%)</span>
+            </div>
+            <div class="progress shadow-sm" style="height: 25px;">
+                <div id="progress-bar" 
+                     class="progress-bar progress-bar-striped progress-bar-animated bg-info" 
+                     role="progressbar" 
+                     style="width: 0%;" 
+                     aria-valuenow="0" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                    0%
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje de estado -->
+        <div class="text-center mb-4">
+            <div class="card border-light bg-light">
+                <div class="card-body py-3">
+                    <div id="status-message" class="text-muted">
+                        <i class="fas fa-spinner fa-spin me-2"></i>
+                        Preparando descarga...
+                    </div>
+                    <div id="speed-indicator" class="speed-indicator mt-2">
+                        Calculando velocidad...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas detalladas -->
+        <div id="download-stats" class="mb-4">
+            <!-- Se poblará dinámicamente -->
+        </div>
+
+        <!-- Botones de acción (aparecen según el estado) -->
+        <div class="text-center">
+            <div id="action-buttons">
+                <!-- Se agregarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Información adicional (colapsable) -->
+        <div class="mt-4">
+            <div class="card border-secondary">
+                <div class="card-header bg-light" data-bs-toggle="collapse" data-bs-target="#advanced-info" style="cursor: pointer;">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Información Técnica
+                        <i class="fas fa-chevron-down float-end"></i>
+                    </h6>
+                </div>
+                <div id="advanced-info" class="collapse">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Configuración:</h6>
+                                <ul class="list-unstyled small">
+                                    <li><i class="fas fa-cog me-2"></i>Workers paralelos: <span id="workers-count">15</span></li>
+                                    <li><i class="fas fa-network-wired me-2"></i>Conexiones simultáneas: <span id="connections-count">10</span></li>
+                                    <li><i class="fas fa-sync me-2"></i>Polling inteligente: Activo</li>
+                                    <li><i class="fas fa-filter me-2"></i>Filtrado PRE-API: 
+                                        {% if job_info.empresa_info %}Activo{% else %}No aplicado{% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted">Rendimiento:</h6>
+                                <div id="performance-metrics">
+                                    <div class="small text-muted">Métricas se mostrarán durante la descarga...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS optimizado -->
+<style>
+.progress-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.connection-status.connected {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.connection-status.disconnected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.connection-status.error {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeaa7;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+.connection-status.connected .status-dot {
+    background-color: #28a745;
+}
+
+.connection-status.disconnected .status-dot {
+    background-color: #dc3545;
+}
+
+.connection-status.error .status-dot {
+    background-color: #ffc107;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.info-item {
+    padding: 10px;
+    text-align: center;
+}
+
+.info-item i {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.info-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #343a40;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.stat-card.nuevas .stat-number { color: #28a745; }
+.stat-card.existentes .stat-number { color: #17a2b8; }
+.stat-card.errores .stat-number { color: #dc3545; }
+.stat-card.total .stat-number { color: #007bff; }
+.stat-card.vehiculos .stat-number { color: #fd7e14; }
+
+.speed-indicator {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #e9ecef;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.speed-indicator.active {
+    background-color: #28a745;
+    color: white;
+    animation: speedPulse 2s infinite;
+}
+
+@keyframes speedPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.progress-bar {
+    transition: width 0.5s ease-in-out;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* Animaciones de aparición */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.5s ease;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .progress-container {
+        padding: 10px;
+    }
+    
+    .info-item {
+        padding: 5px;
+    }
+    
+    .info-item i {
+        font-size: 1.2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+/* Estados de botones */
+.btn-action {
+    min-width: 180px;
+    margin: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Indicador de carga */
+.loading-dots::after {
+    content: '';
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+</style>
+
+<!-- JavaScript optimizado -->
+<script>
+class OptimizedProgressManager {
+    constructor() {
+        // Configuración de polling inteligente
+        this.pollInterval = 3000; // Empezar con 3 segundos
+        this.maxPollInterval = 10000; // Máximo 10 segundos
+        this.minPollInterval = 1500; // Mínimo 1.5 segundos
+        this.consecutiveNoChanges = 0;
+        this.lastProgress = -1;
+        this.lastMessage = '';
+        this.lastDownloaded = -1;
+        this.pollTimer = null;
+        this.isComplete = false;
+        this.startTime = Date.now();
+        
+        // Elementos DOM
+        this.progressBar = document.getElementById('progress-bar');
+        this.progressText = document.getElementById('progress-text');
+        this.statusMessage = document.getElementById('status-message');
+        this.downloadStats = document.getElementById('download-stats');
+        this.speedIndicator = document.getElementById('speed-indicator');
+        this.connectionStatus = document.getElementById('connection-status');
+        this.actionButtons = document.getElementById('action-buttons');
+        this.performanceMetrics = document.getElementById('performance-metrics');
+        
+        this.initializeProgress();
+    }
+    
+    initializeProgress() {
+        console.log('🚀 Iniciando sistema de monitoreo optimizado');
+        this.startPolling();
+        this.setupEventListeners();
+        this.updateConfiguration();
+    }
+    
+    setupEventListeners() {
+        // Manejar visibilidad de página
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pausePolling();
+                console.log('⏸️ Polling pausado (página oculta)');
+            } else if (!this.isComplete) {
+                this.resumePolling();
+                console.log('▶️ Polling reanudado');
+            }
+        });
+        
+        // Manejar errores de conexión
+        window.addEventListener('online', () => {
+            console.log('🌐 Conexión restaurada');
+            if (!this.isComplete) {
+                this.resumePolling();
+            }
+        });
+        
+        window.addEventListener('offline', () => {
+            console.log('❌ Conexión perdida');
+            this.updateConnectionStatus('disconnected');
+        });
+    }
+    
+    updateConfiguration() {
+        // Mostrar configuración actual
+        const workersElement = document.getElementById('workers-count');
+        const connectionsElement = document.getElementById('connections-count');
+        
+        if (workersElement) workersElement.textContent = '15'; // De settings
+        if (connectionsElement) connectionsElement.textContent = '10'; // De settings
+    }
+    
+    startPolling() {
+        if (this.pollTimer) {
+            clearInterval(this.pollTimer);
+        }
+        
+        this.pollTimer = setInterval(() => {
+            this.checkProgress();
+        }, this.pollInterval);
+        
+        // Primera verificación inmediata
+        this.checkProgress();
+    }
+    
+    pausePolling() {
+        if (this.pollTimer) {
+            clearInterval(this.pollTimer);
+            this.pollTimer = null;
+        }
+    }
+    
+    resumePolling() {
+        if (!this.pollTimer && !this.isComplete) {
+            this.startPolling();
+        }
+    }
+    
+    adjustPollInterval(hasChanged) {
+        const oldInterval = this.pollInterval;
+        
+        if (hasChanged) {
+            // Hay cambios - aumentar frecuencia
+            this.consecutiveNoChanges = 0;
+            this.pollInterval = Math.max(this.minPollInterval, this.pollInterval - 500);
+        } else {
+            // No hay cambios - reducir frecuencia
+            this.consecutiveNoChanges++;
+            
+            if (this.consecutiveNoChanges >= 3) {
+                this.pollInterval = Math.min(this.maxPollInterval, this.pollInterval + 1000);
+            }
+        }
+        
+        // Reiniciar polling si cambió significativamente
+        if (Math.abs(oldInterval - this.pollInterval) >= 1000) {
+            console.log(`📊 Ajustando polling: ${oldInterval}ms → ${this.pollInterval}ms`);
+            this.startPolling();
+        }
+    }
+    
+    updateConnectionStatus(status) {
+        if (!this.connectionStatus) return;
+        
+        const statusMap = {
+            'connected': { class: 'connected', text: 'Conectado', icon: '🟢' },
+            'disconnected': { class: 'disconnected', text: 'Reconectando...', icon: '🔴' },
+            'error': { class: 'error', text: 'Error de conexión', icon: '🟡' }
+        };
+        
+        const config = statusMap[status] || statusMap['connected'];
+        this.connectionStatus.className = `connection-status ${config.class}`;
+        this.connectionStatus.innerHTML = `<span class="status-dot"></span> ${config.text}`;
+    }
+    
+    async checkProgress() {
+        try {
+            this.updateConnectionStatus('connected');
+            
+            const response = await fetch("{% url 'sit:check_download_progress' %}", {
+                method: 'GET',
+                cache: 'no-cache',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            
+            // Detectar cambios significativos
+            const hasChanged = this.hasSignificantChanges(data);
+            
+            // Ajustar polling
+            this.adjustPollInterval(hasChanged);
+            
+            // Actualizar UI
+            this.updateUI(data);
+            
+            // Manejar estados finales
+            if (data.status === 'completed') {
+                this.handleCompletion(data);
+            } else if (data.status === 'error') {
+                this.handleError(data);
+            }
+            
+        } catch (error) {
+            console.error('❌ Error en polling:', error);
+            this.updateConnectionStatus('error');
+            this.handlePollingError(error);
+        }
+    }
+    
+    hasSignificantChanges(data) {
+        const currentProgress = data.progress || 0;
+        const currentMessage = data.message || '';
+        const currentDownloaded = data.downloaded_photos || 0;
+        
+        const changed = (
+            Math.abs(currentProgress - this.lastProgress) >= 1 ||
+            currentMessage !== this.lastMessage ||
+            currentDownloaded !== this.lastDownloaded
+        );
+        
+        this.lastProgress = currentProgress;
+        this.lastMessage = currentMessage;
+        this.lastDownloaded = currentDownloaded;
+        
+        return changed;
+    }
+    
+    updateUI(data) {
+        this.updateProgressBar(data);
+        this.updateStatusMessage(data);
+        this.updateStats(data);
+        this.updateSpeedIndicator(data);
+        this.updatePerformanceMetrics(data);
+    }
+    
+    updateProgressBar(data) {
+        if (!this.progressBar) return;
+        
+        const progress = Math.min(100, Math.max(0, data.progress || 0));
+        const downloaded = data.downloaded_photos || 0;
+        const total = data.total_photos || 0;
+        
+        // Actualizar barra
+        this.progressBar.style.width = `${progress}%`;
+        this.progressBar.textContent = `${progress}%`;
+        this.progressBar.setAttribute('aria-valuenow', progress);
+        
+        // Cambiar color según progreso
+        this.progressBar.className = this.getProgressBarClass(progress);
+        
+        // Actualizar texto
+        if (this.progressText) {
+            this.progressText.textContent = `${downloaded.toLocaleString()} / ${total.toLocaleString()} fotos (${progress}%)`;
+        }
+    }
+    
+    getProgressBarClass(progress) {
+        const baseClass = 'progress-bar progress-bar-striped';
+        
+        if (progress < 25) {
+            return `${baseClass} progress-bar-animated bg-info`;
+        } else if (progress < 50) {
+            return `${baseClass} progress-bar-animated bg-warning`;
+        } else if (progress < 75) {
+            return `${baseClass} progress-bar-animated bg-primary`;
+        } else if (progress < 100) {
+            return `${baseClass} progress-bar-animated bg-success`;
+        } else {
+            return `${baseClass} bg-success`;
+        }
+    }
+    
+    updateStatusMessage(data) {
+        if (!this.statusMessage) return;
+        
+        const message = data.message || 'Procesando...';
+        const status = data.status || 'unknown';
+        
+        let icon = '<i class="fas fa-spinner fa-spin me-2"></i>';
+        
+        if (status === 'completed') {
+            icon = '<i class="fas fa-check-circle text-success me-2"></i>';
+        } else if (status === 'error') {
+            icon = '<i class="fas fa-exclamation-triangle text-danger me-2"></i>';
+        } else if (status === 'downloading') {
+            icon = '<i class="fas fa-download text-primary me-2"></i>';
+        }
+        
+        this.statusMessage.innerHTML = `${icon}${message}`;
+    }
+    
+    updateStats(data) {
+        if (!this.downloadStats) return;
+        
+        const stats = data.final_stats || {};
+        
+        if (Object.keys(stats).length > 0) {
+            const statsHTML = `
+                <div class="stats-grid fade-in">
+                    <div class="stat-card nuevas">
+                        <span class="stat-number">${(stats.descargadas || 0).toLocaleString()}</span>
+                        <div class="stat-label">Nuevas</div>
+                    </div>
+                    <div class="stat-card existentes">
+                        <span class="stat-number">${(stats.ya_existen || 0).toLocaleString()}</span>
+                        <div class="stat-label">Ya Existían</div>
+                    </div>
+                    <div class="stat-card errores">
+                        <span class="stat-number">${(stats.errores || 0).toLocaleString()}</span>
+                        <div class="stat-label">Errores</div>
+                    </div>
+                    <div class="stat-card total">
+                        <span class="stat-number">${(stats.total_disponibles || 0).toLocaleString()}</span>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card vehiculos">
+                        <span class="stat-number">${(stats.vehiculos_count || 0).toLocaleString()}</span>
+                        <div class="stat-label">Vehículos</div>
+                    </div>
+                </div>
+            `;
+            this.downloadStats.innerHTML = statsHTML;
+        }
+    }
+    
+    updateSpeedIndicator(data) {
+        if (!this.speedIndicator) return;
+        
+        const stats = data.final_stats || {};
+        const duration = stats.duration || ((Date.now() - this.startTime) / 1000);
+        const totalProcessed = (stats.descargadas || 0) + (stats.ya_existen || 0);
+        
+        if (duration > 0 && totalProcessed > 0) {
+            const speed = totalProcessed / duration;
+            this.speedIndicator.textContent = `${speed.toFixed(1)} fotos/seg`;
+            this.speedIndicator.className = 'speed-indicator active';
+        } else {
+            this.speedIndicator.textContent = 'Calculando velocidad...';
+            this.speedIndicator.className = 'speed-indicator';
+        }
+    }
+    
+    updatePerformanceMetrics(data) {
+        if (!this.performanceMetrics) return;
+        
+        const stats = data.final_stats || {};
+        const elapsed = (Date.now() - this.startTime) / 1000;
+        
+        const metricsHTML = `
+            <ul class="list-unstyled small">
+                <li><i class="fas fa-tachometer-alt me-2"></i>Tiempo transcurrido: ${elapsed.toFixed(0)}s</li>
+                <li><i class="fas fa-signal me-2"></i>Polling actual: ${(this.pollInterval / 1000).toFixed(1)}s</li>
+                <li><i class="fas fa-sync me-2"></i>Cambios consecutivos: ${this.consecutiveNoChanges}</li>
+                <li><i class="fas fa-memory me-2"></i>Eficiencia: ${stats.total_disponibles ? ((stats.total_disponibles / (stats.total_disponibles + stats.errores)) * 100).toFixed(1) : 0}%</li>
+            </ul>
+        `;
+        this.performanceMetrics.innerHTML = metricsHTML;
+    }
+    
+    handleCompletion(data) {
+        console.log('✅ Descarga completada exitosamente');
+        this.isComplete = true;
+        this.pausePolling();
+        
+        // Actualizar UI final
+        this.updateProgressBar({ ...data, progress: 100 });
+        this.updateStatusMessage({ ...data, status: 'completed' });
+        
+        // Mostrar botones de acción
+        this.showCompletionButtons(data);
+        
+        // Opcional: redirección automática
+        setTimeout(() => {
+            if (confirm('🎉 Descarga completada. ¿Deseas ver las fotos ahora?')) {
+                window.location.href = "{% url 'sit:view_security_photos' %}";
+            }
+        }, 3000);
+    }
+    
+    handleError(data) {
+        console.error('❌ Error en descarga:', data.message);
+        this.isComplete = true;
+        this.pausePolling();
+        
+        this.updateConnectionStatus('error');
+        this.showErrorButtons(data);
+    }
+    
+    handlePollingError(error) {
+        // Aumentar intervalo temporalmente
+        const oldInterval = this.pollInterval;
+        this.pollInterval = Math.min(this.maxPollInterval, this.pollInterval * 1.5);
+        
+        console.warn(`⚠️ Error de polling, aumentando intervalo: ${oldInterval}ms → ${this.pollInterval}ms`);
+        
+        // Volver al intervalo normal después de 2 minutos
+        setTimeout(() => {
+            this.pollInterval = 3000;
+            console.log('🔄 Intervalo de polling restaurado');
+        }, 120000);
+    }
+    
+    showCompletionButtons(data) {
+        if (!this.actionButtons) return;
+        
+        const stats = data.final_stats || {};
+        const total = stats.total_disponibles || 0;
+        
+        this.actionButtons.innerHTML = `
+            <a href="{% url 'sit:view_security_photos' %}" class="btn btn-success btn-action btn-lg">
+                <i class="fas fa-images me-2"></i>
+                Ver ${total.toLocaleString()} Fotos
+            </a>
+            <a href="{% url 'sit:security_photos_form' %}" class="btn btn-outline-primary btn-action">
+                <i class="fas fa-plus me-2"></i>
+                Nueva Descarga
+            </a>
+            <a href="{% url 'sit:clear_security_photos_session' %}" class="btn btn-outline-secondary btn-action">
+                <i class="fas fa-broom me-2"></i>
+                Limpiar Datos
+            </a>
+        `;
+    }
+    
+    showErrorButtons(data) {
+        if (!this.actionButtons) return;
+        
+        this.actionButtons.innerHTML = `
+            <button onclick="window.location.reload()" class="btn btn-warning btn-action btn-lg">
+                <i class="fas fa-redo me-2"></i>
+                Reintentar
+            </button>
+            <a href="{% url 'sit:security_photos_form' %}" class="btn btn-outline-primary btn-action">
+                <i class="fas fa-arrow-left me-2"></i>
+                Volver al Formulario
+            </a>
+        `;
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 Inicializando sistema optimizado de progreso');
+    window.progressManager = new OptimizedProgressManager();
+});
+
+// Cleanup al salir
+window.addEventListener('beforeunload', function() {
+    if (window.progressManager) {
+        window.progressManager.pausePolling();
+        console.log('🧹 Cleanup completado');
+    }
+});
+</script>
+{% endblock %}

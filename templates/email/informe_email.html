@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Informe N°{{ informe.id|stringformat:"010d" }} - {{ informe.titulo }}</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 30px; font-size: 16px;">
+
+    <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 30px;">
+        <h2 style="color: #003366; margin-top: 0;">📝 Informe N°{{ informe.id|stringformat:"010d" }}</h2>
+
+        <p style="font-size: 18px;"><strong>Título:</strong> {{ informe.titulo }}</p>
+        <p><strong>Fecha y Hora:</strong> {{ informe.fecha_hora }}</p>
+        <p><strong>Empleado:</strong> {{ informe.empleado }}</p>
+        <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
+
+        <hr style="margin: 20px 0;">
+
+        <h3 style="color: #003366;">🚌 Datos del Bus</h3>
+        <ul style="list-style: none; padding-left: 0; font-size: 16px;">
+            <li><strong>N° de Ficha:</strong> {{ informe.bus.ficha }}</li>
+            <li><strong>Patente:</strong> {{ informe.bus.dominio }}</li>
+            <li><strong>Marca:</strong> {{ informe.bus.modelo.marca.nombre }}</li>
+            <li><strong>Modelo:</strong> {{ informe.bus.modelo.nombre }}</li>
+            <li><strong>Año:</strong> {{ informe.bus.ano }}</li>
+        </ul>
+
+        <hr style="margin: 20px 0;">
+
+        <h3 style="color: #003366;">📋 Descripción</h3>
+        <p style="white-space: pre-line;">{{ informe.descripcion }}</p>
+
+        <hr style="margin: 20px 0;">
+
+        {% if fotos_con_cid %}
+            <h3 style="color: #003366;">📸 Imágenes del Informe</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                {% for item in fotos_con_cid %}
+                    <div style="flex: 1 1 45%;">
+                        <img src="cid:{{ item.cid }}" alt="Foto {{ forloop.counter }}" style="max-width: 100%; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <hr style="margin: 20px 0;">
+
+        <h4 style="color: #666; font-size: 14px;">📑 Últimos 10 informes del empleado</h4>
+        <ul style="font-size: 12px; color: #333; padding-left: 18px; list-style-type: none; margin: 0;">
+            {% for inf in ultimos_informes %}
+                <li style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
+                    <strong>{{ inf.id|stringformat:"010d" }}</strong> - {{ inf.titulo }} - ({{ inf.fecha_hora|date:"d/m/Y H:i" }}) -  {{ inf.descripcion }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>

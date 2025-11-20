@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .card-body.texto-grande p,
+    .card-body.texto-grande p strong {
+        font-size: 1.2rem !important;
+    }
+
+    .video-gallery .video-item {
+        width: 400px;
+        margin-bottom: 20px;
+    }
+
+    .video-gallery video {
+        width: 100%;
+        border-radius: 8px;
+    }
+</style>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Columna izquierda: Galería de videos + Formulario -->
+        <div class="col-md-8">
+            <h4 class="mb-3">🎥 Videos del informe</h4>
+
+            <!-- Galería de videos -->
+            <div class="d-flex flex-wrap gap-3 mb-4 video-gallery">
+                {% if videos %}
+                    {% for video in videos %}
+                        <div class="video-item">
+                            {% if '.mp4' in video.video.url %}
+                                <video controls>
+                                    <source src="{{ video.video.url }}" type="video/mp4">
+                                    Tu navegador no soporta el formato de video.
+                                </video>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No hay videos cargados aún.</p>
+                {% endif %}
+            </div>
+
+            <!-- Formulario para subir videos -->
+            <form method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light" id="form-video">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    <label for="id_video" class="form-label">Archivo de video (.mp4)</label>
+                    <input type="file" name="video" id="id_video" accept="video/mp4" class="form-control">
+                </div>
+
+                <!-- Aviso si el archivo supera el tamaño -->
+                <div id="video-error" class="alert alert-danger d-none" role="alert">
+                    El tamaño del archivo supera los 60MB. No se puede subir al servidor de archivos.
+                </div>
+
+                <button type="submit" class="btn btn-primary">Agregar Video</button>
+                <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-success ms-2">← Volver</a>
+            </form>
+        </div>
+
+        <!-- Columna derecha: Detalles del informe -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header text-white" style="background-color: #5bc0de;">
+                    <h5 class="mb-0">📝 Detalles del Informe Nº {{ informe.id|stringformat:"010d" }}</h5>
+                </div>
+                <div class="card-body texto-grande">
+                    <p><strong>Título:</strong> {{ informe.titulo }}</p>
+                    <p><strong>Empleado:</strong> 
+                        {% if informe.empleado %}
+                            {{ informe.empleado }}
+                        {% else %}
+                            AUN NO DETERMINADO
+                        {% endif %}
+                    </p>
+                    <p><strong>Bus:</strong> {{ informe.bus.ficha }} - {{ informe.bus.marca.nombre }} {{ informe.bus.modelo.nombre }} ({{ informe.bus.dominio }})</p>
+                    <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
+                    <p><strong>Fecha y hora:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Descripción:</strong><br>{{ informe.descripcion }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Validación de tamaño en el cliente -->
+<script>
+    document.getElementById("form-video").addEventListener("submit", function(event) {
+        const input = document.getElementById("id_video");
+        const errorDiv = document.getElementById("video-error");
+        const file = input.files[0];
+        const maxSizeMB = 60 ;
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+        errorDiv.classList.add("d-none");
+
+        if (file && file.size > maxSizeBytes) {
+            errorDiv.classList.remove("d-none");
+            event.preventDefault();
+        }
+    });
+</script>
+{% endblock %}
