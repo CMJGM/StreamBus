@@ -440,7 +440,8 @@ def buscar_informes(request):
     default_desde = default_desde.replace(hour=0, minute=0, second=0, microsecond=0)
     default_hasta = timezone.now()
 
-    form = InformeFiltroForm(request.GET or None)
+    # Pasar usuario al formulario para filtrar orígenes
+    form = InformeFiltroForm(request.GET or None, user=request.user)
 
     if form.is_valid():
         # Fechas
@@ -457,6 +458,11 @@ def buscar_informes(request):
         sucursal = form.cleaned_data.get('sucursal')
         if sucursal:
             informes = informes.filter(sucursal=sucursal)
+
+        # Origen
+        origen = form.cleaned_data.get('origen')
+        if origen:
+            informes = informes.filter(origen=origen)
 
         # Legajo del empleado 🔽
         legajo = form.cleaned_data.get('legajo')
@@ -475,12 +481,20 @@ def buscar_informes(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # Obtener orígenes permitidos para el usuario
+    if request.user.is_authenticated and hasattr(request.user, 'profile'):
+        origenes_permitidos = request.user.profile.get_origenes_permitidos()
+    else:
+        from .models import Origen
+        origenes_permitidos = Origen.objects.filter(activo=True)
+
     context = {
         'form': form,
         'page_obj': page_obj,
         'fecha_desde': fecha_desde,
         'fecha_hasta': fecha_hasta,
         'sucursales': Sucursales.objects.all(),
+        'origenes': origenes_permitidos,
     }
     return render(request, 'informes/lista_informes.html', context)
 
