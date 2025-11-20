@@ -10,7 +10,9 @@ SECRET_KEY = 'django-insecure-@oic64r!trv^3_eydz6@4p0svih5_v-y)@!w%cq)22_=t^7mzh
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['192.168.250.176',
+ALLOWED_HOSTS = ['127.0.0.1',
+                'localhost',
+                '192.168.250.176',
                 '190.183.254.254',
                 'sql2022.dominio.local',
                 'mx01.empresarecreo.com.ar',]
