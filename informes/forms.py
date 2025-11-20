@@ -21,11 +21,23 @@ class InformeGuardia(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['origen'].initial = 'Guardia'
 
-        # Filtrar sucursales según permisos del usuario
+        # Filtrar sucursales y orígenes según permisos del usuario
         if user and hasattr(user, 'profile'):
             self.fields['sucursal'].queryset = user.profile.get_sucursales_permitidas()
+
+            # Filtrar orígenes según permisos del usuario
+            origenes_permitidos = user.profile.get_origenes_permitidos()
+            self.fields['origen'].queryset = origenes_permitidos
+
+            # Intentar establecer 'Guardia' como predeterminado si está permitido
+            try:
+                guardia = origenes_permitidos.get(nombre='Guardia')
+                self.fields['origen'].initial = guardia.id
+            except:
+                # Si no existe 'Guardia' o no está permitido, usar el primero disponible
+                if origenes_permitidos.exists():
+                    self.fields['origen'].initial = origenes_permitidos.first().id
 
 class InformeForm(forms.ModelForm):
     # Campos personalizados para autocompletado Ajax
@@ -83,9 +95,10 @@ class InformeForm(forms.ModelForm):
         # Fecha y hora obligatoria
         self.fields['fecha_hora'].required = True
 
-        # Filtrar sucursales según permisos del usuario
+        # Filtrar sucursales y orígenes según permisos del usuario
         if user and hasattr(user, 'profile'):
             self.fields['sucursal'].queryset = user.profile.get_sucursales_permitidas()
+            self.fields['origen'].queryset = user.profile.get_origenes_permitidos()
 
         # Si es edición, cargar los valores actuales en los campos de búsqueda
         if self.instance and self.instance.pk:

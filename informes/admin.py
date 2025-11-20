@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Informe, FotoInforme, VideoInforme
+from .models import Informe, FotoInforme, VideoInforme, Origen
+
+class OrigenAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'activo', 'orden')
+    list_editable = ('activo', 'orden')
+    search_fields = ('nombre', 'descripcion')
+    list_filter = ('activo',)
+    ordering = ('orden', 'nombre')
 
 class FotoInformeInline(admin.TabularInline):
     model = FotoInforme
@@ -24,6 +31,7 @@ class VideoInformeAdmin(admin.ModelAdmin):
     search_fields = ('informe__titulo',)
 
 # Registrar modelos en admin
+admin.site.register(Origen, OrigenAdmin)
 admin.site.register(Informe, InformeAdmin)
 admin.site.register(FotoInforme, FotoInformeAdmin)
 admin.site.register(VideoInforme, VideoInformeAdmin)
