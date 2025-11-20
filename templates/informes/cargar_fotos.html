@@ -23,6 +23,10 @@
         color: white;
     }
 
+    .subtitle-dark-mode {
+        color: #6c757d;
+    }
+
     /* Galería de Fotos */
     .gallery-container {
         background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
@@ -248,7 +252,11 @@
     /* Modo Oscuro */
     @media (prefers-color-scheme: dark) {
         .header-fotos h2 {
-            color: #e9ecef;
+            color: #e9ecef !important;
+        }
+
+        .subtitle-dark-mode {
+            color: #adb5bd !important;
         }
 
         .header-fotos .text-muted {
@@ -257,6 +265,14 @@
 
         .gallery-container {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        .gallery-container > h5 {
+            color: #e9ecef !important;
+        }
+
+        .gallery-container > h5 > i {
+            color: #e9ecef !important;
         }
 
         .gallery-container h5 {
@@ -332,7 +348,11 @@
     }
 
     [data-bs-theme="dark"] .header-fotos h2 {
-        color: #e9ecef;
+        color: #e9ecef !important;
+    }
+
+    [data-bs-theme="dark"] .subtitle-dark-mode {
+        color: #adb5bd !important;
     }
 
     [data-bs-theme="dark"] .header-fotos .text-muted {
@@ -341,6 +361,14 @@
 
     [data-bs-theme="dark"] .gallery-container {
         background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+
+    [data-bs-theme="dark"] .gallery-container > h5 {
+        color: #e9ecef !important;
+    }
+
+    [data-bs-theme="dark"] .gallery-container > h5 > i {
+        color: #e9ecef !important;
     }
 
     [data-bs-theme="dark"] .gallery-container h5 {
@@ -424,7 +452,7 @@
             </div>
             <div class="ms-3">
                 <h2 class="mb-0 fw-bold">Galería de Fotos</h2>
-                <p class="text-muted mb-0">Informe N° {{ informe.id|stringformat:"010d" }}</p>
+                <p class="subtitle-dark-mode mb-0">Informe N° {{ informe.id|stringformat:"010d" }}</p>
             </div>
         </div>
     </div>
