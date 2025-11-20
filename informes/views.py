@@ -16,6 +16,8 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.conf import settings
 from django.http import HttpResponse
 
+from usuarios.mixins import InformeFilterMixin, SucursalAccessMixin, SucursalFormMixin
+
 from .models import Informe,FotoInforme, VideoInforme, HistorialEnvioInforme, Buses, Sucursales, ExpedienteInforme
 from sucursales.models import Sucursales
 from empleados.models import Empleado
@@ -65,7 +67,7 @@ class ListaInformesBorrarView(View):
        context = {'informes': informes}
        return render(request, self.template_name, context)
 
-class InformeCreateSistemas(CreateView):
+class InformeCreateSistemas(SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_sistemas.html"
@@ -111,7 +113,7 @@ class InformeCreateSistemas(CreateView):
 
         return super().form_valid(form)
 
-class InformeCreateGuardia(CreateView):
+class InformeCreateGuardia(SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_guardia.html"
@@ -157,7 +159,7 @@ class InformeCreateGuardia(CreateView):
 
         return super().form_valid(form)
 
-class InformeCreateSiniestros(CreateView):
+class InformeCreateSiniestros(SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_siniestro.html"
@@ -201,7 +203,7 @@ class InformeCreateSiniestros(CreateView):
 
         return super().form_valid(form)
 
-class InformeCreateTaller(CreateView):
+class InformeCreateTaller(SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_taller.html"
@@ -245,218 +247,162 @@ class InformeCreateTaller(CreateView):
 
         return super().form_valid(form)
 
-class InformeListViewTaller(ListView):
+class InformeListViewTaller(InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_taller.html'
     context_object_name = 'informes'
-    paginate_by = 10  
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related('bus', 'sucursal', 'empleado')
+        # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes
+        queryset = super().get_queryset()
 
-        filtro = self.request.GET.get('filtro', '')
-        fecha_desde = self.request.GET.get('fecha_desde')
-        fecha_hasta = self.request.GET.get('fecha_hasta')
-        sucursal = self.request.GET.get('sucursal')
+        # Filtros específicos de Taller
         legajo = self.request.GET.get('legajo')
         ficha = self.request.GET.get('numero_ficha')
-        origen_fil = self.request.GET.get('origen')
 
         if ficha:
             try:
-                ficha = int(ficha)  
-                queryset = queryset.filter(bus__ficha=ficha)  
+                ficha = int(ficha)
+                queryset = queryset.filter(bus__ficha=ficha)
             except ValueError:
-                pass  
-
-        if filtro:
-            queryset = queryset.filter(titulo__icontains=filtro)
-
-        if fecha_desde:
-            queryset = queryset.filter(fecha_hora__gte=fecha_desde)
-
-        if fecha_hasta:
-            queryset = queryset.filter(fecha_hora__lte=fecha_hasta)
-
-        if sucursal:
-            queryset = queryset.filter(sucursal_id=sucursal)
-        
-        queryset = queryset.filter(origen='Taller')
+                pass
 
         if legajo:
             try:
-                legajo = int(legajo) 
+                legajo = int(legajo)
                 queryset = queryset.filter(empleado__legajo=legajo)
             except ValueError:
-                pass  
-        return queryset.order_by('-fecha_hora')
+                pass
+
+        # Filtrar por origen Taller
+        queryset = queryset.filter(origen='Taller')
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sucursales'] = Sucursales.objects.all()  
         return context
 
-class InformeListViewSiniestro(ListView):
+class InformeListViewSiniestro(InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_siniestros.html'
     context_object_name = 'informes'
-    paginate_by = 10  
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related('bus', 'sucursal', 'empleado')
+        # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes
+        queryset = super().get_queryset()
 
-        filtro = self.request.GET.get('filtro', '')
-        fecha_desde = self.request.GET.get('fecha_desde')
-        fecha_hasta = self.request.GET.get('fecha_hasta')
-        sucursal = self.request.GET.get('sucursal')
+        # Filtros específicos de Siniestros
         legajo = self.request.GET.get('legajo')
         ficha = self.request.GET.get('numero_ficha')
-        origen_fil = self.request.GET.get('origen')
 
         if ficha:
             try:
-                ficha = int(ficha)  
-                queryset = queryset.filter(bus__ficha=ficha)  
+                ficha = int(ficha)
+                queryset = queryset.filter(bus__ficha=ficha)
             except ValueError:
-                pass  
-
-        if filtro:
-            queryset = queryset.filter(titulo__icontains=filtro)
-
-        if fecha_desde:
-            queryset = queryset.filter(fecha_hora__gte=fecha_desde)
-
-        if fecha_hasta:
-            queryset = queryset.filter(fecha_hora__lte=fecha_hasta)
-
-        if sucursal:
-            queryset = queryset.filter(sucursal_id=sucursal)
-        
-        queryset = queryset.filter(origen='Siniestros')
+                pass
 
         if legajo:
             try:
-                legajo = int(legajo) 
+                legajo = int(legajo)
                 queryset = queryset.filter(empleado__legajo=legajo)
             except ValueError:
-                pass  
-        return queryset.order_by('-fecha_hora')
+                pass
+
+        # Filtrar por origen Siniestros
+        queryset = queryset.filter(origen='Siniestros')
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sucursales'] = Sucursales.objects.all()  
         return context
 
-class InformeListViewGuardia(ListView):
+class InformeListViewGuardia(InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_guardia.html'
     context_object_name = 'informes'
-    paginate_by = 10  
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related('bus', 'sucursal', 'empleado')
+        # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes
+        queryset = super().get_queryset()
 
-        filtro = self.request.GET.get('filtro', '')
-        fecha_desde = self.request.GET.get('fecha_desde')
-        fecha_hasta = self.request.GET.get('fecha_hasta')
-        sucursal = self.request.GET.get('sucursal')
+        # Filtros específicos de Guardia
         legajo = self.request.GET.get('legajo')
         ficha = self.request.GET.get('numero_ficha')
-        origen_fil = self.request.GET.get('origen')
 
         if ficha:
             try:
-                ficha = int(ficha)  
-                queryset = queryset.filter(bus__ficha=ficha)  
+                ficha = int(ficha)
+                queryset = queryset.filter(bus__ficha=ficha)
             except ValueError:
-                pass  
-
-        if filtro:
-            queryset = queryset.filter(titulo__icontains=filtro)
-
-        if fecha_desde:
-            queryset = queryset.filter(fecha_hora__gte=fecha_desde)
-
-        if fecha_hasta:
-            queryset = queryset.filter(fecha_hora__lte=fecha_hasta)
-
-        if sucursal:
-            queryset = queryset.filter(sucursal_id=sucursal)
-        
-        queryset = queryset.filter(origen='Guardia')
+                pass
 
         if legajo:
             try:
-                legajo = int(legajo) 
+                legajo = int(legajo)
                 queryset = queryset.filter(empleado__legajo=legajo)
             except ValueError:
-                pass  
-        return queryset.order_by('-fecha_hora')
+                pass
+
+        # Filtrar por origen Guardia
+        queryset = queryset.filter(origen='Guardia')
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sucursales'] = Sucursales.objects.all()  
         return context
 
-class InformeListView(ListView):
+class InformeListView(InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_informes.html'
     context_object_name = 'informes'
     paginate_by = 10  # Paginación de 10 informes por página
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related('bus', 'sucursal', 'empleado')
+        # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes (titulo, fecha, origen)
+        queryset = super().get_queryset()
 
-        filtro = self.request.GET.get('filtro', '')
-        fecha_desde = self.request.GET.get('fecha_desde')
-        fecha_hasta = self.request.GET.get('fecha_hasta')
-        sucursal = self.request.GET.get('sucursal')
+        # Filtros adicionales
         legajo = self.request.GET.get('legajo')
         ficha = self.request.GET.get('numero_ficha')
-        origen_fil = self.request.GET.get('origen')
 
         if ficha:
             try:
-                ficha = int(ficha)  # Convertir 'ficha' a entero
-                queryset = queryset.filter(bus__ficha=ficha)  # Filtrar por el número de ficha
+                ficha = int(ficha)
+                queryset = queryset.filter(bus__ficha=ficha)
             except ValueError:
-                pass  
-
-        if filtro:
-            queryset = queryset.filter(titulo__icontains=filtro)
-
-        if fecha_desde:
-            queryset = queryset.filter(fecha_hora__gte=fecha_desde)
-
-        if fecha_hasta:
-            queryset = queryset.filter(fecha_hora__lte=fecha_hasta)
-
-        if sucursal:
-            queryset = queryset.filter(sucursal_id=sucursal)
-        
-        if origen_fil:
-            queryset = queryset.filter(origen=origen_fil)
+                pass
 
         if legajo:
             try:
-                legajo = int(legajo)  # Esto lo convierte a entero, en caso de ser un número
+                legajo = int(legajo)
                 queryset = queryset.filter(empleado__legajo=legajo)
             except ValueError:
-                pass  # Si no es numérico, no filtra por legaj
-        return queryset.order_by('-fecha_hora')
+                pass
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sucursales'] = Sucursales.objects.all()  
         return context
 
-class InformeCreateView(CreateView):
+class InformeCreateView(SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeForm
     template_name = 'informes/crear_informe.html'
     success_url = reverse_lazy('informes:lista_informes')
 
-class InformeUpdateView(UpdateView):
+class InformeUpdateView(SucursalAccessMixin, UpdateView):
     model = Informe
     form_class = InformeForm
     template_name = 'informes/editar_informe.html'
@@ -912,25 +858,28 @@ def descargar_expediente_pdf(request, expediente_id):
         return HttpResponse(f"Error al generar PDF: {response.status_code}", status=500)
     pass
 
-class InformeCreateInspectores(CreateView):
+class InformeCreateInspectores(SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeForm
     template_name = 'informes/informe_inspectores.html'
     success_url = reverse_lazy('informes:lista_informes')
-    
+
     def form_valid(self, form):
         form.instance.origen = 'Inspectores'
         messages.success(self.request, "✅ Informe de Inspectores creado correctamente")
         return super().form_valid(form)
 
-class InformeListViewInspectores(ListView):
+class InformeListViewInspectores(InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_inspectores.html'
     context_object_name = 'informes'
     paginate_by = 10
-    
+
     def get_queryset(self):
-        return Informe.objects.filter(origen='Inspectores').order_by('-fecha_hora')
+        # InformeFilterMixin ya aplica filtrado por sucursal
+        queryset = super().get_queryset()
+        # Filtrar por origen Inspectores
+        return queryset.filter(origen='Inspectores')
 
 
 
