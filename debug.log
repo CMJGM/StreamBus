@@ -27900,3 +27900,187 @@ Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\http\request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\http\request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Bad Request: /
+Bad Request: /
+"GET / HTTP/1.1" 400 82236
+"GET / HTTP/1.1" 400 82236
+Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\http\request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\http\request.py", line 151, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Bad Request: /favicon.ico
+Bad Request: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 400 82076
+"GET /favicon.ico HTTP/1.1" 400 82076
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 302 0
+"GET / HTTP/1.1" 302 0
+"GET /usuarios/login/?next=/ HTTP/1.1" 200 42503
+"GET /usuarios/login/?next=/ HTTP/1.1" 200 42503
+"GET /static/media/gasf.png HTTP/1.1" 200 16957
+"GET /static/media/gasf.png HTTP/1.1" 200 16957
+"GET /static/js/index.esm.js HTTP/1.1" 200 907
+"GET /static/js/index.esm.js HTTP/1.1" 200 907
+"GET /static/js/index.umd.js HTTP/1.1" 200 874
+"GET /static/js/index.umd.js HTTP/1.1" 200 874
+"GET /static/css/bootstrap/bootstrap.css HTTP/1.1" 200 546989
+"GET /static/css/bootstrap/bootstrap.css HTTP/1.1" 200 546989
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/css/main.css HTTP/1.1" 200 549089
+"GET /static/css/main.css HTTP/1.1" 200 549089
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/js/src/button.js HTTP/1.1" 200 1625
+"GET /static/js/src/alert.js HTTP/1.1" 200 1903
+"GET /static/js/src/alert.js HTTP/1.1" 200 1903
+"GET /static/js/src/button.js HTTP/1.1" 200 1625
+"GET /static/js/src/collapse.js HTTP/1.1" 200 7594
+"GET /static/js/src/modal.js HTTP/1.1" 200 9583
+"GET /static/js/src/modal.js HTTP/1.1" 200 9583
+"GET /static/js/src/collapse.js HTTP/1.1" 200 7594
+"GET /static/js/src/dropdown.js HTTP/1.1" 200 13205
+"GET /static/js/src/carousel.js HTTP/1.1" 200 11817
+"GET /static/js/src/dropdown.js HTTP/1.1" 200 13205
+"GET /static/js/src/carousel.js HTTP/1.1" 200 11817
+"GET /static/js/src/popover.js HTTP/1.1" 200 1870
+"GET /static/js/src/offcanvas.js HTTP/1.1" 200 6806
+"GET /static/js/src/popover.js HTTP/1.1" 200 1870
+"GET /static/js/src/offcanvas.js HTTP/1.1" 200 6806
+"GET /static/js/src/scrollspy.js HTTP/1.1" 200 8474
+"GET /static/js/src/scrollspy.js HTTP/1.1" 200 8474
+"GET /static/js/src/base-component.js HTTP/1.1" 200 1932
+"GET /static/js/src/toast.js HTTP/1.1" 200 5039
+"GET /static/js/src/tab.js HTTP/1.1" 200 9068
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/js/src/base-component.js HTTP/1.1" 200 1932
+"GET /static/js/src/toast.js HTTP/1.1" 200 5039
+"GET /static/js/src/tab.js HTTP/1.1" 200 9068
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/js/src/tooltip.js HTTP/1.1" 200 16031
+"GET /static/js/src/tooltip.js HTTP/1.1" 200 16031
+"GET /static/js/src/util/component-functions.js HTTP/1.1" 200 1114
+"GET /static/js/src/util/component-functions.js HTTP/1.1" 200 1114
+"GET /static/js/src/util/index.js HTTP/1.1" 200 7640
+"GET /static/js/src/util/index.js HTTP/1.1" 200 7640
+"GET /static/js/src/dom/event-handler.js HTTP/1.1" 200 8351
+"GET /static/js/src/dom/event-handler.js HTTP/1.1" 200 8351
+"GET /static/js/src/dom/selector-engine.js HTTP/1.1" 200 3436
+"GET /static/js/src/dom/selector-engine.js HTTP/1.1" 200 3436
+"GET /static/js/src/util/focustrap.js HTTP/1.1" 200 2518
+"GET /static/js/src/util/focustrap.js HTTP/1.1" 200 2518
+"GET /static/js/src/dom/manipulator.js HTTP/1.1" 200 1658
+"GET /static/js/src/util/backdrop.js HTTP/1.1" 200 3127
+"GET /static/js/src/util/backdrop.js HTTP/1.1" 200 3127
+"GET /static/js/src/dom/manipulator.js HTTP/1.1" 200 1658
+"GET /static/js/src/util/scrollbar.js HTTP/1.1" 200 3754
+"GET /static/js/src/util/scrollbar.js HTTP/1.1" 200 3754
+"GET /static/js/src/util/swipe.js HTTP/1.1" 200 3409
+"GET /static/js/src/util/swipe.js HTTP/1.1" 200 3409
+"GET /static/js/src/dom/data.js HTTP/1.1" 200 1395
+"GET /static/js/src/dom/data.js HTTP/1.1" 200 1395
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+"GET /static/js/src/util/config.js HTTP/1.1" 200 1784
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+"GET /static/js/src/util/config.js HTTP/1.1" 200 1784
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 17227
+"GET /favicon.ico HTTP/1.1" 404 17227
+"POST /usuarios/login/?next=/ HTTP/1.1" 302 0
+"POST /usuarios/login/?next=/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 53290
+"GET / HTTP/1.1" 200 53290
+"GET /static/media/img03.png HTTP/1.1" 200 506850
+"GET /static/media/img03.png HTTP/1.1" 200 506850
+"GET /static/media/img02.png HTTP/1.1" 200 651479
+"GET /static/media/img02.png HTTP/1.1" 200 651479
+"GET /static/media/img01.png HTTP/1.1" 200 769542
+"GET /static/media/img01.png HTTP/1.1" 200 769542
+"GET /informes/ HTTP/1.1" 200 78549
+"GET /informes/ HTTP/1.1" 200 78549
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=Sistemas&sucursal= HTTP/1.1" 200 75890
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=Sistemas&sucursal= HTTP/1.1" 200 75890
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=Sistemas&sucursal= HTTP/1.1" 200 74984
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=Sistemas&sucursal= HTTP/1.1" 200 74984
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"GET /informes/ HTTP/1.1" 200 77642
+"GET /informes/ HTTP/1.1" 200 77642
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"POST /usuarios/logout/ HTTP/1.1" 200 39547
+"POST /usuarios/logout/ HTTP/1.1" 200 39547
+"GET /usuarios/login/ HTTP/1.1" 200 41589
+"GET /usuarios/login/ HTTP/1.1" 200 41589
+"POST /usuarios/login/ HTTP/1.1" 302 0
+"POST /usuarios/login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
