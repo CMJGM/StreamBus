@@ -28102,3 +28102,1927 @@ Starting new HTTP connection (1): 190.183.254.253:8088
 http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
 Watching for file changes with StatReloader
 Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54936
+"GET / HTTP/1.1" 200 54936
+"GET /informes/ HTTP/1.1" 200 54428
+"GET /informes/ HTTP/1.1" 200 54428
+"GET /categoria/ HTTP/1.1" 200 52031
+"GET /categoria/ HTTP/1.1" 200 52031
+"GET /empleados/ HTTP/1.1" 200 51380
+"GET /empleados/ HTTP/1.1" 200 51380
+Not Found: /admin.html
+Not Found: /admin.html
+"GET /admin.html HTTP/1.1" 404 17222
+"GET /admin.html HTTP/1.1" 404 17222
+"GET /admin HTTP/1.1" 301 0
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 200 30759
+"GET /admin/ HTTP/1.1" 200 30759
+"GET /static/admin/css/base.css HTTP/1.1" 200 21544
+"GET /static/admin/css/base.css HTTP/1.1" 200 21544
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2682
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2682
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 17905
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 17905
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 28178
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 28178
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6811
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6811
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9042
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9042
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8067
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8067
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33358
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33358
+"GET /static/admin/css/forms.css HTTP/1.1" 200 9090
+"GET /static/admin/css/forms.css HTTP/1.1" 200 9090
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15492
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15492
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11800
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11800
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+"GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+"GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 200 655
+"GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 200 655
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"POST /admin/usuarios/userprofile/add/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/add/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 30476
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 30476
+"GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+"GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33357
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33357
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/usuarios/userprofile/add/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/add/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31009
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31009
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET / HTTP/1.1" 200 54935
+"GET / HTTP/1.1" 200 54935
+"GET /empleados/ HTTP/1.1" 200 59510
+"GET /empleados/ HTTP/1.1" 200 59510
+"POST /usuarios/logout/ HTTP/1.1" 200 39547
+"POST /usuarios/logout/ HTTP/1.1" 200 39547
+"GET /usuarios/login/ HTTP/1.1" 200 41588
+"GET /usuarios/login/ HTTP/1.1" 200 41588
+"POST /usuarios/login/ HTTP/1.1" 200 41610
+"POST /usuarios/login/ HTTP/1.1" 200 41610
+"POST /usuarios/login/ HTTP/1.1" 302 0
+"POST /usuarios/login/ HTTP/1.1" 302 0
+"GET / HTTP/1.1" 200 54934
+"GET / HTTP/1.1" 200 54934
+"GET /admin HTTP/1.1" 301 0
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 17763
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 17763
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2682
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/base.css HTTP/1.1" 200 21544
+"GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2682
+"GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+"GET /static/admin/css/base.css HTTP/1.1" 200 21544
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 17905
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/admin/css/responsive.css HTTP/1.1" 200 17905
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+"GET /static/admin/css/login.css HTTP/1.1" 200 958
+"GET /static/admin/css/login.css HTTP/1.1" 200 958
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 30803
+"GET /admin/ HTTP/1.1" 200 30803
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+"GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 30776
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 30776
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/core.js HTTP/1.1" 200 6208
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6811
+"GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9042
+"GET /static/admin/css/changelists.css HTTP/1.1" 200 6811
+"GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9042
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8067
+"GET /static/admin/js/actions.js HTTP/1.1" 200 8067
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+"GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33357
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33357
+"GET /static/admin/css/forms.css HTTP/1.1" 200 9090
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/css/forms.css HTTP/1.1" 200 9090
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15492
+"GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15492
+"GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11800
+"GET /static/admin/css/widgets.css HTTP/1.1" 200 11800
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+"GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 200 655
+"GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+"GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+"GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 200 655
+"POST /admin/usuarios/userprofile/add/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/add/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31529
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31529
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /empleados/ HTTP/1.1" 200 51379
+"GET /empleados/ HTTP/1.1" 200 51379
+"GET /empleados/crear/ HTTP/1.1" 200 52014
+"GET /empleados/crear/ HTTP/1.1" 200 52014
+"GET / HTTP/1.1" 200 54934
+"GET / HTTP/1.1" 200 54934
+C:\Soft\StreamBus\empleados\urls.py changed, reloading.
+C:\Soft\StreamBus\empleados\urls.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /empleados/ HTTP/1.1" 302 0
+"GET /empleados/ HTTP/1.1" 302 0
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52030
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52030
+"GET /empleados/ HTTP/1.1" 302 0
+"GET /empleados/ HTTP/1.1" 302 0
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52030
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52030
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51942
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51942
+"GET /empleados/lista/ HTTP/1.1" 302 0
+"GET /empleados/lista/ HTTP/1.1" 302 0
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52030
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52030
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51942
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51942
+"POST /empleados/crear/?sucursal=2 HTTP/1.1" 302 0
+"POST /empleados/crear/?sucursal=2 HTTP/1.1" 302 0
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52410
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52410
+"GET /empleados/ HTTP/1.1" 302 0
+"GET /empleados/ HTTP/1.1" 302 0
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52410
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52410
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51942
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51942
+"GET /empleados/lista/ HTTP/1.1" 302 0
+"GET /empleados/lista/ HTTP/1.1" 302 0
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52410
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52410
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33614
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33614
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31542
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31542
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET / HTTP/1.1" 200 54947
+"GET / HTTP/1.1" 200 54947
+"GET /empleados/ HTTP/1.1" 200 53230
+"GET /empleados/ HTTP/1.1" 200 53230
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60161
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60161
+"GET /empleados/ HTTP/1.1" 200 53230
+"GET /empleados/ HTTP/1.1" 200 53230
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52411
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52411
+"GET /empleados/ HTTP/1.1" 200 53230
+"GET /empleados/ HTTP/1.1" 200 53230
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60161
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60161
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 59715
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 59715
+"GET /empleados/ HTTP/1.1" 200 53278
+"GET /empleados/ HTTP/1.1" 200 53278
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 59715
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 59715
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /empleados/ HTTP/1.1" 200 53278
+"GET /empleados/ HTTP/1.1" 200 53278
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 59715
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 59715
+"GET /empleados/ HTTP/1.1" 200 53278
+"GET /empleados/ HTTP/1.1" 200 53278
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52261
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52261
+"GET / HTTP/1.1" 200 54947
+"GET / HTTP/1.1" 200 54947
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52276
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 52276
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51989
+"GET /empleados/crear/?sucursal=2 HTTP/1.1" 200 51989
+"GET /sucursales/ HTTP/1.1" 200 51994
+"GET /sucursales/ HTTP/1.1" 200 51994
+"GET /buses/ HTTP/1.1" 200 57819
+"GET /buses/ HTTP/1.1" 200 57819
+"GET /informes/ HTTP/1.1" 200 78359
+"GET /informes/ HTTP/1.1" 200 78359
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 53043
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 53043
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60544
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60544
+"GET /informes/ HTTP/1.1" 200 77641
+"GET /informes/ HTTP/1.1" 200 77641
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 87946
+"GET /informes/ HTTP/1.1" 200 87946
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33638
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33638
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31526
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31526
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/ HTTP/1.1" 200 87783
+"GET /informes/ HTTP/1.1" 200 87783
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=&sucursal=1 HTTP/1.1" 200 89622
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=&sucursal=1 HTTP/1.1" 200 89622
+"GET /informes/crear/ HTTP/1.1" 200 123954
+"GET /informes/crear/ HTTP/1.1" 200 123954
+"GET /informes/ HTTP/1.1" 200 87782
+"GET /informes/ HTTP/1.1" 200 87782
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33613
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33613
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31542
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31542
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/crear/ HTTP/1.1" 200 124008
+"GET /informes/crear/ HTTP/1.1" 200 124008
+"GET /informes/ HTTP/1.1" 200 87946
+"GET /informes/ HTTP/1.1" 200 87946
+"GET /informes/informes/1545/enviar/?next=/informes/ HTTP/1.1" 200 54389
+"GET /informes/informes/1545/enviar/?next=/informes/ HTTP/1.1" 200 54389
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+Correo enviado correctamente a ['cristian.gudino@empresarecreo.com.ar']
+"POST /informes/informes/1545/enviar/?next=/informes/ HTTP/1.1" 302 0
+"POST /informes/informes/1545/enviar/?next=/informes/ HTTP/1.1" 302 0
+"GET /informes/ HTTP/1.1" 200 88295
+"GET /informes/ HTTP/1.1" 200 88295
+"GET /informes/ HTTP/1.1" 200 89075
+"GET /informes/ HTTP/1.1" 200 89075
+"GET /informes/crear/ HTTP/1.1" 200 124008
+"GET /informes/crear/ HTTP/1.1" 200 124008
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/crear/ HTTP/1.1" 200 65443
+"GET /informes/crear/ HTTP/1.1" 200 65443
+"GET /informes/ajax/buscar-empleados/?q=adr&sucursal_id=2 HTTP/1.1" 200 143
+"GET /informes/ajax/buscar-empleados/?q=adr&sucursal_id=2 HTTP/1.1" 200 143
+"GET /__debug__/history_sidebar/?store_id=403ee2a22af242e0b00f7a66005b257d HTTP/1.1" 200 10291
+"GET /__debug__/history_sidebar/?store_id=403ee2a22af242e0b00f7a66005b257d HTTP/1.1" 200 10291
+Internal Server Error: /informes/ajax/buscar-buses/
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 975, in buscar_buses_ajax
+    buses = Buses.objects.filter(
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'sucursal_id' into field. Choices are: actualizado, ano, creado, dominio, estado, ficha, id, informe, modelo, modelo_id
+Internal Server Error: /informes/ajax/buscar-buses/
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 975, in buscar_buses_ajax
+    buses = Buses.objects.filter(
+            ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1495, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1307, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1772, in names_to_path
+    raise FieldError(
+django.core.exceptions.FieldError: Cannot resolve keyword 'sucursal_id' into field. Choices are: actualizado, ano, creado, dominio, estado, ficha, id, informe, modelo, modelo_id
+"GET /informes/ajax/buscar-buses/?q=270&sucursal_id=2 HTTP/1.1" 500 147234
+"GET /informes/ajax/buscar-buses/?q=270&sucursal_id=2 HTTP/1.1" 500 147234
+"GET /__debug__/history_sidebar/?store_id=a64715ff35374f45ad8fbac2ed7be640 HTTP/1.1" 200 10287
+"GET /__debug__/history_sidebar/?store_id=a64715ff35374f45ad8fbac2ed7be640 HTTP/1.1" 200 10287
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 89075
+"GET /informes/ HTTP/1.1" 200 89075
+"GET /informes/crear/ HTTP/1.1" 200 68593
+"GET /informes/crear/ HTTP/1.1" 200 68593
+"GET /informes/ajax/buscar-empleados/?q=lase&sucursal_id=2 HTTP/1.1" 200 17
+"GET /informes/ajax/buscar-empleados/?q=lase&sucursal_id=2 HTTP/1.1" 200 17
+"GET /__debug__/history_sidebar/?store_id=f5fd173e2a90478fb3e826e8a5dc9099 HTTP/1.1" 200 10292
+"GET /__debug__/history_sidebar/?store_id=f5fd173e2a90478fb3e826e8a5dc9099 HTTP/1.1" 200 10292
+"GET /informes/ajax/buscar-empleados/?q=lass&sucursal_id=2 HTTP/1.1" 200 143
+"GET /informes/ajax/buscar-empleados/?q=lass&sucursal_id=2 HTTP/1.1" 200 143
+"GET /__debug__/history_sidebar/?store_id=83ed707ae0b14808943394fb9cd4a639 HTTP/1.1" 200 10292
+"GET /__debug__/history_sidebar/?store_id=83ed707ae0b14808943394fb9cd4a639 HTTP/1.1" 200 10292
+"GET /informes/ajax/buscar-buses/?q=270 HTTP/1.1" 200 533
+"GET /informes/ajax/buscar-buses/?q=270 HTTP/1.1" 200 533
+"GET /__debug__/history_sidebar/?store_id=992363b6924144649a437cf9ee7e1f18 HTTP/1.1" 200 10265
+"GET /__debug__/history_sidebar/?store_id=992363b6924144649a437cf9ee7e1f18 HTTP/1.1" 200 10265
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 89075
+"GET /informes/ HTTP/1.1" 200 89075
+"GET /informes/crear/ HTTP/1.1" 200 75394
+"GET /informes/crear/ HTTP/1.1" 200 75394
+"GET /informes/ajax/buscar-buses/?q=270 HTTP/1.1" 200 533
+"GET /informes/ajax/buscar-buses/?q=270 HTTP/1.1" 200 533
+"GET /__debug__/history_sidebar/?store_id=f6b90e3c70e14ec1a98378e1175bf2e3 HTTP/1.1" 200 10265
+"GET /__debug__/history_sidebar/?store_id=f6b90e3c70e14ec1a98378e1175bf2e3 HTTP/1.1" 200 10265
+"GET /informes/ajax/buscar-empleados/?q=lass&sucursal_id=2 HTTP/1.1" 200 143
+"GET /informes/ajax/buscar-empleados/?q=lass&sucursal_id=2 HTTP/1.1" 200 143
+"GET /__debug__/history_sidebar/?store_id=030654f02ccb4a1abeafddcc5eb44ab5 HTTP/1.1" 200 10292
+"GET /__debug__/history_sidebar/?store_id=030654f02ccb4a1abeafddcc5eb44ab5 HTTP/1.1" 200 10292
+"POST /informes/crear/ HTTP/1.1" 302 0
+"POST /informes/crear/ HTTP/1.1" 302 0
+"GET /informes/ HTTP/1.1" 200 89057
+"GET /informes/ HTTP/1.1" 200 89057
+"GET /informes/editar/1547/?next=/informes/ HTTP/1.1" 200 54889
+"GET /informes/editar/1547/?next=/informes/ HTTP/1.1" 200 54889
+"GET /informes/ HTTP/1.1" 200 89056
+"GET /informes/ HTTP/1.1" 200 89056
+"GET /informes/informes/1547/foto/?next=/informes/ HTTP/1.1" 200 52169
+"GET /informes/informes/1547/foto/?next=/informes/ HTTP/1.1" 200 52169
+"GET /informes/ HTTP/1.1" 200 89056
+"GET /informes/ HTTP/1.1" 200 89056
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 53939
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 53939
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17468
+"GET /informes/ HTTP/1.1" 200 89056
+"GET /informes/ HTTP/1.1" 200 89056
+"GET /informes/informes/1543/video/?next=/informes/ HTTP/1.1" 200 55236
+"GET /informes/informes/1543/video/?next=/informes/ HTTP/1.1" 200 55236
+Not Found: /media/informes/2610_20251119_0612/V0000001543003.mp4
+Not Found: /media/informes/2610_20251119_0612/V0000001543003.mp4
+"GET /media/informes/2610_20251119_0612/V0000001543003.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2610_20251119_0612/V0000001543003.mp4 HTTP/1.1" 404 17468
+Not Found: /media/informes/2610_20251119_0612/V0000001543001.mp4
+Not Found: /media/informes/2610_20251119_0612/V0000001543002.mp4
+Not Found: /media/informes/2610_20251119_0612/V0000001543001.mp4
+Not Found: /media/informes/2610_20251119_0612/V0000001543002.mp4
+Not Found: /media/informes/2610_20251119_0612/V0000001543004.mp4
+Not Found: /media/informes/2610_20251119_0612/V0000001543004.mp4
+"GET /media/informes/2610_20251119_0612/V0000001543002.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2610_20251119_0612/V0000001543002.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2610_20251119_0612/V0000001543004.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2610_20251119_0612/V0000001543001.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2610_20251119_0612/V0000001543004.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2610_20251119_0612/V0000001543001.mp4 HTTP/1.1" 404 17468
+"GET /informes/?filtro=&fecha_desde=2025-03-18T11%3A02&fecha_hasta=2025-04-08T11%3A02&sucursal= HTTP/1.1" 200 85192
+"GET /informes/?filtro=&fecha_desde=2025-03-18T11%3A02&fecha_hasta=2025-04-08T11%3A02&sucursal= HTTP/1.1" 200 85192
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 65994
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 65994
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/informes/1548/video/?next=/informes/ HTTP/1.1" 200 67350
+"GET /informes/informes/1548/video/?next=/informes/ HTTP/1.1" 200 67350
+Not Found: /media/informes/2381_20251119_1815/V0000001548003.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548003.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548003.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548003.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548002.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548002.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548002.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548002.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548004.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548004.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548004.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548004.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548001.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548001.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548001.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2381_20251119_1815/V0000001548001.mp4 HTTP/1.1" 404 17468
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66494
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66494
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17468
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+"GET /static/js/index.umd.js HTTP/1.1" 200 874
+"GET /static/js/index.umd.js HTTP/1.1" 200 874
+"GET /static/js/index.esm.js HTTP/1.1" 200 907
+"GET /static/js/index.esm.js HTTP/1.1" 200 907
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/css/bootstrap/bootstrap.css HTTP/1.1" 200 546989
+"GET /static/css/main.css HTTP/1.1" 200 549089
+"GET /static/css/bootstrap/bootstrap.css HTTP/1.1" 200 546989
+"GET /static/css/main.css HTTP/1.1" 200 549089
+"GET /static/js/src/alert.js HTTP/1.1" 200 1903
+"GET /static/js/src/alert.js HTTP/1.1" 200 1903
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/js/src/button.js HTTP/1.1" 200 1625
+"GET /static/js/src/button.js HTTP/1.1" 200 1625
+"GET /static/js/src/collapse.js HTTP/1.1" 200 7594
+"GET /static/js/src/carousel.js HTTP/1.1" 200 11817
+"GET /static/js/src/collapse.js HTTP/1.1" 200 7594
+"GET /static/js/src/carousel.js HTTP/1.1" 200 11817
+"GET /static/js/src/modal.js HTTP/1.1" 200 9583
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /static/js/src/modal.js HTTP/1.1" 200 9583
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /static/js/src/dropdown.js HTTP/1.1" 200 13205
+"GET /static/js/src/offcanvas.js HTTP/1.1" 200 6806
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /static/js/src/dropdown.js HTTP/1.1" 200 13205
+"GET /static/js/src/offcanvas.js HTTP/1.1" 200 6806
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /static/js/src/popover.js HTTP/1.1" 200 1870
+"GET /static/js/src/popover.js HTTP/1.1" 200 1870
+"GET /static/js/src/tab.js HTTP/1.1" 200 9068
+"GET /static/js/src/tab.js HTTP/1.1" 200 9068
+"GET /static/js/src/toast.js HTTP/1.1" 200 5039
+"GET /static/js/src/tooltip.js HTTP/1.1" 200 16031
+"GET /static/js/src/toast.js HTTP/1.1" 200 5039
+"GET /static/js/src/scrollspy.js HTTP/1.1" 200 8474
+"GET /static/js/src/tooltip.js HTTP/1.1" 200 16031
+"GET /static/js/src/scrollspy.js HTTP/1.1" 200 8474
+"GET /static/js/src/base-component.js HTTP/1.1" 200 1932
+"GET /static/js/src/base-component.js HTTP/1.1" 200 1932
+"GET /static/js/src/util/component-functions.js HTTP/1.1" 200 1114
+"GET /static/js/src/util/component-functions.js HTTP/1.1" 200 1114
+"GET /static/js/src/dom/event-handler.js HTTP/1.1" 200 8351
+"GET /static/js/src/dom/event-handler.js HTTP/1.1" 200 8351
+"GET /static/js/src/util/index.js HTTP/1.1" 200 7640
+"GET /static/js/src/util/index.js HTTP/1.1" 200 7640
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/js/src/dom/selector-engine.js HTTP/1.1" 200 3436
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/js/src/dom/manipulator.js HTTP/1.1" 200 1658
+"GET /static/js/src/dom/selector-engine.js HTTP/1.1" 200 3436
+"GET /static/js/src/dom/manipulator.js HTTP/1.1" 200 1658
+"GET /static/js/src/util/backdrop.js HTTP/1.1" 200 3127
+"GET /static/js/src/util/backdrop.js HTTP/1.1" 200 3127
+"GET /static/js/src/util/focustrap.js HTTP/1.1" 200 2518
+"GET /static/js/src/util/focustrap.js HTTP/1.1" 200 2518
+"GET /static/js/src/util/swipe.js HTTP/1.1" 200 3409
+"GET /static/js/src/util/scrollbar.js HTTP/1.1" 200 3754
+"GET /static/js/src/util/swipe.js HTTP/1.1" 200 3409
+"GET /static/js/src/util/scrollbar.js HTTP/1.1" 200 3754
+"GET /static/js/src/dom/data.js HTTP/1.1" 200 1395
+"GET /static/js/src/util/config.js HTTP/1.1" 200 1784
+"GET /static/js/src/dom/data.js HTTP/1.1" 200 1395
+"GET /static/js/src/util/config.js HTTP/1.1" 200 1784
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 17227
+"GET /favicon.ico HTTP/1.1" 404 17227
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 66493
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/informes/1548/video/?next=/informes/ HTTP/1.1" 200 67849
+"GET /informes/informes/1548/video/?next=/informes/ HTTP/1.1" 200 67849
+Not Found: /media/informes/2381_20251119_1815/V0000001548002.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548002.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548002.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548002.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548003.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548003.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548004.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548004.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548003.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2381_20251119_1815/V0000001548003.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2381_20251119_1815/V0000001548004.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2381_20251119_1815/V0000001548004.mp4 HTTP/1.1" 404 17468
+Not Found: /media/informes/2381_20251119_1815/V0000001548001.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548001.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548001.mp4 HTTP/1.1" 404 17468
+"GET /media/informes/2381_20251119_1815/V0000001548001.mp4 HTTP/1.1" 404 17468
+"GET /informes/informes-disciplinarios/ HTTP/1.1" 200 56688
+"GET /informes/informes-disciplinarios/ HTTP/1.1" 200 56688
+"GET /media/informes/2591_20250422_0630/F0000000057001.jpg HTTP/1.1" 200 72080
+"GET /media/informes/2591_20250422_0630/F0000000057001.jpg HTTP/1.1" 200 72080
+"GET /media/informes/2591_20250416_0628/F0000000002001.png HTTP/1.1" 200 265837
+"GET /media/informes/2591_20250416_0628/F0000000002001.png HTTP/1.1" 200 265837
+"GET /media/informes/2657_20250421_1745/F0000000130001.png HTTP/1.1" 200 1868262
+"GET /media/informes/2657_20250421_1745/F0000000130001.png HTTP/1.1" 200 1868262
+"GET /media/informes/2657_20250419_1639/F0000000001001.png HTTP/1.1" 200 2831552
+"GET /media/informes/2657_20250419_1639/F0000000001001.png HTTP/1.1" 200 2831552
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 67525
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 67525
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 67525
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 67525
+"GET /static/js/index.esm.js HTTP/1.1" 200 907
+"GET /static/js/index.umd.js HTTP/1.1" 200 874
+"GET /static/js/index.esm.js HTTP/1.1" 200 907
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/js/index.umd.js HTTP/1.1" 200 874
+"GET /static/debug_toolbar/js/toolbar.js HTTP/1.1" 200 14601
+"GET /static/css/bootstrap/bootstrap.css HTTP/1.1" 200 546989
+"GET /static/css/bootstrap/bootstrap.css HTTP/1.1" 200 546989
+"GET /static/css/main.css HTTP/1.1" 200 549089
+"GET /static/css/main.css HTTP/1.1" 200 549089
+"GET /static/js/src/alert.js HTTP/1.1" 200 1903
+"GET /static/js/src/alert.js HTTP/1.1" 200 1903
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/debug_toolbar/css/toolbar.css HTTP/1.1" 200 21178
+"GET /static/js/src/button.js HTTP/1.1" 200 1625
+"GET /static/js/src/button.js HTTP/1.1" 200 1625
+"GET /static/js/src/carousel.js HTTP/1.1" 200 11817
+"GET /static/js/src/carousel.js HTTP/1.1" 200 11817
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /static/js/src/collapse.js HTTP/1.1" 200 7594
+"GET /static/js/src/collapse.js HTTP/1.1" 200 7594
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /static/js/src/dropdown.js HTTP/1.1" 200 13205
+"GET /static/js/src/dropdown.js HTTP/1.1" 200 13205
+"GET /static/js/src/modal.js HTTP/1.1" 200 9583
+"GET /static/js/src/modal.js HTTP/1.1" 200 9583
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /static/js/src/offcanvas.js HTTP/1.1" 200 6806
+"GET /static/js/src/offcanvas.js HTTP/1.1" 200 6806
+"GET /static/js/src/popover.js HTTP/1.1" 200 1870
+"GET /static/js/src/popover.js HTTP/1.1" 200 1870
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /static/js/src/scrollspy.js HTTP/1.1" 200 8474
+"GET /static/js/src/scrollspy.js HTTP/1.1" 200 8474
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /static/js/src/tab.js HTTP/1.1" 200 9068
+"GET /static/js/src/toast.js HTTP/1.1" 200 5039
+"GET /static/js/src/tab.js HTTP/1.1" 200 9068
+"GET /static/js/src/toast.js HTTP/1.1" 200 5039
+"GET /static/js/src/base-component.js HTTP/1.1" 200 1932
+"GET /static/js/src/base-component.js HTTP/1.1" 200 1932
+"GET /static/js/src/dom/event-handler.js HTTP/1.1" 200 8351
+"GET /static/js/src/dom/event-handler.js HTTP/1.1" 200 8351
+"GET /static/js/src/util/component-functions.js HTTP/1.1" 200 1114
+"GET /static/js/src/util/component-functions.js HTTP/1.1" 200 1114
+"GET /static/js/src/tooltip.js HTTP/1.1" 200 16031
+"GET /static/js/src/util/index.js HTTP/1.1" 200 7640
+"GET /static/js/src/dom/manipulator.js HTTP/1.1" 200 1658
+"GET /static/js/src/tooltip.js HTTP/1.1" 200 16031
+"GET /static/js/src/dom/selector-engine.js HTTP/1.1" 200 3436
+"GET /static/js/src/util/index.js HTTP/1.1" 200 7640
+"GET /static/js/src/dom/manipulator.js HTTP/1.1" 200 1658
+"GET /static/js/src/dom/selector-engine.js HTTP/1.1" 200 3436
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/debug_toolbar/js/utils.js HTTP/1.1" 200 4742
+"GET /static/js/src/util/backdrop.js HTTP/1.1" 200 3127
+"GET /static/js/src/util/focustrap.js HTTP/1.1" 200 2518
+"GET /static/js/src/util/focustrap.js HTTP/1.1" 200 2518
+"GET /static/js/src/util/backdrop.js HTTP/1.1" 200 3127
+"GET /static/js/src/util/scrollbar.js HTTP/1.1" 200 3754
+"GET /static/js/src/util/swipe.js HTTP/1.1" 200 3409
+"GET /static/js/src/util/scrollbar.js HTTP/1.1" 200 3754
+"GET /static/js/src/util/swipe.js HTTP/1.1" 200 3409
+"GET /static/js/src/dom/data.js HTTP/1.1" 200 1395
+"GET /static/js/src/util/config.js HTTP/1.1" 200 1784
+"GET /static/js/src/dom/data.js HTTP/1.1" 200 1395
+"GET /static/js/src/util/config.js HTTP/1.1" 200 1784
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+"GET /static/debug_toolbar/css/print.css HTTP/1.1" 200 43
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 17227
+"GET /favicon.ico HTTP/1.1" 404 17227
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 68149
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 68149
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1548/video/?next=/informes/ HTTP/1.1" 200 69508
+"GET /informes/informes/1548/video/?next=/informes/ HTTP/1.1" 200 69508
+Not Found: /media/informes/2381_20251119_1815/V0000001548001.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548001.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548001.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548001.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548003.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548003.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548003.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548003.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548004.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548004.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548004.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548004.mp4 HTTP/1.1" 404 17467
+Not Found: /media/informes/2381_20251119_1815/V0000001548002.mp4
+Not Found: /media/informes/2381_20251119_1815/V0000001548002.mp4
+"GET /media/informes/2381_20251119_1815/V0000001548002.mp4 HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/V0000001548002.mp4 HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 56675
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 56675
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 68292
+"GET /informes/informes/1546/foto/?next=/informes/ HTTP/1.1" 200 68292
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17468
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/editar/1547/?next=/informes/ HTTP/1.1" 200 54889
+"GET /informes/editar/1547/?next=/informes/ HTTP/1.1" 200 54889
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/editar/1545/?next=/informes/ HTTP/1.1" 200 55941
+"GET /informes/editar/1545/?next=/informes/ HTTP/1.1" 200 55941
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+"GET /informes/?filtro=&fecha_desde=2025-03-18T11%3A02&fecha_hasta=2025-04-08T11%3A02&sucursal= HTTP/1.1" 200 85192
+"GET /informes/?filtro=&fecha_desde=2025-03-18T11%3A02&fecha_hasta=2025-04-08T11%3A02&sucursal= HTTP/1.1" 200 85192
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 53044
+"GET /empleados/sucursal/2/ HTTP/1.1" 200 53044
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60544
+"GET /empleados/sucursal/1/ HTTP/1.1" 200 60544
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /empleados/ HTTP/1.1" 200 53301
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33639
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33639
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31527
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31527
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/ HTTP/1.1" 200 88916
+"GET /informes/ HTTP/1.1" 200 88916
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33613
+"GET /admin/usuarios/userprofile/3/change/ HTTP/1.1" 200 33613
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"POST /admin/usuarios/userprofile/3/change/ HTTP/1.1" 302 0
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31542
+"GET /admin/usuarios/userprofile/ HTTP/1.1" 200 31542
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/crear/ HTTP/1.1" 200 75394
+"GET /informes/crear/ HTTP/1.1" 200 75394
+"GET /informes/ajax/buscar-buses/?q=rrrrrr HTTP/1.1" 200 13
+"GET /informes/ajax/buscar-buses/?q=rrrrrr HTTP/1.1" 200 13
+"GET /__debug__/history_sidebar/?store_id=ad65979e639d45599251f9fbf73eb455 HTTP/1.1" 200 10268
+"GET /__debug__/history_sidebar/?store_id=ad65979e639d45599251f9fbf73eb455 HTTP/1.1" 200 10268
+"GET /informes/ajax/buscar-buses/?q=rrrrr HTTP/1.1" 200 13
+"GET /informes/ajax/buscar-buses/?q=rrrrr HTTP/1.1" 200 13
+"GET /__debug__/history_sidebar/?store_id=975a2fb2714b46e59cc17d39c2e538e2 HTTP/1.1" 200 10267
+"GET /__debug__/history_sidebar/?store_id=975a2fb2714b46e59cc17d39c2e538e2 HTTP/1.1" 200 10267
+"GET /informes/ajax/buscar-empleados/?q=adr&sucursal_id=2 HTTP/1.1" 200 143
+"GET /informes/ajax/buscar-empleados/?q=adr&sucursal_id=2 HTTP/1.1" 200 143
+"GET /__debug__/history_sidebar/?store_id=0d3fbcfe6ad94b7f9165fa0a50031fee HTTP/1.1" 200 10291
+"GET /__debug__/history_sidebar/?store_id=0d3fbcfe6ad94b7f9165fa0a50031fee HTTP/1.1" 200 10291
+"GET /informes/ajax/buscar-empleados/?q=713&sucursal_id=2 HTTP/1.1" 200 143
+"GET /informes/ajax/buscar-empleados/?q=713&sucursal_id=2 HTTP/1.1" 200 143
+"GET /__debug__/history_sidebar/?store_id=364fa13c4ae64e35907d9b489b87c39c HTTP/1.1" 200 10291
+"GET /__debug__/history_sidebar/?store_id=364fa13c4ae64e35907d9b489b87c39c HTTP/1.1" 200 10291
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/informes/1539/foto/?next=/informes/ HTTP/1.1" 200 67427
+"GET /informes/informes/1539/foto/?next=/informes/ HTTP/1.1" 200 67427
+Not Found: /media/informes/1739_20251119_0746/F0000001539001.jpg
+Not Found: /media/informes/1739_20251119_0746/F0000001539001.jpg
+"GET /media/informes/1739_20251119_0746/F0000001539001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/1739_20251119_0746/F0000001539001.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/1739_20251119_0746/F0000001539002.jpg
+Not Found: /media/informes/1739_20251119_0746/F0000001539002.jpg
+"GET /media/informes/1739_20251119_0746/F0000001539002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/1739_20251119_0746/F0000001539002.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /buses/ HTTP/1.1" 200 57819
+"GET /buses/ HTTP/1.1" 200 57819
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/editar/1545/?next=/informes/ HTTP/1.1" 200 55941
+"GET /informes/editar/1545/?next=/informes/ HTTP/1.1" 200 55941
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33357
+"GET /admin/usuarios/userprofile/add/ HTTP/1.1" 200 33357
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/auth/user/ HTTP/1.1" 200 59540
+"GET /admin/auth/user/ HTTP/1.1" 200 59540
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /admin/auth/user/16/change/ HTTP/1.1" 200 55548
+"GET /admin/auth/user/16/change/ HTTP/1.1" 200 55548
+"GET /static/admin/js/inlines.js HTTP/1.1" 200 15526
+"GET /static/admin/js/inlines.js HTTP/1.1" 200 15526
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/inline-delete.svg HTTP/1.1" 200 560
+"GET /static/admin/img/inline-delete.svg HTTP/1.1" 200 560
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"POST /admin/auth/user/16/change/ HTTP/1.1" 302 0
+"POST /admin/auth/user/16/change/ HTTP/1.1" 302 0
+"GET /admin/auth/user/ HTTP/1.1" 200 59741
+"GET /admin/auth/user/ HTTP/1.1" 200 59741
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/editar/1545/?next=/informes/ HTTP/1.1" 200 72600
+"GET /informes/editar/1545/?next=/informes/ HTTP/1.1" 200 72600
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545002.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+Not Found: /media/informes/2619_20251119_2128/F0000001545001.jpg
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2619_20251119_2128/F0000001545001.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 73253
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 73253
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17468
+"GET /informes/informes/informe_sistemas/ HTTP/1.1" 200 126661
+"GET /informes/informes/informe_sistemas/ HTTP/1.1" 200 126661
+"GET /static/ruta/a/tu/loading.gif HTTP/1.1" 404 1923
+"GET /static/ruta/a/tu/loading.gif HTTP/1.1" 404 1923
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 73006
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 73006
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89079
+"GET /informes/ HTTP/1.1" 200 89079
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Error al obtener sucursales del usuario adrian.yommi: ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]El nombre de columna 'puede_usar_todos_origenes' no es válido. (207) (SQLExecDirectW); [42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]No se puede preparar la instrucción o instrucciones. (8180)")
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /admin/auth/user/ HTTP/1.1" 200 59837
+"GET /admin/auth/user/ HTTP/1.1" 200 59837
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/auth/user/4/change/ HTTP/1.1" 200 62005
+"GET /admin/auth/user/4/change/ HTTP/1.1" 200 62005
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+"POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+"GET /admin/auth/user/ HTTP/1.1" 200 60040
+"GET /admin/auth/user/ HTTP/1.1" 200 60040
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/ HTTP/1.1" 200 89080
+"GET /informes/ HTTP/1.1" 200 89080
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+C:\Soft\StreamBus\informes\forms.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 73052
+"GET /informes/editar/1546/?next=/informes/ HTTP/1.1" 200 73052
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546002.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546002.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546003.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546003.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546004.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546004.jpg HTTP/1.1" 404 17467
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+Not Found: /media/informes/2678_20251120_0426/F0000001546001.jpg
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+"GET /media/informes/2678_20251120_0426/F0000001546001.jpg HTTP/1.1" 404 17467
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /admin/auth/user/4/change/ HTTP/1.1" 200 62024
+"GET /admin/auth/user/4/change/ HTTP/1.1" 200 62024
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+"POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+"GET /admin/auth/user/ HTTP/1.1" 200 60159
+"GET /admin/auth/user/ HTTP/1.1" 200 60159
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/auth/user/4/change/ HTTP/1.1" 200 62015
+"GET /admin/auth/user/4/change/ HTTP/1.1" 200 62015
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /informes/ HTTP/1.1" 200 88720
+"GET /informes/ HTTP/1.1" 200 88720
+"GET / HTTP/1.1" 200 54947
+"GET / HTTP/1.1" 200 54947
+"GET /informes/ HTTP/1.1" 200 88721
+"GET /informes/ HTTP/1.1" 200 88721
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 89059
+"GET /informes/ HTTP/1.1" 200 89059
+"GET /informes/informes/1540/foto/?next=/informes/ HTTP/1.1" 200 67150
+"GET /informes/informes/1540/foto/?next=/informes/ HTTP/1.1" 200 67150
+Not Found: /media/informes/1919_20251118_1702/F0000001540001.png
+Not Found: /media/informes/1919_20251118_1702/F0000001540001.png
+"GET /media/informes/1919_20251118_1702/F0000001540001.png HTTP/1.1" 404 17467
+"GET /media/informes/1919_20251118_1702/F0000001540001.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1919_20251118_1702/F0000001540002.png
+Not Found: /media/informes/1919_20251118_1702/F0000001540002.png
+"GET /media/informes/1919_20251118_1702/F0000001540002.png HTTP/1.1" 404 17467
+"GET /media/informes/1919_20251118_1702/F0000001540002.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 89058
+"GET /informes/ HTTP/1.1" 200 89058
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=5&sucursal= HTTP/1.1" 200 85055
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=5&sucursal= HTTP/1.1" 200 85055
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=1&sucursal= HTTP/1.1" 200 87648
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=1&sucursal= HTTP/1.1" 200 87648
+C:\Soft\StreamBus\usuarios\mixins.py changed, reloading.
+C:\Soft\StreamBus\usuarios\mixins.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 87484
+"GET /informes/ HTTP/1.1" 200 87484
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=1&sucursal= HTTP/1.1" 200 89334
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=1&sucursal= HTTP/1.1" 200 89334
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=5&sucursal= HTTP/1.1" 200 86762
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=5&sucursal= HTTP/1.1" 200 86762
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=&sucursal= HTTP/1.1" 200 88561
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=&sucursal= HTTP/1.1" 200 88561
+"GET /informes/crear/ HTTP/1.1" 200 75288
+"GET /informes/crear/ HTTP/1.1" 200 75288
+"GET /informes/editar/1548/?next=/informes/ HTTP/1.1" 200 71816
+"GET /informes/editar/1548/?next=/informes/ HTTP/1.1" 200 71816
+Not Found: /media/informes/2381_20251119_1815/F0000001548001.png
+Not Found: /media/informes/2381_20251119_1815/F0000001548001.png
+"GET /media/informes/2381_20251119_1815/F0000001548001.png HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/F0000001548001.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 87483
+"GET /informes/ HTTP/1.1" 200 87483
+"GET /informes/informes/1548/enviar/?next=/informes/ HTTP/1.1" 200 53975
+"GET /informes/informes/1548/enviar/?next=/informes/ HTTP/1.1" 200 53975
+Not Found: /media/informes/2381_20251119_1815/F0000001548001.png
+Not Found: /media/informes/2381_20251119_1815/F0000001548001.png
+"GET /media/informes/2381_20251119_1815/F0000001548001.png HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/F0000001548001.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 87484
+"GET /informes/ HTTP/1.1" 200 87484
+"GET /informes/ HTTP/1.1" 200 88945
+"GET /informes/ HTTP/1.1" 200 88945
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=5&sucursal= HTTP/1.1" 200 88244
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=&fecha_hasta=&origen=5&sucursal= HTTP/1.1" 200 88244
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=2025-11-01T12%3A45&fecha_hasta=2025-11-08T12%3A45&origen=&sucursal= HTTP/1.1" 200 88493
+"GET /informes/?filtro=&numero_ficha=&legajo=&fecha_desde=2025-11-01T12%3A45&fecha_hasta=2025-11-08T12%3A45&origen=&sucursal= HTTP/1.1" 200 88493
+"GET /informes/?page=2&filtro=&fecha_desde=2025-11-01T12:45&fecha_hasta=2025-11-08T12:45&sucursal=&legajo=&numero_ficha=&origen= HTTP/1.1" 200 81154
+"GET /informes/?page=2&filtro=&fecha_desde=2025-11-01T12:45&fecha_hasta=2025-11-08T12:45&sucursal=&legajo=&numero_ficha=&origen= HTTP/1.1" 200 81154
+"GET /informes/informes/1460/enviar/?next=/informes/?page=2&filtro=&fecha_desde=2025-11-01T12:45&fecha_hasta=2025-11-08T12:45&sucursal=&legajo=&numero_ficha=&origen= HTTP/1.1" 200 54408
+"GET /informes/informes/1460/enviar/?next=/informes/?page=2&filtro=&fecha_desde=2025-11-01T12:45&fecha_hasta=2025-11-08T12:45&sucursal=&legajo=&numero_ficha=&origen= HTTP/1.1" 200 54408
+Not Found: /media/informes/2609_20251104_1341/F0000001460001.png
+Not Found: /media/informes/2609_20251104_1341/F0000001460001.png
+"GET /media/informes/2609_20251104_1341/F0000001460001.png HTTP/1.1" 404 17467
+"GET /media/informes/2609_20251104_1341/F0000001460001.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+Internal Server Error: /informes/lista_guardia
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2113, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Guardia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\list.py", line 154, in get
+    self.object_list = self.get_queryset()
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 356, in get_queryset
+    queryset = queryset.filter(origen='Guardia')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1389, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\related_lookups.py", line 156, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2115, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Guardia'.
+Internal Server Error: /informes/lista_guardia
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2113, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Guardia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\list.py", line 154, in get
+    self.object_list = self.get_queryset()
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 356, in get_queryset
+    queryset = queryset.filter(origen='Guardia')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1389, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\related_lookups.py", line 156, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2115, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Guardia'.
+"GET /informes/lista_guardia HTTP/1.1" 500 170982
+"GET /informes/lista_guardia HTTP/1.1" 500 170982
+Internal Server Error: /informes/lista_taller/
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2113, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Taller'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\list.py", line 154, in get
+    self.object_list = self.get_queryset()
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 280, in get_queryset
+    queryset = queryset.filter(origen='Taller')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1389, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\related_lookups.py", line 156, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2115, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Taller'.
+Internal Server Error: /informes/lista_taller/
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2113, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Taller'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\list.py", line 154, in get
+    self.object_list = self.get_queryset()
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 280, in get_queryset
+    queryset = queryset.filter(origen='Taller')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1389, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\related_lookups.py", line 156, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2115, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Taller'.
+"GET /informes/lista_taller/ HTTP/1.1" 500 170946
+"GET /informes/lista_taller/ HTTP/1.1" 500 170946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/informes/1548/enviar/?next=/informes/ HTTP/1.1" 200 62177
+"GET /informes/informes/1548/enviar/?next=/informes/ HTTP/1.1" 200 62177
+Not Found: /media/informes/2381_20251119_1815/F0000001548001.png
+Not Found: /media/informes/2381_20251119_1815/F0000001548001.png
+"GET /media/informes/2381_20251119_1815/F0000001548001.png HTTP/1.1" 404 17467
+"GET /media/informes/2381_20251119_1815/F0000001548001.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/informes/1510/enviar/?next=/informes/ HTTP/1.1" 200 62915
+"GET /informes/informes/1510/enviar/?next=/informes/ HTTP/1.1" 200 62915
+Not Found: /media/informes/2613_20251112_2050/F0000001510001.png
+Not Found: /media/informes/2613_20251112_2050/F0000001510001.png
+"GET /media/informes/2613_20251112_2050/F0000001510001.png HTTP/1.1" 404 17467
+"GET /media/informes/2613_20251112_2050/F0000001510001.png HTTP/1.1" 404 17467
+Not Found: /media/informes/2613_20251112_2050/F0000001510002.png
+Not Found: /media/informes/2613_20251112_2050/F0000001510002.png
+"GET /media/informes/2613_20251112_2050/F0000001510002.png HTTP/1.1" 404 17467
+"GET /media/informes/2613_20251112_2050/F0000001510002.png HTTP/1.1" 404 17467
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/informes/1510/enviar/?next=/informes/ HTTP/1.1" 200 62915
+"GET /informes/informes/1510/enviar/?next=/informes/ HTTP/1.1" 200 62915
+Not Found: /media/informes/2613_20251112_2050/F0000001510002.png
+Not Found: /media/informes/2613_20251112_2050/F0000001510002.png
+"GET /media/informes/2613_20251112_2050/F0000001510002.png HTTP/1.1" 404 17467
+"GET /media/informes/2613_20251112_2050/F0000001510002.png HTTP/1.1" 404 17467
+Not Found: /media/informes/2613_20251112_2050/F0000001510001.png
+Not Found: /media/informes/2613_20251112_2050/F0000001510001.png
+"GET /media/informes/2613_20251112_2050/F0000001510001.png HTTP/1.1" 404 17467
+"GET /media/informes/2613_20251112_2050/F0000001510001.png HTTP/1.1" 404 17467
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/informes/1543/enviar/?next=/informes/ HTTP/1.1" 200 62217
+"GET /informes/informes/1543/enviar/?next=/informes/ HTTP/1.1" 200 62217
+Not Found: /media/informes/2610_20251119_0612/F0000001543001.png
+Not Found: /media/informes/2610_20251119_0612/F0000001543001.png
+"GET /media/informes/2610_20251119_0612/F0000001543001.png HTTP/1.1" 404 17467
+"GET /media/informes/2610_20251119_0612/F0000001543001.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 88945
+"GET /informes/ HTTP/1.1" 200 88945
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 54948
+"GET / HTTP/1.1" 200 54948
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/informes/1535/enviar/?next=/informes/ HTTP/1.1" 200 63633
+"GET /informes/informes/1535/enviar/?next=/informes/ HTTP/1.1" 200 63633
+Not Found: /media/informes/1844_20251114_1758/F0000001535002.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535002.png
+"GET /media/informes/1844_20251114_1758/F0000001535002.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535002.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1844_20251114_1758/F0000001535003.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535004.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535003.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535004.png
+"GET /media/informes/1844_20251114_1758/F0000001535004.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535003.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535004.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535003.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1844_20251114_1758/F0000001535001.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535001.png
+"GET /media/informes/1844_20251114_1758/F0000001535001.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535001.png HTTP/1.1" 404 17467
+C:\Soft\StreamBus\empleados\models.py changed, reloading.
+C:\Soft\StreamBus\empleados\models.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/informes/1535/enviar/?next=/informes/ HTTP/1.1" 200 63658
+"GET /informes/informes/1535/enviar/?next=/informes/ HTTP/1.1" 200 63658
+Not Found: /media/informes/1844_20251114_1758/F0000001535004.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535004.png
+"GET /media/informes/1844_20251114_1758/F0000001535004.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535004.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1844_20251114_1758/F0000001535003.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535003.png
+"GET /media/informes/1844_20251114_1758/F0000001535003.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535003.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1844_20251114_1758/F0000001535002.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535002.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535001.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535001.png
+"GET /media/informes/1844_20251114_1758/F0000001535002.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535002.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535001.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535001.png HTTP/1.1" 404 17467
+"GET /informes/informes/1535/enviar/?next=/informes/ HTTP/1.1" 200 63664
+"GET /informes/informes/1535/enviar/?next=/informes/ HTTP/1.1" 200 63664
+Not Found: /media/informes/1844_20251114_1758/F0000001535004.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535004.png
+"GET /media/informes/1844_20251114_1758/F0000001535004.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535004.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1844_20251114_1758/F0000001535003.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535003.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535002.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535001.png
+Not Found: /media/informes/1844_20251114_1758/F0000001535002.png
+"GET /media/informes/1844_20251114_1758/F0000001535003.png HTTP/1.1" 404 17467
+Not Found: /media/informes/1844_20251114_1758/F0000001535001.png
+"GET /media/informes/1844_20251114_1758/F0000001535003.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535002.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535002.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535001.png HTTP/1.1" 404 17467
+"GET /media/informes/1844_20251114_1758/F0000001535001.png HTTP/1.1" 404 17467
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+Internal Server Error: /informes/lista_guardia
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2113, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Guardia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\list.py", line 154, in get
+    self.object_list = self.get_queryset()
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 356, in get_queryset
+    queryset = queryset.filter(origen='Guardia')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1389, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\related_lookups.py", line 156, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2115, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Guardia'.
+Internal Server Error: /informes/lista_guardia
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2113, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Guardia'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\contrib\auth\mixins.py", line 73, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\views\generic\list.py", line 154, in get
+    self.object_list = self.get_queryset()
+                       ^^^^^^^^^^^^^^^^^^^
+  File "C:\Soft\StreamBus\informes\views.py", line 356, in get_queryset
+    queryset = queryset.filter(origen='Guardia')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1476, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1494, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\query.py", line 1501, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1613, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1645, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1559, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\sql\query.py", line 1389, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\lookups.py", line 30, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\related_lookups.py", line 156, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\DELL\.conda\envs\Django\Lib\site-packages\django\db\models\fields\__init__.py", line 2115, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'Guardia'.
+"GET /informes/lista_guardia HTTP/1.1" 500 170981
+"GET /informes/lista_guardia HTTP/1.1" 500 170981
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+C:\Soft\StreamBus\informes\views.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/lista_guardia HTTP/1.1" 200 55450
+"GET /informes/lista_guardia HTTP/1.1" 200 55450
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/ HTTP/1.1" 200 88946
+"GET /informes/lista_siniestro HTTP/1.1" 200 70475
+"GET /informes/lista_siniestro HTTP/1.1" 200 70475
+"GET /informes/lista_guardia HTTP/1.1" 200 55448
+"GET /informes/lista_guardia HTTP/1.1" 200 55448
+"POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+"POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+"GET /admin/auth/user/ HTTP/1.1" 200 60159
+"GET /admin/auth/user/ HTTP/1.1" 200 60159
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /informes/lista_guardia HTTP/1.1" 200 79347
+"GET /informes/lista_guardia HTTP/1.1" 200 79347
+"GET /informes/lista_siniestro HTTP/1.1" 200 70475
+"GET /informes/lista_siniestro HTTP/1.1" 200 70475
+"GET /informes/lista_taller/ HTTP/1.1" 200 53835
+"GET /informes/lista_taller/ HTTP/1.1" 200 53835
+"GET /informes/ HTTP/1.1" 200 92169
+"GET /informes/ HTTP/1.1" 200 92169
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 1790
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET /informes/lista_guardia HTTP/1.1" 200 89014
+"GET /informes/lista_guardia HTTP/1.1" 200 89014
+"GET /informes/ HTTP/1.1" 200 92169
+"GET /informes/ HTTP/1.1" 200 92169
