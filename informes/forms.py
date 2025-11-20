@@ -19,8 +19,13 @@ class InformeGuardia(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         self.fields['origen'].initial = 'Guardia'
+
+        # Filtrar sucursales según permisos del usuario
+        if user and hasattr(user, 'profile'):
+            self.fields['sucursal'].queryset = user.profile.get_sucursales_permitidas()
 
 class InformeForm(forms.ModelForm):    
 
@@ -48,11 +53,16 @@ class InformeForm(forms.ModelForm):
         }
    
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        self.fields['empleado'].required = False  
-        self.fields['empleado'].queryset = Empleado.objects.order_by('apellido', 'nombre')        
-        self.fields['bus'].required = False  
-        self.fields['bus'].queryset = Buses.objects.order_by('ficha')        
+        self.fields['empleado'].required = False
+        self.fields['empleado'].queryset = Empleado.objects.order_by('apellido', 'nombre')
+        self.fields['bus'].required = False
+        self.fields['bus'].queryset = Buses.objects.order_by('ficha')
+
+        # Filtrar sucursales según permisos del usuario
+        if user and hasattr(user, 'profile'):
+            self.fields['sucursal'].queryset = user.profile.get_sucursales_permitidas()
 
         if 'fecha_hora' in self.fields and self.instance and self.instance.pk and self.instance.fecha_hora:
             local_dt = localtime(self.instance.fecha_hora)

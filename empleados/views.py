@@ -4,30 +4,26 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Empleado
 from .forms import EmpleadoForm
+from usuarios.mixins import EmpleadoFilterMixin, SucursalAccessMixin
 
-class EmpleadoListView(ListView):
+class EmpleadoListView(EmpleadoFilterMixin, ListView):
     model = Empleado
     template_name = 'empleados/lista_empleados.html'
     context_object_name = 'empleados'
     paginate_by = 10
 
     def get_queryset(self):
+        # EmpleadoFilterMixin ya aplica filtrado por sucursal y apellido
         queryset = super().get_queryset()
-        filtro = self.request.GET.get('filtro', '').strip()
+
+        # Manejar ordenamiento adicional
         orden = self.request.GET.get('orden', '')
-
-        if filtro:
-            queryset = queryset.filter(apellido__icontains=filtro)
-
         if orden == 'apellido_asc':
             queryset = queryset.order_by('apellido')
         elif orden == 'apellido_desc':
             queryset = queryset.order_by('-apellido')
-        else:
-            queryset = queryset.order_by("apellido")
 
         return queryset
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,7 +66,7 @@ class EmpleadoCreateView(SuccessMessageMixin, CreateView):
         return super().form_invalid(form)
 
 
-class EmpleadoUpdateView(SuccessMessageMixin, UpdateView):
+class EmpleadoUpdateView(SucursalAccessMixin, SuccessMessageMixin, UpdateView):
     model = Empleado
     form_class = EmpleadoForm
     template_name = 'empleados/form_empleado.html'
