@@ -4,15 +4,13 @@
 {% block content %}
 <div class="container mt-4" style="max-width: 70%;">
     <!-- Encabezado con sucursal -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">
-                <i class="bi bi-people-fill"></i> Empleados
+            <h2 class="mb-2">
+                <i class="bi bi-people-fill"></i> Empleados de {{ sucursal.nombre }}
             </h2>
             <p class="text-muted mb-0">
-                <i class="bi bi-building"></i>
-                <strong>{{ sucursal.nombre }}</strong>
-                <span class="badge bg-secondary ms-2">{{ total_empleados }} empleado{{ total_empleados|pluralize }}</span>
+                <span class="badge bg-secondary">{{ total_empleados }} empleado{{ total_empleados|pluralize }}</span>
             </p>
         </div>
         <div>
@@ -56,7 +54,6 @@
                 <th>Apellido</th>
                 <th>Nombre</th>
                 <th>Categoría</th>
-                <th>Sucursal</th>
                 <th>Fecha Ingreso</th>
                 <th>Acciones</th>
             </tr>
@@ -68,7 +65,6 @@
                     <td>{{ empleado.apellido }}</td>
                     <td>{{ empleado.nombre }}</td>
                     <td>{{ empleado.categoria.descripcion }}</td>
-                    <td>{{ empleado.sucursal.abreviatura }}</td>
                     <td>{{ empleado.fecha_ingreso|date:"d/m/Y" }}</td>
                     <td>
                         <a href="{% url 'editar_empleado' empleado.pk %}" class="btn btn-sm btn-warning">
@@ -78,7 +74,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="7" class="text-center">No se encontraron empleados.</td>
+                    <td colspan="6" class="text-center">No se encontraron empleados.</td>
                 </tr>
             {% endfor %}
         </tbody>
