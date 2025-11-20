@@ -98,6 +98,12 @@ class InformeForm(forms.ModelForm):
                 local_dt = localtime(self.instance.fecha_hora)
                 self.initial['fecha_hora'] = local_dt.strftime('%Y-%m-%dT%H:%M')
 
+            # En edición, hacer sucursal y bus readonly
+            self.fields['sucursal'].widget.attrs['disabled'] = 'disabled'
+            self.fields['sucursal'].required = False  # Disabled fields don't submit, so make it not required
+            self.fields['bus_search'].widget.attrs['readonly'] = 'readonly'
+            self.fields['bus_search'].widget.attrs['disabled'] = 'disabled'
+
 class InformeFiltroForm(forms.Form):
     filtro = forms.CharField(required=False, label='Título')
     fecha_desde = forms.DateTimeField(required=False,widget=forms.DateTimeInput(attrs={'type': 'datetime-local','class': 'form-control'}))

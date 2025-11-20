@@ -1,142 +1,579 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+<style>
+    /* Header Moderno */
+    .header-editar {
+        margin-bottom: 2rem;
+    }
+
+    .icon-circle-editar {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    }
+
+    .icon-circle-editar i {
+        color: white;
+    }
+
+    /* Cards Modernos */
+    .card-modern {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+    .card-modern:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-section {
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+    }
+
+    .card-section h5 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-label-dark {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4facfe;
+        box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+    }
+
+    .form-control:disabled, .form-select:disabled {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+    /* Campos de búsqueda Ajax */
+    .search-field-wrapper {
+        position: relative;
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        pointer-events: none;
+    }
+
+    .autocomplete-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+    .autocomplete-results.show {
+        display: block;
+    }
+
+    .autocomplete-item {
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s ease;
+    }
+
+    .autocomplete-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .autocomplete-item:last-child {
+        border-bottom: none;
+    }
+
+    .autocomplete-loading {
+        padding: 0.75rem 1rem;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    /* Selection Badge */
+    .selection-badge {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 2px solid #b1dfbb;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        animation: slideDown 0.3s ease;
+    }
+
+    .selection-badge.show {
+        display: flex;
+    }
+
+    .selection-badge .badge-text {
+        color: #155724;
+        font-weight: 500;
+    }
+
+    .selection-badge .clear-btn {
+        background: #155724;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 0.25rem 0.75rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+
+    .selection-badge .clear-btn:hover {
+        background: #0d3d1a;
+    }
+
+    /* Readonly Badge */
+    .readonly-badge {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        border: 2px solid #ced4da;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-top: 0.5rem;
+        color: #495057;
+        font-weight: 500;
+    }
+
+    /* Botones Modernos */
+    .btn-modern-save {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-modern-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+        color: white;
+    }
+
+    .btn-modern-back {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        border: none;
+        color: #2c3e50;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-modern-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(168, 237, 234, 0.3);
+        color: #2c3e50;
+    }
+
+    /* Galería de Imágenes */
+    .images-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: sticky;
+        top: 20px;
+    }
+
+    .images-card .card-header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border: none;
+    }
+
+    .images-card .card-header-gradient h6 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .images-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .images-grid.single-image {
+        grid-template-columns: 1fr;
+    }
+
+    .image-thumbnail {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .image-thumbnail:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-thumbnail img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    /* Modo Oscuro */
+    @media (prefers-color-scheme: dark) {
+        .card-modern {
+            background-color: #1e2530;
+        }
+
+        .card-section {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        .card-section h5 {
+            color: #e9ecef;
+        }
+
+        .form-label-dark {
+            color: #adb5bd;
+        }
+
+        .form-control, .form-select {
+            background-color: #2c3e50;
+            border-color: #495057;
+            color: #e9ecef;
+        }
+
+        .form-control:disabled, .form-select:disabled {
+            background-color: #1e2530;
+            color: #6c757d;
+        }
+
+        .autocomplete-results {
+            background-color: #2c3e50;
+            border-color: #495057;
+        }
+
+        .autocomplete-item {
+            color: #e9ecef;
+            border-bottom-color: #495057;
+        }
+
+        .autocomplete-item:hover {
+            background-color: #34495e;
+        }
+
+        .readonly-badge {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border-color: #495057;
+            color: #adb5bd;
+        }
+
+        .images-card {
+            background-color: #1e2530;
+        }
+    }
+
+    [data-bs-theme="dark"] .card-modern {
+        background-color: #1e2530;
+    }
+
+    [data-bs-theme="dark"] .card-section {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+
+    [data-bs-theme="dark"] .card-section h5 {
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .form-label-dark {
+        color: #adb5bd;
+    }
+
+    [data-bs-theme="dark"] .form-control,
+    [data-bs-theme="dark"] .form-select {
+        background-color: #2c3e50;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .form-control:disabled,
+    [data-bs-theme="dark"] .form-select:disabled {
+        background-color: #1e2530;
+        color: #6c757d;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-results {
+        background-color: #2c3e50;
+        border-color: #495057;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item {
+        color: #e9ecef;
+        border-bottom-color: #495057;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item:hover {
+        background-color: #34495e;
+    }
+
+    [data-bs-theme="dark"] .readonly-badge {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        border-color: #495057;
+        color: #adb5bd;
+    }
+
+    [data-bs-theme="dark"] .images-card {
+        background-color: #1e2530;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 <div class="container mt-4">
+    <!-- Header -->
+    <div class="header-editar mb-4">
+        <div class="d-flex align-items-center">
+            <div class="icon-circle-editar">
+                <i class="bi bi-pencil-square fs-3"></i>
+            </div>
+            <div class="ms-3">
+                <h2 class="mb-0 fw-bold">Editar Informe</h2>
+                <p class="text-muted mb-0">N° {{ informe.id|stringformat:"010d" }}</p>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <!-- Card de Edición (8 columnas) -->
-        <div class="col-lg-8 mb-4">
-            <div class="card shadow">
-                <div class="card-header text-white" style="background-color: #5bc0de;">
-                    <h5 class="mb-0">✏️ Editar Informe Nº {{ informe.id|stringformat:"010d" }}</h5>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" class="row g-3">
+        <!-- Columna izquierda: Formulario (8 columnas) -->
+        <div class="col-lg-8">
+            <div class="card-modern">
+                <div style="padding: 2rem;">
+                    <form method="post" id="editForm">
                         {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
 
-                        <!-- Título -->
-                        <div class="col-12">
-                            <input type="hidden" name="next" value="{{ request.GET.next }}">
-                            <label for="id_titulo" class="form-label fw-semibold">Título</label>
-                            {{ form.titulo }}
-                            {% if form.titulo.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.titulo.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                        <!-- Hidden fields for actual values -->
+                        {{ form.empleado }}
+                        {{ form.bus }}
+
+                        <!-- Sección: Información General -->
+                        <div class="card-section">
+                            <h5>
+                                <i class="bi bi-info-circle"></i>
+                                Información General
+                            </h5>
+
+                            <div class="mb-3">
+                                <label for="id_titulo" class="form-label form-label-dark">
+                                    Título <span class="text-danger">*</span>
+                                </label>
+                                {{ form.titulo }}
+                                {% if form.titulo.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.titulo.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="id_descripcion" class="form-label form-label-dark">
+                                    Descripción
+                                </label>
+                                {{ form.descripcion }}
+                                {% if form.descripcion.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.descripcion.errors %}{{ error }}{% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
 
-                        <!-- Descripción -->
-                        <div class="col-12">
-                            <label for="id_descripcion" class="form-label fw-semibold">Descripción</label>
-                            {{ form.descripcion }}
-                            {% if form.descripcion.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.descripcion.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
+                        <!-- Sección: Datos del Evento -->
+                        <div class="card-section">
+                            <h5>
+                                <i class="bi bi-calendar-event"></i>
+                                Datos del Evento
+                            </h5>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_fecha_hora" class="form-label form-label-dark">
+                                        Fecha y Hora <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.fecha_hora }}
+                                    {% if form.fecha_hora.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.fecha_hora.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="id_sucursal" class="form-label form-label-dark">
+                                        Sucursal <span class="text-danger">*</span>
+                                        <small class="text-muted">(no modificable)</small>
+                                    </label>
+                                    {{ form.sucursal }}
+                                    {% if form.sucursal.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.sucursal.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-12 mb-0">
+                                    <label for="id_origen" class="form-label form-label-dark">
+                                        Origen <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.origen }}
+                                    {% if form.origen.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {% for error in form.origen.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Fecha y Hora -->
-                        <div class="col-md-6">
-                            <label for="id_fecha_hora" class="form-label fw-semibold">Fecha y Hora</label>
-                            {{ form.fecha_hora }}
-                            {% if form.fecha_hora.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.fecha_hora.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
+                        <!-- Sección: Unidad y Personal -->
+                        <div class="card-section">
+                            <h5>
+                                <i class="bi bi-people"></i>
+                                Unidad y Personal Involucrado
+                            </h5>
+
+                            <!-- Bus (readonly) -->
+                            <div class="mb-3">
+                                <label class="form-label form-label-dark">
+                                    <i class="bi bi-bus-front text-danger"></i>
+                                    Bus <span class="text-danger">*</span>
+                                    <small class="text-muted">(no modificable)</small>
+                                </label>
+                                {{ form.bus_search }}
+                                <div class="readonly-badge">
+                                    <i class="bi bi-lock me-2"></i>
+                                    {{ form.bus_search.value|default:"No especificado" }}
                                 </div>
-                            {% endif %}
+                            </div>
+
+                            <!-- Empleado (modificable con Ajax) -->
+                            <div class="mb-0">
+                                <label for="id_empleado_search" class="form-label form-label-dark">
+                                    <i class="bi bi-person text-info"></i>
+                                    Empleado <small class="text-muted">(opcional)</small>
+                                </label>
+                                <div class="search-field-wrapper">
+                                    {{ form.empleado_search }}
+                                    <i class="bi bi-search search-icon"></i>
+                                    <div id="empleado-results" class="autocomplete-results"></div>
+                                </div>
+                                <div id="empleado-selected" class="selection-badge">
+                                    <span class="badge-text"></span>
+                                    <button type="button" class="clear-btn">
+                                        <i class="bi bi-x"></i> Quitar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Sucursal -->
-                        <div class="col-md-6">
-                            <label for="id_sucursal" class="form-label fw-semibold">Sucursal</label>
-                            {{ form.sucursal }}
-                            {% if form.sucursal.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.sucursal.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="id_bus" class="form-label fw-semibold">Ficha</label>
-                            {{ form.bus }}
-                            {% if form.bus.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.bus.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <label for="id_origen" class="form-label fw-semibold">Origen</label>
-                            {{ form.origen }}
-                            {% if form.origen.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.origen.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>                        
-
-                        <!-- Empleado -->
-                        <div class="col-12">
-                            <label for="id_empleado" class="form-label fw-semibold">Empleado</label>
-                            {{ form.empleado }}
-                            {% if form.empleado.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.empleado.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Botón Guardar -->
-                        <div class="col-12 text-end mt-3">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-1"></i> Guardar Cambios
+                        <!-- Botones -->
+                        <div class="d-flex gap-2 justify-content-end mt-4">
+                            <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-modern-back">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Volver
+                            </a>
+                            <button type="submit" class="btn btn-modern-save">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Guardar Cambios
                             </button>
-                            <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-success ms-2">← Volver</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <!-- Card de Miniaturas (4 columnas) -->
+        <!-- Columna derecha: Galería de Imágenes (4 columnas) -->
         <div class="col-lg-4">
-            <div class="card shadow h-100">
-                <div class="card-header bg-secondary text-white">
-                    <h6 class="mb-0">📷 Imágenes del Informe</h6>
+            <div class="images-card">
+                <div class="card-header-gradient">
+                    <h6>
+                        <i class="bi bi-images"></i>
+                        Imágenes del Informe
+                    </h6>
                 </div>
                 <div class="card-body" style="overflow-y: auto; max-height: 600px;">
                     {% with informe.fotos.all as fotos %}
                         {% if fotos %}
-                            {% if fotos|length == 1 %}
-                                <img src="{{ fotos.0.imagen.url }}" class="img-fluid rounded shadow-sm w-100" alt="Foto informe">
-                            {% else %}
-                                <div class="row row-cols-2 g-2">
-                                    {% for foto in fotos %}
-                                        <div class="col">
-                                            <img src="{{ foto.imagen.url }}" class="img-fluid rounded shadow-sm" alt="Foto informe">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                            <div class="images-grid {% if fotos|length == 1 %}single-image{% endif %}">
+                                {% for foto in fotos %}
+                                    <div class="image-thumbnail">
+                                        <img src="{{ foto.imagen.url }}" alt="Foto informe">
+                                    </div>
+                                {% endfor %}
+                            </div>
                         {% else %}
-                            <p class="text-muted">No hay imágenes disponibles para este informe.</p>
+                            <p class="text-muted text-center py-4">
+                                <i class="bi bi-image fs-3 d-block mb-2"></i>
+                                No hay imágenes disponibles
+                            </p>
                         {% endif %}
                     {% endwith %}
                 </div>
@@ -144,4 +581,94 @@
         </div>
     </div>
 </div>
+
+<script>
+    const buscarEmpleadosUrl = "{% url 'informes:buscar_empleados_ajax' %}";
+    const sucursalId = {{ informe.sucursal.id }};
+    let empleadoTimeout = null;
+
+    // Cargar empleado seleccionado al inicio si existe
+    window.addEventListener('DOMContentLoaded', function() {
+        const empleadoHidden = document.getElementById('id_empleado');
+        const empleadoSearch = document.getElementById('id_empleado_search');
+        const selectedBadge = document.getElementById('empleado-selected');
+
+        if (empleadoHidden.value) {
+            selectedBadge.querySelector('.badge-text').textContent = empleadoSearch.value;
+            selectedBadge.classList.add('show');
+        }
+    });
+
+    // Búsqueda de empleado con Ajax
+    document.getElementById('id_empleado_search').addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+        const resultsDiv = document.getElementById('empleado-results');
+
+        if (empleadoTimeout) clearTimeout(empleadoTimeout);
+
+        if (query.length < 3) {
+            resultsDiv.classList.remove('show');
+            return;
+        }
+
+        resultsDiv.innerHTML = '<div class="autocomplete-loading">Buscando...</div>';
+        resultsDiv.classList.add('show');
+
+        empleadoTimeout = setTimeout(() => {
+            fetch(`${buscarEmpleadosUrl}?q=${encodeURIComponent(query)}&sucursal_id=${sucursalId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<div class="autocomplete-loading text-danger">${data.error}</div>`;
+                        return;
+                    }
+
+                    if (data.empleados.length === 0) {
+                        resultsDiv.innerHTML = '<div class="autocomplete-loading">No se encontraron resultados</div>';
+                        return;
+                    }
+
+                    resultsDiv.innerHTML = data.empleados.map(emp =>
+                        `<div class="autocomplete-item" data-id="${emp.id}" data-display="${emp.display}">
+                            ${emp.display}
+                        </div>`
+                    ).join('');
+
+                    // Añadir event listeners a los items
+                    resultsDiv.querySelectorAll('.autocomplete-item').forEach(item => {
+                        item.addEventListener('click', function() {
+                            selectEmpleado(this.dataset.id, this.dataset.display);
+                        });
+                    });
+                })
+                .catch(error => {
+                    resultsDiv.innerHTML = '<div class="autocomplete-loading text-danger">Error en la búsqueda</div>';
+                });
+        }, 300);
+    });
+
+    function selectEmpleado(id, display) {
+        document.getElementById('id_empleado').value = id;
+        document.getElementById('id_empleado_search').value = display;
+        document.getElementById('empleado-results').classList.remove('show');
+
+        const badge = document.getElementById('empleado-selected');
+        badge.querySelector('.badge-text').textContent = display;
+        badge.classList.add('show');
+    }
+
+    // Quitar empleado seleccionado
+    document.querySelector('#empleado-selected .clear-btn').addEventListener('click', function() {
+        document.getElementById('id_empleado').value = '';
+        document.getElementById('id_empleado_search').value = '';
+        document.getElementById('empleado-selected').classList.remove('show');
+    });
+
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-field-wrapper')) {
+            document.getElementById('empleado-results').classList.remove('show');
+        }
+    });
+</script>
 {% endblock %}
