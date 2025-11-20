@@ -61,6 +61,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Debug Toolbar (solo en desarrollo)
+if DEBUG:
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+
 ROOT_URLCONF = 'StreamBus.urls'
 
 TEMPLATES = [
@@ -238,8 +242,8 @@ CITOS_ENABLED_FUNCTIONS = {
 
 
 
+# Configuración adicional de Debug Toolbar
 if DEBUG:
-    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware",]    
     INTERNAL_IPS = ["127.0.0.1",]
     import mimetypes
     mimetypes.add_type("application/javascript", ".js", True)
