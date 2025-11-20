@@ -16,9 +16,11 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from usuarios.mixins import InformeFilterMixin, SucursalAccessMixin, SucursalFormMixin
 
+from .decorators import check_sucursal_access, audit_file_access
 from .models import Informe,FotoInforme, VideoInforme, HistorialEnvioInforme, Buses, Sucursales, ExpedienteInforme
 from sucursales.models import Sucursales
 from empleados.models import Empleado
@@ -47,7 +49,7 @@ except locale.Error:
 
 from calendar import month_name
 
-class ListaInformesBorrarView(View):
+class ListaInformesBorrarView(LoginRequiredMixin, View):
    template_name = 'informes/lista_borrar.html'
 
    def get(self, request):
@@ -468,11 +470,13 @@ class InformeUpdateView(SucursalAccessMixin, UpdateView):
         context['next'] = self.request.GET.get('next', '')
         return context
 
+@login_required
 def lista_informes(request):
     informes = Informe.objects.all().order_by('-fecha_hora')
     print(informes)
     return render(request, 'informes/lista_informes.html', {'informes': informes})
 
+@login_required
 def buscar_informes(request):
     informes = Informe.objects.all().order_by('-fecha_hora')
 
@@ -544,6 +548,9 @@ def buscar_informes(request):
     }
     return render(request, 'informes/lista_informes.html', context)
 
+@login_required
+@check_sucursal_access
+@audit_file_access(action='upload_photo')
 def cargar_fotos(request, pk):
     informe = get_object_or_404(Informe, pk=pk)
     fotos = FotoInforme.objects.filter(informe=informe)
@@ -578,6 +585,9 @@ def cargar_fotos(request, pk):
         'fotos': fotos
     })
 
+@login_required
+@check_sucursal_access
+@audit_file_access(action='upload_video')
 def cargar_video(request, pk):
     informe = get_object_or_404(Informe, pk=pk)
     videos = VideoInforme.objects.filter(informe=informe)
@@ -611,6 +621,9 @@ def cargar_video(request, pk):
         'max_video_size_mb': settings.MAX_VIDEO_UPLOAD_SIZE_MB,
     })
 
+@login_required
+@check_sucursal_access
+@audit_file_access(action='view_photo')
 def ver_foto(request, foto_id):
     foto = get_object_or_404(FotoInforme, id=foto_id)
     informe = foto.informe
@@ -628,11 +641,12 @@ def ver_foto(request, foto_id):
     }
     return render(request, 'informes/ver_foto.html', contexto)
 
+@login_required
 def informes_sin_legajo(request):
     informes = Informe.objects.filter(empleado__isnull=True)    
     return render(request, 'informes/sin_legajo.html', {'informes': informes})
 
-class EnviarInformeEmailView(FormView):
+class EnviarInformeEmailView(LoginRequiredMixin, FormView):
     template_name = 'informes/enviar_email.html'
     form_class = EnviarInformeEmailForm
 
@@ -666,6 +680,7 @@ class EnviarInformeEmailView(FormView):
         context['next'] = self.next_url  
         return context
 
+@login_required
 def informes_no_enviados(request):
     informes_no_enviados = Informe.objects.filter(historial_envios__isnull=True)
 
@@ -689,6 +704,7 @@ def informes_no_enviados(request):
         "informes_no_enviados": informes_no_enviados,
     })
 
+@login_required
 def informes_asociar_sitinforme(request):
     if request.method == 'POST':
         ids = request.POST.getlist('informes_ids')
@@ -722,6 +738,7 @@ def informes_asociar_sitinforme(request):
     informes_no_generados = Informe.objects.filter(generado=False).select_related('sucursal', 'bus', 'empleado').prefetch_related('fotos')
     return render(request, 'informes/sit_asociarinforme.html', { 'informes_no_generados': informes_no_generados })
 
+@login_required
 def informes_asociar_sitsiniestro(request):
     if request.method == 'POST':
         ids = request.POST.getlist('informes_ids')
@@ -755,6 +772,7 @@ def informes_asociar_sitsiniestro(request):
     informes_no_generados = Informe.objects.filter(generado=False).select_related('sucursal', 'bus', 'empleado').prefetch_related('fotos')
     return render(request, 'informes/sit_asociarsiniestro.html', { 'informes_no_generados': informes_no_generados })
 
+@login_required
 def informes_desestimar(request):
     if request.method == 'POST':
         ids = request.POST.getlist('informes_ids')
@@ -797,7 +815,7 @@ def informes_desestimar(request):
     desestimar = Informe.objects.filter(generado=False).select_related('sucursal', 'bus', 'empleado').prefetch_related('fotos')
     return render(request, 'informes/desestimar.html', { 'desestimar': desestimar })
 
-class InformesPorEmpleadoView(View):
+class InformesPorEmpleadoView(LoginRequiredMixin, View):
     def get(self, request):
         empleado_id = request.GET.get('empleado')
         informes = []
@@ -814,7 +832,7 @@ class InformesPorEmpleadoView(View):
             'empleados': empleados,
         })
 
-class InformeBorrarView(View):
+class InformeBorrarView(LoginRequiredMixin, View):
     template_name = 'informes/borrar_informe.html'
     success_url = reverse_lazy('informes:lista_informes')
 
@@ -828,8 +846,9 @@ class InformeBorrarView(View):
         informe.delete()
         messages.success(request, f'El informe con ID {pk} ha sido borrado correctamente.')
         return redirect(self.success_url)
-    
-def estadisticas_informes(request):    
+
+@login_required
+def estadisticas_informes(request):
 
     anio_actual = datetime.now().year
     anio = int(request.GET.get('anio', anio_actual))
@@ -879,6 +898,7 @@ def estadisticas_informes(request):
 
     return render(request, 'informes/dashboard.html', context)
 
+@login_required
 def informes_disciplinarios(request):
     informes = Informe.objects.filter(expediente__isnull=False).select_related('bus', 'empleado', 'expediente').prefetch_related('fotos')
     
