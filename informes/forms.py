@@ -63,7 +63,7 @@ class InformeForm(forms.ModelForm):
             }),
             'descripcion': forms.Textarea(attrs={
                 'class': 'form-control',
-                'rows': 4,
+                'rows': 8,
                 'placeholder': 'Descripción detallada del informe...'
             }),
             'sucursal': forms.Select(attrs={'class': 'form-select'}),
