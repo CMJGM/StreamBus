@@ -77,8 +77,11 @@ class InformeForm(forms.ModelForm):
         # Configurar campos empleado y bus como hidden (serán manejados por Ajax)
         self.fields['empleado'].required = False
         self.fields['empleado'].widget = forms.HiddenInput()
-        self.fields['bus'].required = False
+        self.fields['bus'].required = True  # Bus obligatorio
         self.fields['bus'].widget = forms.HiddenInput()
+
+        # Fecha y hora obligatoria
+        self.fields['fecha_hora'].required = True
 
         # Filtrar sucursales según permisos del usuario
         if user and hasattr(user, 'profile'):
