@@ -14,7 +14,8 @@ from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView,FormView
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from usuarios.mixins import InformeFilterMixin, SucursalAccessMixin, SucursalFormMixin
 
@@ -886,4 +887,106 @@ class InformeListViewInspectores(InformeFilterMixin, ListView):
         return queryset.filter(origen='Inspectores')
 
 
+@login_required
+def buscar_empleados_ajax(request):
+    """
+    Endpoint Ajax para buscar empleados por sucursal y término de búsqueda.
+    Requiere al menos 3 caracteres para activar la búsqueda.
+    """
+    query = request.GET.get('q', '').strip()
+    sucursal_id = request.GET.get('sucursal_id', '')
+
+    # Validar que tenga al menos 3 caracteres
+    if len(query) < 3:
+        return JsonResponse({'empleados': []})
+
+    # Validar sucursal
+    if not sucursal_id:
+        return JsonResponse({'empleados': [], 'error': 'Debe seleccionar una sucursal primero'})
+
+    try:
+        sucursal_id = int(sucursal_id)
+    except ValueError:
+        return JsonResponse({'empleados': [], 'error': 'ID de sucursal inválido'})
+
+    # Verificar permisos del usuario sobre la sucursal
+    if hasattr(request.user, 'profile'):
+        sucursales_permitidas = request.user.profile.get_sucursales_permitidas()
+        if not sucursales_permitidas.filter(id=sucursal_id).exists():
+            return JsonResponse({'empleados': [], 'error': 'No tiene permisos para esta sucursal'})
+
+    # Buscar empleados por legajo o nombre/apellido
+    empleados = Empleado.objects.filter(sucursal_id=sucursal_id)
+
+    # Filtrar por legajo si es numérico, sino por nombre/apellido
+    if query.isdigit():
+        empleados = empleados.filter(legajo__icontains=query)
+    else:
+        empleados = empleados.filter(
+            Q(nombre__icontains=query) | Q(apellido__icontains=query)
+        )
+
+    empleados = empleados.order_by('apellido', 'nombre')[:20]  # Limitar a 20 resultados
+
+    data = {
+        'empleados': [
+            {
+                'id': emp.id,
+                'legajo': emp.legajo,
+                'nombre_completo': f"{emp.apellido}, {emp.nombre}",
+                'display': f"{emp.legajo} - {emp.apellido}, {emp.nombre}"
+            }
+            for emp in empleados
+        ]
+    }
+
+    return JsonResponse(data)
+
+
+@login_required
+def buscar_buses_ajax(request):
+    """
+    Endpoint Ajax para buscar buses por sucursal y término de búsqueda.
+    Requiere al menos 3 caracteres para activar la búsqueda.
+    """
+    query = request.GET.get('q', '').strip()
+    sucursal_id = request.GET.get('sucursal_id', '')
+
+    # Validar que tenga al menos 3 caracteres
+    if len(query) < 3:
+        return JsonResponse({'buses': []})
+
+    # Validar sucursal
+    if not sucursal_id:
+        return JsonResponse({'buses': [], 'error': 'Debe seleccionar una sucursal primero'})
+
+    try:
+        sucursal_id = int(sucursal_id)
+    except ValueError:
+        return JsonResponse({'buses': [], 'error': 'ID de sucursal inválido'})
+
+    # Verificar permisos del usuario sobre la sucursal
+    if hasattr(request.user, 'profile'):
+        sucursales_permitidas = request.user.profile.get_sucursales_permitidas()
+        if not sucursales_permitidas.filter(id=sucursal_id).exists():
+            return JsonResponse({'buses': [], 'error': 'No tiene permisos para esta sucursal'})
+
+    # Buscar buses por ficha
+    buses = Buses.objects.filter(
+        sucursal_id=sucursal_id,
+        ficha__icontains=query
+    ).order_by('ficha')[:20]  # Limitar a 20 resultados
+
+    data = {
+        'buses': [
+            {
+                'id': bus.id,
+                'ficha': str(bus.ficha),
+                'display': f"Ficha {bus.ficha}"
+            }
+            for bus in buses
+        ]
+    }
+
+    return JsonResponse(data)
 

@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4" style="max-width: 800px;">
+<div class="container mt-4" style="max-width: 900px;">
     <div class="card shadow">
         <div class="card-header text-white" style="background-color: #5bc0de;">
-            <h5 class="mb-0">📄 Crear Informe</h5>
+            <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Crear Informe</h5>
         </div>
         <div class="card-body">
-            <form method="post" enctype="multipart/form-data" class="row g-3">
+            <form method="post" enctype="multipart/form-data" id="informeForm" class="row g-3">
                 {% csrf_token %}
+
+                <!-- Campos hidden para empleado y bus -->
+                {{ form.empleado }}
+                {{ form.bus }}
 
                 <!-- Título -->
                 <div class="col-12">
@@ -36,8 +40,8 @@
                     {% endif %}
                 </div>
 
-                <!-- Fecha y Hora -->
-                <div class="col-md-6">
+                <!-- Fila 1: Fecha, Sucursal, Origen -->
+                <div class="col-md-4">
                     <label for="id_fecha_hora" class="form-label fw-semibold">Fecha y Hora</label>
                     {{ form.fecha_hora }}
                     {% if form.fecha_hora.errors %}
@@ -47,11 +51,10 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                </div>               
+                </div>
 
-                <!-- Sucursal -->
-                <div class="col-md-6">
-                    <label for="id_sucursal" class="form-label fw-semibold">Sucursal</label>
+                <div class="col-md-4">
+                    <label for="id_sucursal" class="form-label fw-semibold">Sucursal <span class="text-danger">*</span></label>
                     {{ form.sucursal }}
                     {% if form.sucursal.errors %}
                         <div class="invalid-feedback d-block">
@@ -60,22 +63,10 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                </div>             
-
-                <!-- Bus -->
-                <div class="col-md-6">
-                    <label for="id_bus" class="form-label fw-semibold">Ficha</label>
-                    {{ form.bus }}
-                    {% if form.bus.errors %}
-                        <div class="invalid-feedback d-block">
-                            {% for error in form.bus.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    <small class="text-muted">Seleccione primero la sucursal</small>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label for="id_origen" class="form-label fw-semibold">Origen</label>
                     {{ form.origen }}
                     {% if form.origen.errors %}
@@ -87,28 +78,321 @@
                     {% endif %}
                 </div>
 
-                <!-- Empleado -->
-                <div class="col-12">
-                    <label for="id_empleado" class="form-label fw-semibold">Empleado</label>
-                    {{ form.empleado }}
-                    {% if form.empleado.errors %}
+                <!-- Búsqueda de Empleado con autocompletado -->
+                <div class="col-md-6">
+                    <label for="id_empleado_search" class="form-label fw-semibold">Empleado (opcional)</label>
+                    {{ form.empleado_search }}
+                    <div id="empleado-results" class="autocomplete-results"></div>
+                    <div id="empleado-selected" class="alert alert-info mt-2" style="display: none;">
+                        <strong>Seleccionado:</strong> <span id="empleado-selected-text"></span>
+                        <button type="button" class="btn-close btn-sm float-end" onclick="clearEmpleado()"></button>
+                    </div>
+                    {% if form.empleado_search.errors %}
                         <div class="invalid-feedback d-block">
-                            {% for error in form.empleado.errors %}
+                            {% for error in form.empleado_search.errors %}
                                 <p>{{ error }}</p>
                             {% endfor %}
                         </div>
                     {% endif %}
+                    <small class="text-muted"><i class="bi bi-info-circle"></i> Escriba al menos 3 caracteres del legajo o nombre</small>
                 </div>
 
-                <!-- Botón Guardar -->
-                <div class="col-12 text-end mt-3">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save me-1"></i> Guardar Informe </button>
-                    <a href="{% url 'informes:lista_informes' %}" class="btn btn-success ms-2"> ← Volver a la lista </a>                    
+                <!-- Búsqueda de Bus con autocompletado -->
+                <div class="col-md-6">
+                    <label for="id_bus_search" class="form-label fw-semibold">Bus (opcional)</label>
+                    {{ form.bus_search }}
+                    <div id="bus-results" class="autocomplete-results"></div>
+                    <div id="bus-selected" class="alert alert-info mt-2" style="display: none;">
+                        <strong>Seleccionado:</strong> <span id="bus-selected-text"></span>
+                        <button type="button" class="btn-close btn-sm float-end" onclick="clearBus()"></button>
+                    </div>
+                    {% if form.bus_search.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.bus_search.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <small class="text-muted"><i class="bi bi-info-circle"></i> Escriba al menos 3 caracteres de la ficha</small>
                 </div>
-                
+
+                <!-- Botones -->
+                <div class="col-12 text-end mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Guardar Informe
+                    </button>
+                    <a href="{% url 'informes:lista_informes' %}" class="btn btn-secondary ms-2">
+                        <i class="bi bi-arrow-left me-1"></i> Volver a la lista
+                    </a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    .autocomplete-results {
+        position: absolute;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #ddd;
+        max-height: 250px;
+        overflow-y: auto;
+        width: calc(100% - 24px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none;
+    }
+
+    .autocomplete-results.show {
+        display: block;
+    }
+
+    .autocomplete-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+    }
+
+    .autocomplete-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .autocomplete-item:last-child {
+        border-bottom: none;
+    }
+
+    .autocomplete-loading {
+        padding: 10px 15px;
+        text-align: center;
+        color: #6c757d;
+    }
+
+    .autocomplete-no-results {
+        padding: 10px 15px;
+        text-align: center;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    /* Modo oscuro */
+    @media (prefers-color-scheme: dark) {
+        .autocomplete-results {
+            background: #343a40;
+            border-color: #495057;
+        }
+
+        .autocomplete-item {
+            border-bottom-color: #495057;
+        }
+
+        .autocomplete-item:hover {
+            background-color: #495057;
+        }
+    }
+
+    [data-bs-theme="dark"] .autocomplete-results {
+        background: #343a40;
+        border-color: #495057;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item {
+        border-bottom-color: #495057;
+        color: #dee2e6;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-item:hover {
+        background-color: #495057;
+    }
+</style>
+
+<script>
+    // Variables para controlar los timeouts de búsqueda
+    let empleadoTimeout = null;
+    let busTimeout = null;
+
+    // URLs de los endpoints Ajax
+    const buscarEmpleadosUrl = "{% url 'informes:buscar_empleados_ajax' %}";
+    const buscarBusesUrl = "{% url 'informes:buscar_buses_ajax' %}";
+
+    // Función para obtener el ID de la sucursal seleccionada
+    function getSucursalId() {
+        const sucursal = document.getElementById('id_sucursal');
+        return sucursal ? sucursal.value : '';
+    }
+
+    // Búsqueda de empleados
+    document.getElementById('id_empleado_search').addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+        const resultsDiv = document.getElementById('empleado-results');
+
+        // Limpiar timeout anterior
+        if (empleadoTimeout) {
+            clearTimeout(empleadoTimeout);
+        }
+
+        // Si tiene menos de 3 caracteres, ocultar resultados
+        if (query.length < 3) {
+            resultsDiv.classList.remove('show');
+            return;
+        }
+
+        // Verificar que haya seleccionado una sucursal
+        const sucursalId = getSucursalId();
+        if (!sucursalId) {
+            resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-exclamation-circle"></i> Primero seleccione una sucursal</div>';
+            resultsDiv.classList.add('show');
+            return;
+        }
+
+        // Mostrar indicador de carga
+        resultsDiv.innerHTML = '<div class="autocomplete-loading"><i class="bi bi-hourglass-split"></i> Buscando...</div>';
+        resultsDiv.classList.add('show');
+
+        // Esperar 300ms antes de hacer la búsqueda (debounce)
+        empleadoTimeout = setTimeout(() => {
+            fetch(`${buscarEmpleadosUrl}?q=${encodeURIComponent(query)}&sucursal_id=${sucursalId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<div class="autocomplete-no-results"><i class="bi bi-exclamation-circle"></i> ${data.error}</div>`;
+                    } else if (data.empleados.length === 0) {
+                        resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-inbox"></i> No se encontraron empleados</div>';
+                    } else {
+                        let html = '';
+                        data.empleados.forEach(emp => {
+                            html += `<div class="autocomplete-item" onclick="selectEmpleado(${emp.id}, '${emp.display.replace(/'/g, "\\'")}')">
+                                <strong>${emp.legajo}</strong> - ${emp.nombre_completo}
+                            </div>`;
+                        });
+                        resultsDiv.innerHTML = html;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-x-circle"></i> Error al buscar</div>';
+                });
+        }, 300);
+    });
+
+    // Búsqueda de buses
+    document.getElementById('id_bus_search').addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+        const resultsDiv = document.getElementById('bus-results');
+
+        // Limpiar timeout anterior
+        if (busTimeout) {
+            clearTimeout(busTimeout);
+        }
+
+        // Si tiene menos de 3 caracteres, ocultar resultados
+        if (query.length < 3) {
+            resultsDiv.classList.remove('show');
+            return;
+        }
+
+        // Verificar que haya seleccionado una sucursal
+        const sucursalId = getSucursalId();
+        if (!sucursalId) {
+            resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-exclamation-circle"></i> Primero seleccione una sucursal</div>';
+            resultsDiv.classList.add('show');
+            return;
+        }
+
+        // Mostrar indicador de carga
+        resultsDiv.innerHTML = '<div class="autocomplete-loading"><i class="bi bi-hourglass-split"></i> Buscando...</div>';
+        resultsDiv.classList.add('show');
+
+        // Esperar 300ms antes de hacer la búsqueda (debounce)
+        busTimeout = setTimeout(() => {
+            fetch(`${buscarBusesUrl}?q=${encodeURIComponent(query)}&sucursal_id=${sucursalId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<div class="autocomplete-no-results"><i class="bi bi-exclamation-circle"></i> ${data.error}</div>`;
+                    } else if (data.buses.length === 0) {
+                        resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-inbox"></i> No se encontraron buses</div>';
+                    } else {
+                        let html = '';
+                        data.buses.forEach(bus => {
+                            html += `<div class="autocomplete-item" onclick="selectBus(${bus.id}, '${bus.display.replace(/'/g, "\\'")}')">
+                                ${bus.display}
+                            </div>`;
+                        });
+                        resultsDiv.innerHTML = html;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-x-circle"></i> Error al buscar</div>';
+                });
+        }, 300);
+    });
+
+    // Seleccionar empleado
+    function selectEmpleado(id, display) {
+        document.getElementById('id_empleado').value = id;
+        document.getElementById('id_empleado_search').value = display;
+        document.getElementById('empleado-selected-text').textContent = display;
+        document.getElementById('empleado-selected').style.display = 'block';
+        document.getElementById('empleado-results').classList.remove('show');
+    }
+
+    // Seleccionar bus
+    function selectBus(id, display) {
+        document.getElementById('id_bus').value = id;
+        document.getElementById('id_bus_search').value = display;
+        document.getElementById('bus-selected-text').textContent = display;
+        document.getElementById('bus-selected').style.display = 'block';
+        document.getElementById('bus-results').classList.remove('show');
+    }
+
+    // Limpiar selección de empleado
+    function clearEmpleado() {
+        document.getElementById('id_empleado').value = '';
+        document.getElementById('id_empleado_search').value = '';
+        document.getElementById('empleado-selected').style.display = 'none';
+    }
+
+    // Limpiar selección de bus
+    function clearBus() {
+        document.getElementById('id_bus').value = '';
+        document.getElementById('id_bus_search').value = '';
+        document.getElementById('bus-selected').style.display = 'none';
+    }
+
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('#id_empleado_search') && !e.target.closest('#empleado-results')) {
+            document.getElementById('empleado-results').classList.remove('show');
+        }
+        if (!e.target.closest('#id_bus_search') && !e.target.closest('#bus-results')) {
+            document.getElementById('bus-results').classList.remove('show');
+        }
+    });
+
+    // Limpiar búsquedas cuando cambia la sucursal
+    document.getElementById('id_sucursal').addEventListener('change', function() {
+        clearEmpleado();
+        clearBus();
+    });
+
+    // Si hay valores iniciales (modo edición), mostrar los badges
+    window.addEventListener('DOMContentLoaded', function() {
+        if (document.getElementById('id_empleado').value) {
+            const display = document.getElementById('id_empleado_search').value;
+            if (display) {
+                document.getElementById('empleado-selected-text').textContent = display;
+                document.getElementById('empleado-selected').style.display = 'block';
+            }
+        }
+        if (document.getElementById('id_bus').value) {
+            const display = document.getElementById('id_bus_search').value;
+            if (display) {
+                document.getElementById('bus-selected-text').textContent = display;
+                document.getElementById('bus-selected').style.display = 'block';
+            }
+        }
+    });
+</script>
 {% endblock %}

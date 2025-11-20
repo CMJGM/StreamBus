@@ -27,7 +27,27 @@ class InformeGuardia(forms.ModelForm):
         if user and hasattr(user, 'profile'):
             self.fields['sucursal'].queryset = user.profile.get_sucursales_permitidas()
 
-class InformeForm(forms.ModelForm):    
+class InformeForm(forms.ModelForm):
+    # Campos personalizados para autocompletado Ajax
+    empleado_search = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Escriba al menos 3 caracteres del legajo o nombre...',
+            'autocomplete': 'off'
+        }),
+        label='Buscar Empleado'
+    )
+
+    bus_search = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Escriba al menos 3 caracteres de la ficha...',
+            'autocomplete': 'off'
+        }),
+        label='Buscar Bus'
+    )
 
     class Meta:
         model = Informe
@@ -47,26 +67,33 @@ class InformeForm(forms.ModelForm):
                 'placeholder': 'Descripción detallada del informe...'
             }),
             'sucursal': forms.Select(attrs={'class': 'form-select'}),
-            'bus': forms.Select(attrs={'class': 'form-select'}),
-            'empleado': forms.Select(attrs={'class': 'form-select'}),
             'origen': forms.Select(attrs={'class': 'form-select'}),
         }
-   
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+
+        # Configurar campos empleado y bus como hidden (serán manejados por Ajax)
         self.fields['empleado'].required = False
-        self.fields['empleado'].queryset = Empleado.objects.order_by('apellido', 'nombre')
+        self.fields['empleado'].widget = forms.HiddenInput()
         self.fields['bus'].required = False
-        self.fields['bus'].queryset = Buses.objects.order_by('ficha')
+        self.fields['bus'].widget = forms.HiddenInput()
 
         # Filtrar sucursales según permisos del usuario
         if user and hasattr(user, 'profile'):
             self.fields['sucursal'].queryset = user.profile.get_sucursales_permitidas()
 
-        if 'fecha_hora' in self.fields and self.instance and self.instance.pk and self.instance.fecha_hora:
-            local_dt = localtime(self.instance.fecha_hora)
-            self.initial['fecha_hora'] = local_dt.strftime('%Y-%m-%dT%H:%M')
+        # Si es edición, cargar los valores actuales en los campos de búsqueda
+        if self.instance and self.instance.pk:
+            if self.instance.empleado:
+                self.fields['empleado_search'].initial = f"{self.instance.empleado.legajo} - {self.instance.empleado.apellido}, {self.instance.empleado.nombre}"
+            if self.instance.bus:
+                self.fields['bus_search'].initial = f"Ficha {self.instance.bus.ficha}"
+
+            if self.instance.fecha_hora:
+                local_dt = localtime(self.instance.fecha_hora)
+                self.initial['fecha_hora'] = local_dt.strftime('%Y-%m-%dT%H:%M')
 
 class InformeFiltroForm(forms.Form):
     filtro = forms.CharField(required=False, label='Título')
