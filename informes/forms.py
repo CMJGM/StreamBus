@@ -117,6 +117,20 @@ class InformeForm(forms.ModelForm):
             self.fields['bus_search'].widget.attrs['readonly'] = 'readonly'
             self.fields['bus_search'].widget.attrs['disabled'] = 'disabled'
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Si es edición y sucursal no viene en los datos (porque está disabled),
+        # preservar el valor original
+        if self.instance.pk and not self.cleaned_data.get('sucursal'):
+            # Recargar el objeto original para obtener la sucursal
+            original = Informe.objects.get(pk=self.instance.pk)
+            instance.sucursal = original.sucursal
+
+        if commit:
+            instance.save()
+        return instance
+
 class InformeFiltroForm(forms.Form):
     filtro = forms.CharField(required=False, label='Título')
     fecha_desde = forms.DateTimeField(required=False,widget=forms.DateTimeInput(attrs={'type': 'datetime-local','class': 'form-control'}))
