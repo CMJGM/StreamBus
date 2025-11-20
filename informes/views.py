@@ -601,7 +601,10 @@ class EnviarInformeEmailView(FormView):
     form_class = EnviarInformeEmailForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.informe = get_object_or_404(Informe, pk=kwargs['pk'])
+        self.informe = get_object_or_404(
+            Informe.objects.select_related('bus', 'sucursal', 'empleado', 'origen'),
+            pk=kwargs['pk']
+        )
         self.next_url = request.GET.get('next')
         return super().dispatch(request, *args, **kwargs)
 
