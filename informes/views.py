@@ -255,6 +255,8 @@ class InformeListViewTaller(InformeFilterMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        from .models import Origen
+
         # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes
         queryset = super().get_queryset()
 
@@ -276,14 +278,24 @@ class InformeListViewTaller(InformeFilterMixin, ListView):
             except ValueError:
                 pass
 
-        # Filtrar por origen Taller
-        queryset = queryset.filter(origen='Taller')
+        # Filtrar por origen Taller usando el modelo Origen
+        try:
+            origen_taller = Origen.objects.get(nombre='Taller')
+            queryset = queryset.filter(origen=origen_taller)
+        except Origen.DoesNotExist:
+            queryset = queryset.none()
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sucursales'] = Sucursales.objects.all()  
+
+        # Filtrar sucursales según permisos del usuario
+        if hasattr(self.request.user, 'profile'):
+            context['sucursales'] = self.request.user.profile.get_sucursales_permitidas()
+        else:
+            context['sucursales'] = Sucursales.objects.none()
+
         return context
 
 class InformeListViewSiniestro(InformeFilterMixin, ListView):
@@ -293,6 +305,8 @@ class InformeListViewSiniestro(InformeFilterMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        from .models import Origen
+
         # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes
         queryset = super().get_queryset()
 
@@ -314,14 +328,24 @@ class InformeListViewSiniestro(InformeFilterMixin, ListView):
             except ValueError:
                 pass
 
-        # Filtrar por origen Siniestros
-        queryset = queryset.filter(origen='Siniestros')
+        # Filtrar por origen Siniestros usando el modelo Origen
+        try:
+            origen_siniestros = Origen.objects.get(nombre='Siniestros')
+            queryset = queryset.filter(origen=origen_siniestros)
+        except Origen.DoesNotExist:
+            queryset = queryset.none()
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sucursales'] = Sucursales.objects.all()  
+
+        # Filtrar sucursales según permisos del usuario
+        if hasattr(self.request.user, 'profile'):
+            context['sucursales'] = self.request.user.profile.get_sucursales_permitidas()
+        else:
+            context['sucursales'] = Sucursales.objects.none()
+
         return context
 
 class InformeListViewGuardia(InformeFilterMixin, ListView):
@@ -331,6 +355,8 @@ class InformeListViewGuardia(InformeFilterMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        from .models import Origen
+
         # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes
         queryset = super().get_queryset()
 
@@ -352,14 +378,24 @@ class InformeListViewGuardia(InformeFilterMixin, ListView):
             except ValueError:
                 pass
 
-        # Filtrar por origen Guardia
-        queryset = queryset.filter(origen='Guardia')
+        # Filtrar por origen Guardia usando el modelo Origen
+        try:
+            origen_guardia = Origen.objects.get(nombre='Guardia')
+            queryset = queryset.filter(origen=origen_guardia)
+        except Origen.DoesNotExist:
+            queryset = queryset.none()
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sucursales'] = Sucursales.objects.all()  
+
+        # Filtrar sucursales según permisos del usuario
+        if hasattr(self.request.user, 'profile'):
+            context['sucursales'] = self.request.user.profile.get_sucursales_permitidas()
+        else:
+            context['sucursales'] = Sucursales.objects.none()
+
         return context
 
 class InformeListView(InformeFilterMixin, ListView):

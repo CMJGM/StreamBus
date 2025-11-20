@@ -2,13 +2,69 @@
 
 {% block content %}
 <style>
+    /* Estilos de formulario compacto */
     form .form-label {
-        font-size: 12px;  /* Ajusta el tamaño de la fuente */
+        font-size: 12px;
     }
 
     form .form-control, form .form-select {
-        height: 27px;     /* Ajusta el alto de los campos de entrada */
-        font-size: 12px;  /* Ajusta el tamaño de la fuente */
+        height: 27px;
+        font-size: 12px;
+    }
+
+    /* Header de tabla con estilo pastel */
+    .table-header-pastel {
+        background: linear-gradient(135deg, #f8bbd0 0%, #f48fb1 50%, #f8bbd0 100%);
+        color: #880e4f;
+        font-weight: 600;
+    }
+
+    .table-header-pastel th {
+        border-bottom: 2px solid #f06292;
+    }
+
+    /* Badges compactos */
+    .badge-compact {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    /* Fecha compacta */
+    .fecha-compact {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.25rem !important;
+    }
+
+    /* Colores por origen - igual que lista_informes */
+    .badge-origen-sistemas {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .badge-origen-guardia {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .badge-origen-rrhh {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+
+    .badge-origen-taller {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: #2d2d2d;
+    }
+
+    .badge-origen-siniestros {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        color: #8b0000;
+    }
+
+    .badge-origen-inspectores {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #2d5f5f;
     }
 </style>
 
@@ -165,52 +221,60 @@
     {% endif %}    
 
     <table class="table table-bordered table-hover mt-3">
-        <thead class="table-light">
+        <thead class="table-header-pastel">
             <tr>
-                <th>Nro.Informe</th>
-                <th>Título</th>
-                <th>Empleado</th>
-                <th>Bus</th>
-                <th>Sucursal</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
+                <th class="text-center" style="width: 8%;">Nro. Informe</th>
+                <th style="width: 25%;">Título</th>
+                <th style="width: 15%;">Empleado</th>
+                <th class="text-center" style="width: 6%;">Ficha</th>
+                <th class="text-center" style="width: 7%;">Sucursal</th>
+                <th class="text-center" style="width: 9%;">Origen</th>
+                <th class="text-center" style="width: 8%;">Fecha</th>
+                <th class="text-center" style="width: 22%;">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for informe in page_obj %}
             <tr>
-                <td class="col-1">{{ informe.id|stringformat:"010d" }}</td>
-                <td class="col-3">{{ informe.titulo }}</td>
-                <td class="col-3">
+                <td class="text-center">{{ informe.id|stringformat:"010d" }}</td>
+                <td>{{ informe.titulo }}</td>
+                <td>
                     {% if informe.empleado %}
-                        {{ informe.empleado }}
+                        {{ informe.empleado.nombre_completo }}
                     {% endif %}
                 </td>
-                <td>{{ informe.bus.ficha }}</td>
-                <td>{{ informe.sucursal.abreviatura }}</td>
-                <td>{{ informe.fecha_hora|date:"d/m/Y H:i" }}</td>
-                <td class="d-flex gap-2" class="col-1">
+                <td class="text-center">
+                    <span class="badge badge-compact bg-light text-dark">{{ informe.bus.ficha }}</span>
+                </td>
+                <td class="text-center">
+                    <span class="badge badge-compact bg-secondary">{{ informe.sucursal.abreviatura }}</span>
+                </td>
+                <td class="text-center">
+                    <span class="badge badge-compact badge-origen-{{ informe.origen.nombre|lower }}">{{ informe.origen.nombre }}</span>
+                </td>
+                <td class="text-center fecha-compact">{{ informe.fecha_hora|date:"d/m/y H:i" }}</td>
+                <td class="d-flex gap-2">
                     <a href="{% url 'informes:editar_informe' informe.pk %}?next={{ request.path }}" class="btn btn-sm btn-warning d-flex align-items-center">
                         <i class="fas fa-pencil-alt me-1"></i> 📝 Editar
                     </a>
-        
+
                     <a href="{% url 'informes:cargar_fotos' informe.pk %}?next={{ request.path }}" class="btn btn-sm" style="background-color: #f8bbd0;">
-                        <i class="fas fa-camera me-1"></i> 📷 Imágenes ({{ informe.fotos.count }})                        
+                        <i class="fas fa-camera me-1"></i> 📷 Imágenes ({{ informe.fotos.count }})
                     </a>
-                    
+
                     <a href="{% url 'informes:cargar_video' informe.pk %}?next={{ request.path }}" class="btn btn-sm" style="background-color: #b3e5fc;">
                         <i class="fas fa-video me-1"></i> 🎥 Videos ({{ informe.videos.count }})
                     </a>
 
                     <a href="{% url 'informes:enviar_informe_email' informe.pk %}?next={{ request.get_full_path }}" class="btn btn-sm"  style="background-color: #d8b4fe;">
-                        <i class="fas fa-envelope"></i> 📧 Enviar 
+                        <i class="fas fa-envelope"></i> 📧 Enviar
                     </a>
 
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="7" class="text-center">No se encontraron informes.</td>
+                <td colspan="8" class="text-center">No se encontraron informes.</td>
             </tr>
             {% endfor %}
         </tbody>
