@@ -39,42 +39,42 @@
 
                     <!-- Filtro por título -->
                     <div class="col-md-2">
-                        <label for="filtro" class="form-label text-muted small mb-1">Título</label>
+                        <label for="filtro" class="form-label filter-label small mb-1">Título</label>
                         <input type="text" name="filtro" id="filtro" class="form-control form-control-sm"
                                value="{{ request.GET.filtro }}" placeholder="Buscar por título">
                     </div>
 
                     <!-- Filtro por número de ficha del bus -->
                     <div class="col-md-1">
-                        <label for="numero_ficha" class="form-label text-muted small mb-1">N° Ficha</label>
+                        <label for="numero_ficha" class="form-label filter-label small mb-1">N° Ficha</label>
                         <input type="text" name="numero_ficha" id="numero_ficha" class="form-control form-control-sm"
                             value="{{ request.GET.numero_ficha }}" placeholder="Ficha">
                     </div>
 
                     <!-- Filtro por legajo del empleado -->
                     <div class="col-md-1">
-                        <label for="id_legajo" class="form-label text-muted small mb-1">Legajo</label>
+                        <label for="id_legajo" class="form-label filter-label small mb-1">Legajo</label>
                         <input type="text" name="legajo" id="id_legajo" class="form-control form-control-sm"
                                value="{{ request.GET.legajo }}" placeholder="Legajo">
                     </div>
 
                     <!-- Fecha Desde -->
                     <div class="col-md-2">
-                        <label for="fecha_desde" class="form-label text-muted small mb-1">Desde</label>
+                        <label for="fecha_desde" class="form-label filter-label small mb-1">Desde</label>
                         <input type="datetime-local" name="fecha_desde" id="fecha_desde" class="form-control form-control-sm"
                                value="{{ request.GET.fecha_desde }}">
                     </div>
 
                     <!-- Fecha Hasta -->
                     <div class="col-md-2">
-                        <label for="fecha_hasta" class="form-label text-muted small mb-1">Hasta</label>
+                        <label for="fecha_hasta" class="form-label filter-label small mb-1">Hasta</label>
                         <input type="datetime-local" name="fecha_hasta" id="fecha_hasta" class="form-control form-control-sm"
                                value="{{ request.GET.fecha_hasta }}">
                     </div>
 
                     <!-- Filtro por origen -->
                     <div class="col-md-2">
-                        <label for="origen" class="form-label text-muted small mb-1">Origen</label>
+                        <label for="origen" class="form-label filter-label small mb-1">Origen</label>
                         <select name="origen" id="origen" class="form-select form-select-sm">
                             <option value="">Todos</option>
                             <option value="Sistemas" {% if request.GET.origen == "Sistemas" %}selected{% endif %}>Sistemas</option>
@@ -88,7 +88,7 @@
 
                     <!-- Filtro por sucursal (solo habilitadas) -->
                     <div class="col-md-2">
-                        <label for="sucursal" class="form-label text-muted small mb-1">Sucursal</label>
+                        <label for="sucursal" class="form-label filter-label small mb-1">Sucursal</label>
                         <select name="sucursal" id="sucursal" class="form-select form-select-sm">
                             <option value="">Todas</option>
                             {% for s in sucursales %}
@@ -434,6 +434,60 @@
     background-color: #e3f2fd;
     border-color: #90caf9;
     color: #0d47a1;
+}
+
+/* Etiquetas de filtros adaptables a modo claro y oscuro */
+.filter-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .filter-label {
+        color: #adb5bd !important;
+    }
+
+    .card {
+        background-color: #212529;
+        border-color: #495057;
+    }
+
+    .table-header-pastel {
+        background: linear-gradient(135deg, #2d3e2f 0%, #1e3a1e 100%);
+        color: #a8e6cf;
+    }
+
+    .table-header-pastel th {
+        border-bottom-color: #4a5f4a;
+    }
+
+    .table-row-hover:hover {
+        background-color: #343a40;
+    }
+}
+
+/* Modo oscuro con atributo data-bs-theme */
+[data-bs-theme="dark"] .filter-label {
+    color: #adb5bd !important;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #212529;
+    border-color: #495057;
+}
+
+[data-bs-theme="dark"] .table-header-pastel {
+    background: linear-gradient(135deg, #2d3e2f 0%, #1e3a1e 100%);
+    color: #a8e6cf;
+}
+
+[data-bs-theme="dark"] .table-header-pastel th {
+    border-bottom-color: #4a5f4a;
+}
+
+[data-bs-theme="dark"] .table-row-hover:hover {
+    background-color: #343a40;
 }
 </style>
 {% endblock %}
