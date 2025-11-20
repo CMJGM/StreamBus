@@ -149,12 +149,13 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-header-pastel">
                     <tr>
-                        <th class="text-center" style="width: 10%;">Nro. Informe</th>
-                        <th style="width: 20%;">Título</th>
-                        <th style="width: 18%;">Empleado</th>
-                        <th class="text-center" style="width: 8%;">Bus</th>
-                        <th class="text-center" style="width: 10%;">Sucursal</th>
-                        <th class="text-center" style="width: 12%;">Fecha</th>
+                        <th class="text-center" style="width: 8%;">Nro. Informe</th>
+                        <th style="width: 18%;">Título</th>
+                        <th style="width: 16%;">Empleado</th>
+                        <th class="text-center" style="width: 7%;">Bus</th>
+                        <th class="text-center" style="width: 9%;">Sucursal</th>
+                        <th class="text-center" style="width: 9%;">Origen</th>
+                        <th class="text-center" style="width: 11%;">Fecha</th>
                         <th class="text-center" style="width: 22%;">Acciones</th>
                     </tr>
                 </thead>
@@ -175,6 +176,9 @@
                         </td>
                         <td class="text-center">
                             <span class="badge bg-secondary">{{ informe.sucursal.abreviatura }}</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="badge bg-info text-dark">{{ informe.origen.nombre }}</span>
                         </td>
                         <td class="text-center small">{{ informe.fecha_hora|date:"d/m/Y H:i" }}</td>
                         <td>
@@ -203,7 +207,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="8" class="text-center text-muted py-4">
                             <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                             No se encontraron informes con los filtros aplicados.
                         </td>
