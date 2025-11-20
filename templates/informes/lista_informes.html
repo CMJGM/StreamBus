@@ -72,17 +72,16 @@
                                value="{{ request.GET.fecha_hasta }}">
                     </div>
 
-                    <!-- Filtro por origen -->
+                    <!-- Filtro por origen (solo orígenes permitidos por usuario) -->
                     <div class="col-md-2">
                         <label for="origen" class="form-label filter-label small mb-1">Origen</label>
                         <select name="origen" id="origen" class="form-select form-select-sm">
                             <option value="">Todos</option>
-                            <option value="Sistemas" {% if request.GET.origen == "Sistemas" %}selected{% endif %}>Sistemas</option>
-                            <option value="Guardia" {% if request.GET.origen == "Guardia" %}selected{% endif %}>Guardia</option>
-                            <option value="RRHH" {% if request.GET.origen == "RRHH" %}selected{% endif %}>RRHH</option>
-                            <option value="Siniestros" {% if request.GET.origen == "Siniestros" %}selected{% endif %}>Siniestros</option>
-                            <option value="Taller" {% if request.GET.origen == "Taller" %}selected{% endif %}>Taller</option>
-                            <option value="Inspectores" {% if request.GET.origen == "Inspectores" %}selected{% endif %}>Inspectores</option>
+                            {% for o in origenes %}
+                                <option value="{{ o.id }}" {% if request.GET.origen == o.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ o.nombre }}
+                                </option>
+                            {% endfor %}
                         </select>
                     </div>
 
@@ -125,7 +124,13 @@
                 {% if request.GET.legajo %} | Legajo: {{ request.GET.legajo }}{% endif %}
                 {% if request.GET.fecha_desde %} | Desde: {{ request.GET.fecha_desde }}{% endif %}
                 {% if request.GET.fecha_hasta %} | Hasta: {{ request.GET.fecha_hasta }}{% endif %}
-                {% if request.GET.origen %} | Origen: {{ request.GET.origen }} {% endif %}
+                {% if request.GET.origen %}
+                    {% for o in origenes %}
+                        {% if o.id|stringformat:"s" == request.GET.origen %}
+                            | Origen: {{ o.nombre }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
                 {% if request.GET.sucursal %}
                     {% for s in sucursales %}
                         {% if s.id|stringformat:"s" == request.GET.sucursal %}

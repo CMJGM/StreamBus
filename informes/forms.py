@@ -122,7 +122,19 @@ class InformeFiltroForm(forms.Form):
     fecha_desde = forms.DateTimeField(required=False,widget=forms.DateTimeInput(attrs={'type': 'datetime-local','class': 'form-control'}))
     fecha_hasta = forms.DateTimeField(required=False,widget=forms.DateTimeInput(attrs={'type': 'datetime-local','class': 'form-control'}))
     sucursal = forms.ModelChoiceField(queryset=Sucursales.objects.all(), required=False)
-    legajo = forms.IntegerField(required=False, label="Legajo")    
+    origen = forms.ModelChoiceField(queryset=None, required=False, label="Origen")
+    legajo = forms.IntegerField(required=False, label="Legajo")
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        # Filtrar orígenes según permisos del usuario
+        from .models import Origen
+        if user and hasattr(user, 'profile'):
+            self.fields['origen'].queryset = user.profile.get_origenes_permitidos()
+        else:
+            self.fields['origen'].queryset = Origen.objects.filter(activo=True)    
 
 class FotoInformeForm(forms.ModelForm):
     class Meta:
