@@ -123,7 +123,15 @@ class InformeFilterMixin(SucursalFilterMixin):
         queryset = super().get_queryset()
 
         # Aplicar select_related para optimizar consultas
-        queryset = queryset.select_related('bus', 'sucursal', 'empleado')
+        queryset = queryset.select_related('bus', 'sucursal', 'empleado', 'origen')
+
+        # Filtrar por orígenes permitidos del usuario (siempre)
+        if hasattr(self.request.user, 'profile'):
+            user_profile = self.request.user.profile
+            # Si no puede usar todos los orígenes, filtrar por los permitidos
+            if not user_profile.puede_usar_todos_origenes:
+                origenes_permitidos = user_profile.get_origenes_permitidos()
+                queryset = queryset.filter(origen__in=origenes_permitidos)
 
         # Filtros adicionales de la URL
         filtro_titulo = self.request.GET.get('filtro', '')
