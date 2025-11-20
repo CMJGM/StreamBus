@@ -440,8 +440,19 @@ def buscar_informes(request):
     default_desde = default_desde.replace(hour=0, minute=0, second=0, microsecond=0)
     default_hasta = timezone.now()
 
+    # Obtener orígenes permitidos para el usuario
+    if request.user.is_authenticated and hasattr(request.user, 'profile'):
+        origenes_permitidos = request.user.profile.get_origenes_permitidos()
+    else:
+        from .models import Origen
+        origenes_permitidos = Origen.objects.filter(activo=True)
+
     # Pasar usuario al formulario para filtrar orígenes
     form = InformeFiltroForm(request.GET or None, user=request.user)
+
+    # Inicializar fechas por defecto
+    fecha_desde = default_desde
+    fecha_hasta = default_hasta
 
     if form.is_valid():
         # Fechas
@@ -481,13 +492,6 @@ def buscar_informes(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Obtener orígenes permitidos para el usuario
-    if request.user.is_authenticated and hasattr(request.user, 'profile'):
-        origenes_permitidos = request.user.profile.get_origenes_permitidos()
-    else:
-        from .models import Origen
-        origenes_permitidos = Origen.objects.filter(activo=True)
-
     context = {
         'form': form,
         'page_obj': page_obj,
@@ -495,6 +499,7 @@ def buscar_informes(request):
         'fecha_hasta': fecha_hasta,
         'sucursales': Sucursales.objects.all(),
         'origenes': origenes_permitidos,
+        'is_paginated': page_obj.has_other_pages(),
     }
     return render(request, 'informes/lista_informes.html', context)
 
