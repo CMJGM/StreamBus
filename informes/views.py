@@ -393,7 +393,11 @@ class InformeListView(InformeFilterMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sucursales'] = Sucursales.objects.all()  
+        # Filtrar sucursales según permisos del usuario
+        if hasattr(self.request.user, 'profile'):
+            context['sucursales'] = self.request.user.profile.get_sucursales_permitidas()
+        else:
+            context['sucursales'] = Sucursales.objects.none()
         return context
 
 class InformeCreateView(SucursalFormMixin, CreateView):
