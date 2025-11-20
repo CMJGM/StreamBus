@@ -42,7 +42,7 @@
 
     <!-- Botón Agregar Empleado -->
     <div class="mt-3 mb-3">
-        <a href="{% url 'crear_empleado' %}?sucursal={{ sucursal.id }}" class="btn btn-success">
+        <a href="{% url 'crear_empleado' %}?sucursal={{ sucursal.id }}" class="btn btn-pastel-green">
             <i class="bi bi-plus-circle"></i> Agregar Empleado
         </a>
     </div>
@@ -67,7 +67,7 @@
                     <td>{{ empleado.categoria.descripcion }}</td>
                     <td>{{ empleado.fecha_ingreso|date:"d/m/Y" }}</td>
                     <td>
-                        <a href="{% url 'editar_empleado' empleado.pk %}" class="btn btn-sm btn-warning">
+                        <a href="{% url 'editar_empleado' empleado.pk %}" class="btn btn-sm btn-pastel-orange">
                             <i class="bi bi-pencil"></i> Editar
                         </a>
                     </td>
@@ -122,4 +122,42 @@
         </nav>
     {% endif %}
 </div>
+
+<style>
+/* Botones con colores pastel */
+.btn-pastel-green {
+    background-color: #a8e6cf;
+    border-color: #88d4ab;
+    color: #2d5f3f;
+    font-weight: 500;
+}
+
+.btn-pastel-green:hover {
+    background-color: #88d4ab;
+    border-color: #6fc490;
+    color: #2d5f3f;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(136, 212, 171, 0.3);
+}
+
+.btn-pastel-orange {
+    background-color: #ffd4a3;
+    border-color: #ffbe7a;
+    color: #8b5a00;
+    font-weight: 500;
+}
+
+.btn-pastel-orange:hover {
+    background-color: #ffbe7a;
+    border-color: #ffa952;
+    color: #8b5a00;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 190, 122, 0.3);
+}
+
+.btn-pastel-green,
+.btn-pastel-orange {
+    transition: all 0.2s ease;
+}
+</style>
 {% endblock %}
