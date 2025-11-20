@@ -3,40 +3,97 @@
 
 {% block content %}
 <style>
-    .input-compact {
-        height: 28px;
-        font-size: 0.85rem;
-        padding: 2px 8px;
+    /* Header gradient moderno */
+    .page-header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .btn-purple {
-        background-color: #e0c7ff;
-        color: #4b0082;
+    /* Card moderna con bordes suaves */
+    .card-modern {
+        border-radius: 15px;
         border: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
     }
 
-    .btn-purple:hover {
-        background-color: #d6b5fc;
+    /* Input mejorado */
+    .input-modern {
+        border-radius: 8px;
+        border: 2px solid #e0e7ff;
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
     }
 
+    .input-modern:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    }
+
+    /* Botón enviar con gradient */
+    .btn-enviar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-enviar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+
+    .btn-enviar:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Botón volver mejorado */
+    .btn-volver {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-volver:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+        color: white;
+    }
+
+    /* Mensaje de envío */
     .sending-message {
         display: none;
-        font-size: 0.9rem;
-        color: #4b0082;
-        margin-top: 12px;
-    }
-
-    .dot-flashing {
-        display: inline-block;
-        position: relative;
-        width: 1em;
-        height: 1em;
+        font-size: 0.95rem;
+        color: #667eea;
+        margin-top: 1rem;
+        padding: 0.75rem;
+        background-color: #f0f4ff;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
     }
 
     .dot-flashing::after {
         content: '●';
         animation: flash 1s infinite linear;
-        color: #4b0082;
+        color: #667eea;
     }
 
     @keyframes flash {
@@ -44,63 +101,288 @@
         50% { opacity: 1; }
         100% { opacity: 0.2; }
     }
+
+    /* Header del informe */
+    .informe-header {
+        background: linear-gradient(135deg, #e0f2ff 0%, #dbeafe 100%);
+        padding: 1.5rem;
+        border-radius: 10px 10px 0 0;
+        border-bottom: 3px solid #60a5fa;
+    }
+
+    .informe-numero {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e40af;
+    }
+
+    .informe-titulo {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-top: 0.25rem;
+    }
+
+    /* Badges mejorados */
+    .badge-info-modern {
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .badge-ficha {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        color: #92400e;
+    }
+
+    .badge-sucursal {
+        background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+        color: #5b21b6;
+    }
+
+    .badge-empleado {
+        background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+        color: #1e40af;
+    }
+
+    /* Colores por origen - mismos que lista_informes */
+    .badge-origen-sistemas {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .badge-origen-guardia {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+
+    .badge-origen-rrhh {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+
+    .badge-origen-taller {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: #2d2d2d;
+    }
+
+    .badge-origen-siniestros {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        color: #8b0000;
+    }
+
+    .badge-origen-inspectores {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #2d5f5f;
+    }
+
+    /* Grid de información */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #94a3b8;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        color: #1e293b;
+    }
+
+    /* Descripción mejorada */
+    .descripcion-box {
+        background: #f8fafc;
+        padding: 1.25rem;
+        border-radius: 8px;
+        border-left: 4px solid #3b82f6;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Galería de fotos mejorada */
+    .galeria-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e2e8f0;
+    }
+
+    .galeria-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .foto-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .foto-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .foto-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
 </style>
 
-<div class="container mt-4">
-    <h2 class="mb-4">Enviar Informe por Email</h2>
+<div class="container mt-4 mb-5">
+    <!-- Header moderno -->
+    <div class="page-header-gradient text-center">
+        <h2 class="mb-2">
+            <i class="bi bi-envelope-paper-fill"></i> Enviar Informe por Email
+        </h2>
+        <p class="mb-0 opacity-90">Complete los destinatarios y envíe el informe por correo electrónico</p>
+    </div>
 
     <!-- Card para destinatarios y botón -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
+    <div class="card card-modern mb-4">
+        <div class="card-body p-4">
             <form method="post" id="enviar-form">
                 {% csrf_token %}
-                <div class="row align-items-end">
-                    <div class="col-md-7">
-                        <input type="hidden" name="next" value="{{ request.GET.next }}">
-                        <label for="{{ form.destinatarios.id_for_label }}" class="form-label small">Destinatarios (separados por coma):</label>
-                        {{ form.destinatarios|add_class:"form-control input-compact" }}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label for="{{ form.destinatarios.id_for_label }}" class="form-label fw-semibold">
+                            <i class="bi bi-people-fill text-primary"></i> Destinatarios
+                        </label>
+                        <small class="text-muted d-block mb-2">Ingrese los correos separados por coma</small>
+                        {{ form.destinatarios|add_class:"form-control input-modern" }}
                     </div>
-                    <div class="col-md-2 text-end">
-                        <button type="submit" class="btn btn-purple w-100" id="enviar-btn">
-                            <i class="bi bi-envelope-fill"></i> Enviar
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-enviar w-100" id="enviar-btn">
+                            <i class="bi bi-send-fill"></i> Enviar
                         </button>
-                    </div>                
-                    <!-- Botón Volver a la lista -->
-                    <div class="col-md-3 btn-success text-end">
-                        <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-success ms-2">← Volver</a>
                     </div>
-                </div>                
+                    <div class="col-md-2">
+                        <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}"
+                           class="btn btn-volver w-100">
+                            <i class="bi bi-arrow-left"></i> Volver
+                        </a>
+                    </div>
+                </div>
+
                 <div class="text-center sending-message" id="sending-msg">
-                    <div class="spinner-border text-secondary small" role="status">
-                        <span class="visually-hidden">Enviando...</span>
+                    <div class="d-inline-flex align-items-center">
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                            <span class="visually-hidden">Enviando...</span>
+                        </div>
+                        <span>Enviando informe, por favor espere<span class="dot-flashing"></span></span>
                     </div>
-                    <span class="ms-2">Enviando informe, por favor espere <span class="dot-flashing"></span></span>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Card con los datos del informe -->
-    <div class="card shadow mb-4">
-        <div class="card-header" style="background-color: #d4edfa;">
-            <h5 class="mb-0 text-dark">Informe Nº {{ informe.id|stringformat:"010d" }} - Titulo : {{ informe.titulo }}</h5>
+    <div class="card card-modern">
+        <div class="informe-header">
+            <div class="informe-numero">
+                <i class="bi bi-file-text-fill"></i> Informe Nº {{ informe.id|stringformat:"010d" }}
+            </div>
+            <div class="informe-titulo">{{ informe.titulo }}</div>
         </div>
-        <div class="card-body">
-            <p class="fs-5"><strong>Fecha:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
-            <p class="fs-5"><strong>Sucursal:</strong> {{ informe.sucursal.nombre }}</p>
-            <p class="fs-5"><strong>Bus:</strong> {{ informe.bus.ficha }}</p>
-            <p class="fs-5"><strong>Empleado:</strong> {{ informe.empleado.nombre_completo }}</p>
-            <p class="fs-5"><strong>Descripción:</strong> {{ informe.descripcion }}</p>
+        <div class="card-body p-4">
+            <!-- Grid de información principal -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-calendar-event"></i> Fecha y Hora
+                    </div>
+                    <div class="info-value">{{ informe.fecha_hora|date:"d/m/Y H:i" }}</div>
+                </div>
 
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-building"></i> Sucursal
+                    </div>
+                    <div class="info-value">
+                        <span class="badge badge-info-modern badge-sucursal">{{ informe.sucursal.nombre }}</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-bus-front-fill"></i> Ficha de Bus
+                    </div>
+                    <div class="info-value">
+                        <span class="badge badge-info-modern badge-ficha">{{ informe.bus.ficha }}</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-person-badge"></i> Empleado
+                    </div>
+                    <div class="info-value">
+                        <span class="badge badge-info-modern badge-empleado">{{ informe.empleado.nombre_completo }}</span>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-tag-fill"></i> Origen
+                    </div>
+                    <div class="info-value">
+                        <span class="badge badge-info-modern badge-origen-{{ informe.origen.nombre|lower }}">{{ informe.origen.nombre }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="descripcion-box">
+                <div class="info-label mb-2">
+                    <i class="bi bi-card-text"></i> Descripción
+                </div>
+                <div class="info-value" style="white-space: pre-wrap;">{{ informe.descripcion }}</div>
+            </div>
+
+            <!-- Galería de fotos -->
             {% if informe.fotos.all %}
-                <hr>
-                <h5>Imágenes adjuntas</h5>
-                <div class="row">
-                    {% for foto in informe.fotos.all %}
-                        <div class="col-md-3 mb-3">
-                            <img src="{{ foto.imagen.url }}" alt="Foto" class="img-fluid rounded shadow-sm">
-                        </div>
-                    {% endfor %}
+                <div class="galeria-section">
+                    <h5 class="galeria-title">
+                        <i class="bi bi-images"></i>
+                        Imágenes Adjuntas
+                        <span class="badge bg-secondary">{{ informe.fotos.all|length }}</span>
+                    </h5>
+                    <div class="row g-3">
+                        {% for foto in informe.fotos.all %}
+                            <div class="col-md-3 col-sm-6">
+                                <div class="foto-card">
+                                    <a href="{{ foto.imagen.url }}" target="_blank">
+                                        <img src="{{ foto.imagen.url }}" alt="Foto {{ forloop.counter }}" loading="lazy">
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             {% endif %}
         </div>
