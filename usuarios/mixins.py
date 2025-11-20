@@ -203,13 +203,15 @@ class EmpleadoFilterMixin(SucursalFilterMixin):
         return queryset.order_by('apellido', 'nombre')
 
 
-class SucursalFormMixin:
+class SucursalFormMixin(LoginRequiredMixin):
     """
     Mixin para formularios que necesitan filtrar opciones de sucursal.
+    Requiere autenticación del usuario.
 
     Uso:
         class MiFormView(SucursalFormMixin, CreateView):
             # El formulario filtrará automáticamente las sucursales disponibles
+            # El usuario debe estar autenticado
     """
 
     def get_form_kwargs(self):
