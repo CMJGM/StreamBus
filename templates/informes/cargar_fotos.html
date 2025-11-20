@@ -3,69 +3,515 @@
 
 {% block content %}
 <style>
-    .card-body.texto-grande p,
-    .card-body.texto-grande p strong {
-        font-size: 1.2rem !important;
+    /* Header Moderno */
+    .header-fotos {
+        margin-bottom: 2rem;
+    }
+
+    .icon-circle-fotos {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+    }
+
+    .icon-circle-fotos i {
+        color: white;
+    }
+
+    /* Galería de Fotos */
+    .gallery-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+
+    .photo-card {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        aspect-ratio: 1;
+    }
+
+    .photo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .photo-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .photo-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+        padding: 0.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .photo-card:hover .photo-overlay {
+        opacity: 1;
+    }
+
+    .empty-gallery {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+    }
+
+    .empty-gallery i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    /* Formulario Moderno */
+    .form-upload-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+    }
+
+    .form-upload-card .card-header-custom {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #f093fb;
+    }
+
+    .form-upload-card .card-header-custom h5 {
+        margin: 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .file-input-label {
+        display: block;
+        padding: 1rem;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .file-input-label:hover {
+        border-color: #f093fb;
+        background: #fff;
+    }
+
+    .file-input-label i {
+        font-size: 2rem;
+        color: #f093fb;
+        margin-bottom: 0.5rem;
+    }
+
+    .btn-modern-upload {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-modern-upload:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+        background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+        color: white;
+    }
+
+    .btn-modern-back {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        border: none;
+        color: #2c3e50;
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-modern-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(168, 237, 234, 0.3);
+        color: #2c3e50;
+    }
+
+    /* Card de Detalles */
+    .details-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        position: sticky;
+        top: 20px;
+    }
+
+    .details-card .card-header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border: none;
+    }
+
+    .details-card .card-header-gradient h5 {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .details-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .detail-item {
+        margin-bottom: 1.25rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.25rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-label i {
+        color: #667eea;
+    }
+
+    .detail-value {
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+
+    .badge-informe {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    /* Modo Oscuro */
+    @media (prefers-color-scheme: dark) {
+        .gallery-container {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        .form-upload-card {
+            background-color: #1e2530;
+        }
+
+        .form-upload-card .card-header-custom {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        .form-upload-card .card-header-custom h5 {
+            color: #e9ecef;
+        }
+
+        .file-input-label {
+            background: #2c3e50;
+            border-color: #495057;
+            color: #e9ecef;
+        }
+
+        .file-input-label:hover {
+            background: #34495e;
+            border-color: #f093fb;
+        }
+
+        .details-card {
+            background-color: #1e2530;
+        }
+
+        .detail-item {
+            border-bottom-color: #495057;
+        }
+
+        .detail-label {
+            color: #adb5bd;
+        }
+
+        .detail-value {
+            color: #e9ecef;
+        }
+
+        .empty-gallery {
+            color: #adb5bd;
+        }
+    }
+
+    [data-bs-theme="dark"] .gallery-container {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+
+    [data-bs-theme="dark"] .form-upload-card {
+        background-color: #1e2530;
+    }
+
+    [data-bs-theme="dark"] .form-upload-card .card-header-custom {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    }
+
+    [data-bs-theme="dark"] .form-upload-card .card-header-custom h5 {
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .file-input-label {
+        background: #2c3e50;
+        border-color: #495057;
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .file-input-label:hover {
+        background: #34495e;
+        border-color: #f093fb;
+    }
+
+    [data-bs-theme="dark"] .details-card {
+        background-color: #1e2530;
+    }
+
+    [data-bs-theme="dark"] .detail-item {
+        border-bottom-color: #495057;
+    }
+
+    [data-bs-theme="dark"] .detail-label {
+        color: #adb5bd;
+    }
+
+    [data-bs-theme="dark"] .detail-value {
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .empty-gallery {
+        color: #adb5bd;
     }
 </style>
 
 <div class="container mt-4">
+    <!-- Header -->
+    <div class="header-fotos mb-4">
+        <div class="d-flex align-items-center">
+            <div class="icon-circle-fotos">
+                <i class="bi bi-camera fs-3"></i>
+            </div>
+            <div class="ms-3">
+                <h2 class="mb-0 fw-bold">Galería de Fotos</h2>
+                <p class="text-muted mb-0">Informe N° {{ informe.id|stringformat:"010d" }}</p>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <!-- Columna izquierda: Galería de fotos + Formulario -->
-        <div class="col-md-8">
-            <h4 class="mb-3">📷 Fotos del informe</h4>
-
+        <div class="col-lg-8">
             <!-- Galería de miniaturas -->
-            <div class="d-flex flex-wrap gap-3 mb-4">
+            <div class="gallery-container">
+                <h5 class="mb-3 fw-bold">
+                    <i class="bi bi-images me-2"></i>
+                    Fotos cargadas
+                    {% if fotos %}
+                        <span class="badge bg-primary ms-2">{{ fotos.count }}</span>
+                    {% endif %}
+                </h5>
+
                 {% if fotos %}
-                    {% for foto in fotos %}
-                        <div style="width: 120px;">
-                            <a href="{% url 'informes:ver_foto' foto.id %}">
-                                <img src="{{ foto.imagen.url }}" alt="Foto" class="img-thumbnail w-100">
+                    <div class="gallery-grid">
+                        {% for foto in fotos %}
+                            <a href="{% url 'informes:ver_foto' foto.id %}" class="photo-card">
+                                <img src="{{ foto.imagen.url }}" alt="Foto del informe">
+                                <div class="photo-overlay">
+                                    <i class="bi bi-eye text-white"></i>
+                                </div>
                             </a>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 {% else %}
-                    <p>No hay fotos cargadas aún.</p>
+                    <div class="empty-gallery">
+                        <i class="bi bi-image"></i>
+                        <p class="mb-0">No hay fotos cargadas aún</p>
+                        <small>Agregue la primera foto usando el formulario de abajo</small>
+                    </div>
                 {% endif %}
             </div>
 
             <!-- Formulario para agregar nueva foto -->
-            <form method="post" enctype="multipart/form-data" class="border p-3 rounded bg-light">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <input type="hidden" name="next" value="{{ request.GET.next }}">
-                    {{ form.imagen.label_tag }}
-                    {{ form.imagen }}
+            <div class="form-upload-card">
+                <div class="card-header-custom">
+                    <h5>
+                        <i class="bi bi-cloud-arrow-up me-2"></i>
+                        Agregar Nueva Foto
+                    </h5>
                 </div>
-                <button type="submit" class="btn btn-primary">Agregar Foto</button>
-                <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-success ms-2">← Volver</a>
-            </form>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+
+                    <div class="file-input-wrapper">
+                        <label for="id_imagen" class="file-input-label">
+                            <i class="bi bi-cloud-upload d-block"></i>
+                            <strong>Seleccionar imagen</strong>
+                            <p class="mb-0 small text-muted mt-2">Formatos: JPG, PNG, GIF</p>
+                        </label>
+                        {{ form.imagen }}
+                    </div>
+
+                    <div class="d-flex gap-2 justify-content-end">
+                        <a href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'informes:lista_informes' %}{% endif %}" class="btn btn-modern-back">
+                            <i class="bi bi-arrow-left me-2"></i>
+                            Volver
+                        </a>
+                        <button type="submit" class="btn btn-modern-upload">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Agregar Foto
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <!-- Columna derecha: Detalles del informe -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-header text-white" style="background-color: #5bc0de;">
-                    <h5 class="mb-0">📝 Detalles del Informe Nº {{ informe.id|stringformat:"010d" }}</h5>
+        <div class="col-lg-4">
+            <div class="details-card">
+                <div class="card-header-gradient">
+                    <h5>
+                        <i class="bi bi-file-earmark-text"></i>
+                        Detalles del Informe
+                    </h5>
                 </div>
-                <div class="card-body texto-grande" >
-                    <p><strong>Título:</strong> {{ informe.titulo }}</p>
-                    <p><strong>Empleado:</strong> 
-                        {% if informe.empleado %}
-                            {{ informe.empleado }}
-                        {% else %}
-                            AUN NO DETERMINADO
-                        {% endif %}
-                    </p>
-                    <p><strong>Bus:</strong> {{ informe.bus.ficha }} - {{ informe.bus.marca.nombre }} {{ informe.bus.modelo.nombre }} ({{ informe.bus.dominio }})</p>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <span class="badge-informe">N° {{ informe.id|stringformat:"010d" }}</span>
+                    </div>
 
-                    <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
-                    <p><strong>Fecha y hora:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
-                    <p><strong>Descripción:</strong><br>{{ informe.descripcion }}</p>
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="bi bi-chat-left-text"></i>
+                            Título
+                        </div>
+                        <div class="detail-value">{{ informe.titulo }}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="bi bi-person"></i>
+                            Empleado
+                        </div>
+                        <div class="detail-value">
+                            {% if informe.empleado %}
+                                {{ informe.empleado }}
+                            {% else %}
+                                <span class="text-muted">AÚN NO DETERMINADO</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="bi bi-bus-front"></i>
+                            Bus
+                        </div>
+                        <div class="detail-value">
+                            <strong>Ficha:</strong> {{ informe.bus.ficha }}<br>
+                            <strong>Modelo:</strong> {{ informe.bus.marca.nombre }} {{ informe.bus.modelo.nombre }}<br>
+                            <strong>Dominio:</strong> {{ informe.bus.dominio }}
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="bi bi-building"></i>
+                            Sucursal
+                        </div>
+                        <div class="detail-value">{{ informe.sucursal }}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="bi bi-calendar-event"></i>
+                            Fecha y Hora
+                        </div>
+                        <div class="detail-value">{{ informe.fecha_hora|date:"d/m/Y H:i" }}</div>
+                    </div>
+
+                    <div class="detail-item">
+                        <div class="detail-label">
+                            <i class="bi bi-card-text"></i>
+                            Descripción
+                        </div>
+                        <div class="detail-value">{{ informe.descripcion }}</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Mostrar nombre del archivo seleccionado
+    document.getElementById('id_imagen').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name;
+        const label = document.querySelector('.file-input-label strong');
+        if (fileName) {
+            label.textContent = fileName;
+            label.parentElement.querySelector('i').className = 'bi bi-check-circle d-block';
+        }
+    });
+</script>
 {% endblock %}
