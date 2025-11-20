@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="container mt-4" style="max-width: 900px;">
-    <div class="card shadow">
-        <div class="card-header text-white" style="background-color: #5bc0de;">
+    <div class="card shadow-sm border-0">
+        <div class="card-header card-header-pastel">
             <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Crear Informe</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
             <form method="post" enctype="multipart/form-data" id="informeForm" class="row g-3">
                 {% csrf_token %}
 
@@ -16,7 +16,7 @@
 
                 <!-- Título -->
                 <div class="col-12">
-                    <label for="id_titulo" class="form-label fw-semibold">Título</label>
+                    <label for="id_titulo" class="form-label fw-semibold label-dark-mode">Título</label>
                     {{ form.titulo }}
                     {% if form.titulo.errors %}
                         <div class="invalid-feedback d-block">
@@ -29,7 +29,7 @@
 
                 <!-- Descripción -->
                 <div class="col-12">
-                    <label for="id_descripcion" class="form-label fw-semibold">Descripción</label>
+                    <label for="id_descripcion" class="form-label fw-semibold label-dark-mode">Descripción</label>
                     {{ form.descripcion }}
                     {% if form.descripcion.errors %}
                         <div class="invalid-feedback d-block">
@@ -42,7 +42,7 @@
 
                 <!-- Fila 1: Fecha, Sucursal, Origen -->
                 <div class="col-md-4">
-                    <label for="id_fecha_hora" class="form-label fw-semibold">Fecha y Hora</label>
+                    <label for="id_fecha_hora" class="form-label fw-semibold label-dark-mode">Fecha y Hora</label>
                     {{ form.fecha_hora }}
                     {% if form.fecha_hora.errors %}
                         <div class="invalid-feedback d-block">
@@ -54,7 +54,9 @@
                 </div>
 
                 <div class="col-md-4">
-                    <label for="id_sucursal" class="form-label fw-semibold">Sucursal <span class="text-danger">*</span></label>
+                    <label for="id_sucursal" class="form-label fw-semibold label-dark-mode">
+                        Sucursal <span class="text-danger">*</span>
+                    </label>
                     {{ form.sucursal }}
                     {% if form.sucursal.errors %}
                         <div class="invalid-feedback d-block">
@@ -63,11 +65,13 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                    <small class="text-muted">Seleccione primero la sucursal</small>
+                    <small class="text-muted d-block mt-1">
+                        <i class="bi bi-info-circle"></i> Seleccione primero la sucursal
+                    </small>
                 </div>
 
                 <div class="col-md-4">
-                    <label for="id_origen" class="form-label fw-semibold">Origen</label>
+                    <label for="id_origen" class="form-label fw-semibold label-dark-mode">Origen</label>
                     {{ form.origen }}
                     {% if form.origen.errors %}
                         <div class="invalid-feedback d-block">
@@ -80,12 +84,16 @@
 
                 <!-- Búsqueda de Empleado con autocompletado -->
                 <div class="col-md-6">
-                    <label for="id_empleado_search" class="form-label fw-semibold">Empleado (opcional)</label>
+                    <label for="id_empleado_search" class="form-label fw-semibold label-dark-mode">
+                        <i class="bi bi-person"></i> Empleado (opcional)
+                    </label>
                     {{ form.empleado_search }}
                     <div id="empleado-results" class="autocomplete-results"></div>
-                    <div id="empleado-selected" class="alert alert-info mt-2" style="display: none;">
-                        <strong>Seleccionado:</strong> <span id="empleado-selected-text"></span>
-                        <button type="button" class="btn-close btn-sm float-end" onclick="clearEmpleado()"></button>
+                    <div id="empleado-selected" class="alert alert-success-pastel mt-2" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><strong>Seleccionado:</strong> <span id="empleado-selected-text"></span></span>
+                            <button type="button" class="btn-close btn-sm" onclick="clearEmpleado()"></button>
+                        </div>
                     </div>
                     {% if form.empleado_search.errors %}
                         <div class="invalid-feedback d-block">
@@ -94,17 +102,23 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                    <small class="text-muted"><i class="bi bi-info-circle"></i> Escriba al menos 3 caracteres del legajo o nombre</small>
+                    <small class="text-muted d-block mt-1">
+                        <i class="bi bi-search"></i> Escriba al menos 3 caracteres del legajo o nombre
+                    </small>
                 </div>
 
                 <!-- Búsqueda de Bus con autocompletado -->
                 <div class="col-md-6">
-                    <label for="id_bus_search" class="form-label fw-semibold">Bus (opcional)</label>
+                    <label for="id_bus_search" class="form-label fw-semibold label-dark-mode">
+                        <i class="bi bi-bus-front"></i> Bus (opcional)
+                    </label>
                     {{ form.bus_search }}
                     <div id="bus-results" class="autocomplete-results"></div>
-                    <div id="bus-selected" class="alert alert-info mt-2" style="display: none;">
-                        <strong>Seleccionado:</strong> <span id="bus-selected-text"></span>
-                        <button type="button" class="btn-close btn-sm float-end" onclick="clearBus()"></button>
+                    <div id="bus-selected" class="alert alert-success-pastel mt-2" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><strong>Seleccionado:</strong> <span id="bus-selected-text"></span></span>
+                            <button type="button" class="btn-close btn-sm" onclick="clearBus()"></button>
+                        </div>
                     </div>
                     {% if form.bus_search.errors %}
                         <div class="invalid-feedback d-block">
@@ -113,16 +127,18 @@
                             {% endfor %}
                         </div>
                     {% endif %}
-                    <small class="text-muted"><i class="bi bi-info-circle"></i> Escriba al menos 3 caracteres de la ficha</small>
+                    <small class="text-muted d-block mt-1">
+                        <i class="bi bi-search"></i> Escriba al menos 3 caracteres de la ficha
+                    </small>
                 </div>
 
                 <!-- Botones -->
-                <div class="col-12 text-end mt-4">
-                    <button type="submit" class="btn btn-primary">
+                <div class="col-12 text-end mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-pastel-blue">
                         <i class="bi bi-save me-1"></i> Guardar Informe
                     </button>
-                    <a href="{% url 'informes:lista_informes' %}" class="btn btn-secondary ms-2">
-                        <i class="bi bi-arrow-left me-1"></i> Volver a la lista
+                    <a href="{% url 'informes:lista_informes' %}" class="btn btn-pastel-grey ms-2">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
                     </a>
                 </div>
             </form>
@@ -131,16 +147,77 @@
 </div>
 
 <style>
+    /* Card header con gradiente pastel */
+    .card-header-pastel {
+        background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+        color: #0d47a1;
+        font-weight: 600;
+        border-bottom: 2px solid #64b5f6;
+    }
+
+    /* Etiquetas adaptables a modo oscuro */
+    .label-dark-mode {
+        color: #212529;
+    }
+
+    /* Botones pastel */
+    .btn-pastel-blue {
+        background-color: #90caf9;
+        border-color: #64b5f6;
+        color: #0d47a1;
+        font-weight: 500;
+    }
+
+    .btn-pastel-blue:hover {
+        background-color: #64b5f6;
+        border-color: #42a5f5;
+        color: #0d47a1;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(100, 181, 246, 0.3);
+    }
+
+    .btn-pastel-grey {
+        background-color: #e0e0e0;
+        border-color: #bdbdbd;
+        color: #424242;
+        font-weight: 500;
+    }
+
+    .btn-pastel-grey:hover {
+        background-color: #bdbdbd;
+        border-color: #9e9e9e;
+        color: #212121;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(189, 189, 189, 0.3);
+    }
+
+    .btn-pastel-blue,
+    .btn-pastel-grey {
+        transition: all 0.2s ease;
+    }
+
+    /* Alert de selección con estilo pastel */
+    .alert-success-pastel {
+        background-color: #c8e6c9;
+        border: 1px solid #a5d6a7;
+        color: #2e7d32;
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+    }
+
+    /* Autocomplete results */
     .autocomplete-results {
         position: absolute;
         z-index: 1000;
         background: white;
-        border: 1px solid #ddd;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
         max-height: 250px;
         overflow-y: auto;
         width: calc(100% - 24px);
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         display: none;
+        margin-top: 2px;
     }
 
     .autocomplete-results.show {
@@ -148,35 +225,43 @@
     }
 
     .autocomplete-item {
-        padding: 10px 15px;
+        padding: 12px 15px;
         cursor: pointer;
         border-bottom: 1px solid #f0f0f0;
         transition: background-color 0.2s;
     }
 
     .autocomplete-item:hover {
-        background-color: #f8f9fa;
+        background-color: #e3f2fd;
     }
 
     .autocomplete-item:last-child {
         border-bottom: none;
     }
 
-    .autocomplete-loading {
-        padding: 10px 15px;
+    .autocomplete-loading,
+    .autocomplete-no-results {
+        padding: 12px 15px;
         text-align: center;
         color: #6c757d;
     }
 
     .autocomplete-no-results {
-        padding: 10px 15px;
-        text-align: center;
-        color: #6c757d;
         font-style: italic;
     }
 
-    /* Modo oscuro */
+    /* Modo oscuro con @media */
     @media (prefers-color-scheme: dark) {
+        .label-dark-mode {
+            color: #dee2e6 !important;
+        }
+
+        .card-header-pastel {
+            background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+            color: #bbdefb;
+            border-bottom-color: #1976d2;
+        }
+
         .autocomplete-results {
             background: #343a40;
             border-color: #495057;
@@ -184,11 +269,34 @@
 
         .autocomplete-item {
             border-bottom-color: #495057;
+            color: #dee2e6;
         }
 
         .autocomplete-item:hover {
             background-color: #495057;
         }
+
+        .autocomplete-loading,
+        .autocomplete-no-results {
+            color: #adb5bd;
+        }
+
+        .alert-success-pastel {
+            background-color: #1e3a1e;
+            border-color: #2e7d32;
+            color: #a5d6a7;
+        }
+    }
+
+    /* Modo oscuro con atributo data-bs-theme */
+    [data-bs-theme="dark"] .label-dark-mode {
+        color: #dee2e6 !important;
+    }
+
+    [data-bs-theme="dark"] .card-header-pastel {
+        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+        color: #bbdefb;
+        border-bottom-color: #1976d2;
     }
 
     [data-bs-theme="dark"] .autocomplete-results {
@@ -203,6 +311,17 @@
 
     [data-bs-theme="dark"] .autocomplete-item:hover {
         background-color: #495057;
+    }
+
+    [data-bs-theme="dark"] .autocomplete-loading,
+    [data-bs-theme="dark"] .autocomplete-no-results {
+        color: #adb5bd;
+    }
+
+    [data-bs-theme="dark"] .alert-success-pastel {
+        background-color: #1e3a1e;
+        border-color: #2e7d32;
+        color: #a5d6a7;
     }
 </style>
 
@@ -275,7 +394,7 @@
         }, 300);
     });
 
-    // Búsqueda de buses
+    // Búsqueda de buses (sin filtro de sucursal)
     document.getElementById('id_bus_search').addEventListener('input', function(e) {
         const query = e.target.value.trim();
         const resultsDiv = document.getElementById('bus-results');
@@ -291,21 +410,13 @@
             return;
         }
 
-        // Verificar que haya seleccionado una sucursal
-        const sucursalId = getSucursalId();
-        if (!sucursalId) {
-            resultsDiv.innerHTML = '<div class="autocomplete-no-results"><i class="bi bi-exclamation-circle"></i> Primero seleccione una sucursal</div>';
-            resultsDiv.classList.add('show');
-            return;
-        }
-
         // Mostrar indicador de carga
         resultsDiv.innerHTML = '<div class="autocomplete-loading"><i class="bi bi-hourglass-split"></i> Buscando...</div>';
         resultsDiv.classList.add('show');
 
         // Esperar 300ms antes de hacer la búsqueda (debounce)
         busTimeout = setTimeout(() => {
-            fetch(`${buscarBusesUrl}?q=${encodeURIComponent(query)}&sucursal_id=${sucursalId}`)
+            fetch(`${buscarBusesUrl}?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.error) {
@@ -316,7 +427,7 @@
                         let html = '';
                         data.buses.forEach(bus => {
                             html += `<div class="autocomplete-item" onclick="selectBus(${bus.id}, '${bus.display.replace(/'/g, "\\'")}')">
-                                ${bus.display}
+                                <strong>Ficha ${bus.ficha}</strong> - ${bus.dominio}
                             </div>`;
                         });
                         resultsDiv.innerHTML = html;
@@ -371,10 +482,10 @@
         }
     });
 
-    // Limpiar búsquedas cuando cambia la sucursal
+    // Limpiar solo búsqueda de empleados cuando cambia la sucursal
     document.getElementById('id_sucursal').addEventListener('change', function() {
         clearEmpleado();
-        clearBus();
+        // NO limpiar bus porque no depende de la sucursal
     });
 
     // Si hay valores iniciales (modo edición), mostrar los badges

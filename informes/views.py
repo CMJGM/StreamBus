@@ -946,35 +946,20 @@ def buscar_empleados_ajax(request):
 @login_required
 def buscar_buses_ajax(request):
     """
-    Endpoint Ajax para buscar buses por sucursal y término de búsqueda.
+    Endpoint Ajax para buscar buses por término de búsqueda.
     Requiere al menos 3 caracteres para activar la búsqueda.
+    Nota: Buses no están asociados a sucursales, se buscan globalmente.
     """
     query = request.GET.get('q', '').strip()
-    sucursal_id = request.GET.get('sucursal_id', '')
 
     # Validar que tenga al menos 3 caracteres
     if len(query) < 3:
         return JsonResponse({'buses': []})
 
-    # Validar sucursal
-    if not sucursal_id:
-        return JsonResponse({'buses': [], 'error': 'Debe seleccionar una sucursal primero'})
-
-    try:
-        sucursal_id = int(sucursal_id)
-    except ValueError:
-        return JsonResponse({'buses': [], 'error': 'ID de sucursal inválido'})
-
-    # Verificar permisos del usuario sobre la sucursal
-    if hasattr(request.user, 'profile'):
-        sucursales_permitidas = request.user.profile.get_sucursales_permitidas()
-        if not sucursales_permitidas.filter(id=sucursal_id).exists():
-            return JsonResponse({'buses': [], 'error': 'No tiene permisos para esta sucursal'})
-
-    # Buscar buses por ficha
+    # Buscar buses por ficha (sin filtro de sucursal porque Buses no tiene ese campo)
     buses = Buses.objects.filter(
-        sucursal_id=sucursal_id,
-        ficha__icontains=query
+        ficha__icontains=query,
+        estado=True  # Solo buses activos
     ).order_by('ficha')[:20]  # Limitar a 20 resultados
 
     data = {
@@ -982,7 +967,8 @@ def buscar_buses_ajax(request):
             {
                 'id': bus.id,
                 'ficha': str(bus.ficha),
-                'display': f"Ficha {bus.ficha}"
+                'dominio': bus.dominio,
+                'display': f"Ficha {bus.ficha} - {bus.dominio}"
             }
             for bus in buses
         ]
