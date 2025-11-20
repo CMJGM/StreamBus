@@ -3,14 +3,32 @@
 
 {% block content %}
 <div class="container mt-4" style="max-width: 70%;">
-    <h2>Lista de Empleados</h2>
-    
+    <!-- Encabezado con sucursal -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-1">
+                <i class="bi bi-people-fill"></i> Empleados
+            </h2>
+            <p class="text-muted mb-0">
+                <i class="bi bi-building"></i>
+                <strong>{{ sucursal.nombre }}</strong>
+                <span class="badge bg-secondary ms-2">{{ total_empleados }} empleado{{ total_empleados|pluralize }}</span>
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'seleccionar_sucursal_empleados' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left-right"></i> Cambiar Sucursal
+            </a>
+        </div>
+    </div>
+
+    <!-- Barra de filtros y ordenamiento -->
     <form method="get" class="d-flex justify-content-between align-items-center mt-3">
         <div class="d-flex align-items-center">
             <input type="text" name="filtro" value="{{ filtro }}" class="form-control form-control-sm me-2" placeholder="Filtrar por apellido" style="height: 30px;">
             <button type="submit" class="btn btn-outline-primary btn-sm me-3">Filtrar</button>
         </div>
-    
+
         <div>
             {% if orden == 'apellido_asc' %}
                 <button type="submit" name="orden" value="apellido_desc" class="btn btn-secondary btn-sm">
@@ -23,10 +41,10 @@
             {% endif %}
         </div>
     </form>
-    
-    <!-- Botón Agregar Empleado movido aquí para mejor visibilidad -->
+
+    <!-- Botón Agregar Empleado -->
     <div class="mt-3 mb-3">
-        <a href="{% url 'crear_empleado' %}" class="btn btn-success">
+        <a href="{% url 'crear_empleado' %}?sucursal={{ sucursal.id }}" class="btn btn-success">
             <i class="bi bi-plus-circle"></i> Agregar Empleado
         </a>
     </div>
@@ -69,7 +87,7 @@
     {% if hay_filtro %}
         <div class="alert alert-info mt-3" role="alert">
             Mostrando resultados filtrados por: <strong>"{{ filtro }}"</strong>.
-            <a href="{% url 'lista_empleados' %}" class="btn btn-sm btn-outline-secondary ms-2">Quitar filtro</a>
+            <a href="{% url 'lista_empleados_sucursal' sucursal.id %}" class="btn btn-sm btn-outline-secondary ms-2">Quitar filtro</a>
         </div>
     {% endif %}
 
