@@ -32,3 +32,4 @@ staticfiles/
 .DS_Store
 Thumbs.db
 *.pyc
+debug.log
