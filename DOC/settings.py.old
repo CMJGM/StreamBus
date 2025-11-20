@@ -2,20 +2,21 @@ import os
 import mimetypes
 from pathlib import Path
 from celery.schedules import crontab
-from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# =============================================================================
-# SECURITY - Configuración desde variables de entorno
-# =============================================================================
-SECRET_KEY = config('DJANGO_SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-@oic64r!trv^3_eydz6@4p0svih5_v-y)@!w%cq)22_=t^7mzh'
 
-# Configuración de archivos
-DATA_UPLOAD_MAX_MEMORY_SIZE = config('DATA_UPLOAD_MAX_MEMORY_SIZE', default=524288000, cast=int)
-MAX_VIDEO_UPLOAD_SIZE_MB = config('MAX_VIDEO_UPLOAD_SIZE_MB', default=60, cast=int) 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+ALLOWED_HOSTS = ['192.168.250.176',
+                '190.183.254.254',
+                'sql2022.dominio.local',
+                'mx01.empresarecreo.com.ar',]
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 524288000 
+MAX_VIDEO_UPLOAD_SIZE_MB = 60 
 
 
 # Application definition
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     'sucursales',
     'informes',
     'sit',
-    'usuarios',
 ]
 
 MIDDLEWARE = [
@@ -90,22 +90,22 @@ WSGI_APPLICATION = 'StreamBus.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-        'OPTIONS': {'driver': config('DB_DRIVER', default='ODBC Driver 17 for SQL Server')},
+        'NAME': 'streambus',
+        'USER': 'sa',
+        'PASSWORD': 'HPsql2012',
+        'HOST': '190.183.254.254',
+        'PORT': '62593',
+        'OPTIONS': {'driver': 'ODBC Driver 17 for SQL Server',},
     },
     'SIT': {
         'ENGINE': 'mssql',
-        'NAME': config('DB_SIT_NAME'),
-        'USER': config('DB_SIT_USER'),
-        'PASSWORD': config('DB_SIT_PASSWORD'),
-        'HOST': config('DB_SIT_HOST'),
-        'PORT': config('DB_SIT_PORT'),
-        'OPTIONS': {'driver': config('DB_DRIVER', default='ODBC Driver 17 for SQL Server')},
-    },
+        'NAME': 'SIT',
+        'USER': 'wwwStreamBusSitR',
+        'PASSWORD': 'y57b8376*bn7HM-e5',
+        'HOST': '190.183.254.254',
+        'PORT': '62593',
+        'OPTIONS': { 'driver': 'ODBC Driver 17 for SQL Server',},  
+    },    
 }
 
 
@@ -174,13 +174,13 @@ import ssl
 import smtplib
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+EMAIL_HOST = '192.168.250.250'
+EMAIL_PORT = 25
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = 'cristian.gudino'  # Prueba sin @dominio primero
+EMAIL_HOST_PASSWORD = 'cristian6163'
+DEFAULT_FROM_EMAIL = 'sit.autobuses@autobusessantafe.com.ar'  # El FROM puede llevar dominio
 
 
 
@@ -217,16 +217,16 @@ LOGGING = {
 # =============================================================================
 
 # Feature flag principal para activar citos
-USE_CITOS_LIBRARY = config('USE_CITOS_LIBRARY', default=False, cast=bool)
+USE_CITOS_LIBRARY = os.environ.get('USE_CITOS_LIBRARY', 'False').lower() == 'true'
 
-# Configuración GPS base
-GPS_BASE_URL = config('GPS_BASE_URL')
-GPS_TIMEOUT = config('GPS_TIMEOUT', default=30, cast=int)
-GPS_VERIFY_SSL = config('GPS_VERIFY_SSL', default=True, cast=bool)
+# Configuración GPS base (migrar desde hardcoded)
+GPS_BASE_URL = os.environ.get('GPS_BASE_URL', 'http://190.183.254.253:8088')
+GPS_TIMEOUT = int(os.environ.get('GPS_TIMEOUT', '30'))
+GPS_VERIFY_SSL = os.environ.get('GPS_VERIFY_SSL', 'True').lower() == 'true'
 
-# Credenciales GPS
-GPS_ACCOUNT = config('GPS_ACCOUNT')
-GPS_PASSWORD = config('GPS_PASSWORD')
+# Credenciales GPS (migrar desde hardcoded - USAR LAS ACTUALES)
+GPS_ACCOUNT = os.environ.get('GPS_ACCOUNT', "admin")  # ← Poner tu usuario actual
+GPS_PASSWORD = os.environ.get('GPS_PASSWORD', "Buses2024")  # ← Poner tu password actual
 
 # Funciones específicas a migrar (control granular)
 CITOS_ENABLED_FUNCTIONS = {
@@ -254,19 +254,19 @@ if DEBUG:
 # Configuración básica de descargas (versión simplificada)
 DOWNLOAD_OPTIMIZATION = {
     # Número máximo de workers para descargas concurrentes
-    'MAX_DOWNLOAD_WORKERS': config('MAX_DOWNLOAD_WORKERS', default=25, cast=int),
-
+    'MAX_DOWNLOAD_WORKERS': 25,  # Empezamos conservador
+    
     # Número máximo de descargas simultáneas
-    'MAX_CONCURRENT_DOWNLOADS': config('MAX_CONCURRENT_DOWNLOADS', default=10, cast=int),
-
+    'MAX_CONCURRENT_DOWNLOADS': 10,  # Empezamos conservador
+    
     # Timeout para conexiones HTTP (segundos)
-    'HTTP_TIMEOUT': config('HTTP_TIMEOUT', default=40, cast=int),
-
+    'HTTP_TIMEOUT': 40,
+    
     # Tamaño de batch para consultas de API
-    'API_BATCH_SIZE': config('API_BATCH_SIZE', default=200, cast=int),
-
+    'API_BATCH_SIZE': 200,  # Empezamos con páginas más pequeñas
+    
     # Intervalo de polling (milisegundos)
-    'INITIAL_POLL_INTERVAL': config('INITIAL_POLL_INTERVAL', default=8000, cast=int),
+    'INITIAL_POLL_INTERVAL': 8000,  # 3 segundos inicial
 }
 
 # Agregar el middleware (ya no debería dar error)
@@ -428,8 +428,8 @@ AUTO_DOWNLOAD_CONFIG = {
 # CRONJOBS NO debe existir
 
 # ===== SOLO Celery =====
-CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://localhost:6379/0')
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

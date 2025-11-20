@@ -1,4 +1,19 @@
-# Videos
+# =============================================================================
+# STREAMBUS - .gitignore
+# =============================================================================
+
+# =============================================================================
+# ARCHIVOS DE CONFIGURACIÓN SENSIBLES (NUNCA SUBIR)
+# =============================================================================
+.env
+.env.*
+!.env.example
+*.env
+.env.local
+.env.production
+.env.development
+
+# Videos (archivos grandes)
 *.mp4
 *.avi
 *.mov
@@ -14,23 +29,44 @@ __pycache__/
 env/
 venv/
 ENV/
-media/informes/
+.venv
+*.egg-info/
+dist/
+build/
 
 # Django
 *.log
 db.sqlite3
+db.sqlite3-journal
 media/
+media/informes/
 staticfiles/
+/static/
+local_settings.py
 
 # IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
 
 # OS
 .DS_Store
 Thumbs.db
-*.pyc
 debug.log
-*.log
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Backups
+*.bak
+*.backup
