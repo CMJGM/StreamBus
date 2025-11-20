@@ -18,9 +18,13 @@ class UserProfileInline(admin.StackedInline):
             'fields': ('sucursales', 'puede_ver_todas', 'es_gerente'),
             'description': 'Configure las sucursales a las que este usuario tiene acceso.'
         }),
+        ('Permisos de Orígenes', {
+            'fields': ('origenes', 'puede_usar_todos_origenes'),
+            'description': 'Configure los orígenes de informes que este usuario puede usar.'
+        }),
     )
 
-    filter_horizontal = ('sucursales',)  # Widget mejorado para ManyToMany
+    filter_horizontal = ('sucursales', 'origenes')  # Widget mejorado para ManyToMany
 
 
 class CustomUserAdmin(BaseUserAdmin):
@@ -142,12 +146,13 @@ class UserProfileAdmin(admin.ModelAdmin):
         'user',
         'get_sucursales_list',
         'puede_ver_todas',
+        'puede_usar_todos_origenes',
         'es_gerente',
     )
 
-    list_filter = ('puede_ver_todas', 'es_gerente')
+    list_filter = ('puede_ver_todas', 'puede_usar_todos_origenes', 'es_gerente')
     search_fields = ('user__username', 'user__first_name', 'user__last_name')
-    filter_horizontal = ('sucursales',)
+    filter_horizontal = ('sucursales', 'origenes')
 
     fieldsets = (
         ('Usuario', {
@@ -155,6 +160,9 @@ class UserProfileAdmin(admin.ModelAdmin):
         }),
         ('Permisos de Sucursales', {
             'fields': ('sucursales', 'puede_ver_todas', 'es_gerente'),
+        }),
+        ('Permisos de Orígenes', {
+            'fields': ('origenes', 'puede_usar_todos_origenes'),
         }),
     )
 

@@ -4,6 +4,40 @@ from buses.models import Buses
 from sucursales.models import Sucursales
 from django.utils import timezone
 
+
+class Origen(models.Model):
+    """
+    Modelo para gestionar los diferentes orígenes de informes.
+    Permite asignar orígenes específicos a usuarios.
+    """
+    nombre = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name="Nombre del Origen"
+    )
+    descripcion = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Descripción"
+    )
+    activo = models.BooleanField(
+        default=True,
+        verbose_name="Activo",
+        help_text="Si está inactivo, no aparecerá en los formularios"
+    )
+    orden = models.IntegerField(
+        default=0,
+        verbose_name="Orden de visualización"
+    )
+
+    class Meta:
+        verbose_name = "Origen"
+        verbose_name_plural = "Orígenes"
+        ordering = ['orden', 'nombre']
+
+    def __str__(self):
+        return self.nombre
+
 def ruta_archivo(instance, filename):
     ficha = instance.informe.bus.ficha    
     fecha_hora = instance.informe.fecha_hora
@@ -18,20 +52,12 @@ class Informe(models.Model):
     sucursal = models.ForeignKey(Sucursales, on_delete=models.CASCADE)
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=True, blank=True)
     bus = models.ForeignKey(Buses, on_delete=models.CASCADE)
-    generado = models.BooleanField(default=False) 
-    ORIGEN_CHOICES = [
-        ("Sistemas", "Sistemas"),
-        ("Guardia", "Guardia"),
-        ("RRHH", "RRHH"),
-        ("Taller", "Taller"),
-        ("Siniestros", "Siniestros"),
-        ("Inspectores", "Inspectores"), 
-    ]
-    
-    origen = models.CharField(
-        max_length=20,
-        choices=ORIGEN_CHOICES,
-        default="Sistemas"
+    generado = models.BooleanField(default=False)
+    origen = models.ForeignKey(
+        Origen,
+        on_delete=models.PROTECT,
+        verbose_name="Origen",
+        help_text="Origen del informe"
     )
 
     class Meta:

@@ -24,10 +24,24 @@ class UserProfile(models.Model):
         help_text="Sucursales que el usuario puede ver y gestionar"
     )
 
+    origenes = models.ManyToManyField(
+        'informes.Origen',
+        blank=True,
+        related_name='usuarios',
+        verbose_name="Orígenes permitidos",
+        help_text="Orígenes que el usuario puede usar al crear/editar informes"
+    )
+
     puede_ver_todas = models.BooleanField(
         default=False,
         verbose_name="¿Puede ver todas las sucursales?",
         help_text="Si está marcado, el usuario podrá ver todas las sucursales sin restricciones"
+    )
+
+    puede_usar_todos_origenes = models.BooleanField(
+        default=False,
+        verbose_name="¿Puede usar todos los orígenes?",
+        help_text="Si está marcado, el usuario podrá usar todos los orígenes sin restricciones"
     )
 
     es_gerente = models.BooleanField(
@@ -60,6 +74,17 @@ class UserProfile(models.Model):
             return Sucursales.objects.all()
         return self.sucursales.all()
 
+    def get_origenes_permitidos(self):
+        """
+        Retorna QuerySet de orígenes que el usuario puede usar.
+        Si puede_usar_todos_origenes=True, retorna todos los orígenes activos.
+        """
+        from informes.models import Origen
+
+        if self.puede_usar_todos_origenes:
+            return Origen.objects.filter(activo=True)
+        return self.origenes.filter(activo=True)
+
     def tiene_acceso_sucursal(self, sucursal):
         """
         Verifica si el usuario tiene acceso a una sucursal específica.
@@ -77,6 +102,24 @@ class UserProfile(models.Model):
             return self.sucursales.filter(id=sucursal).exists()
 
         return sucursal in self.sucursales.all()
+
+    def tiene_acceso_origen(self, origen):
+        """
+        Verifica si el usuario tiene acceso a un origen específico.
+
+        Args:
+            origen: Instancia de Origen o ID de origen
+
+        Returns:
+            bool: True si tiene acceso, False en caso contrario
+        """
+        if self.puede_usar_todos_origenes:
+            return True
+
+        if isinstance(origen, int):
+            return self.origenes.filter(id=origen, activo=True).exists()
+
+        return origen in self.origenes.filter(activo=True)
 
 
 # Signal para crear automáticamente UserProfile cuando se crea un User
