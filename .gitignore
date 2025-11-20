@@ -33,3 +33,4 @@ staticfiles/
 Thumbs.db
 *.pyc
 debug.log
+*.log
