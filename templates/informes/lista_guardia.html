@@ -165,26 +165,26 @@
                             <span class="badge badge-compact badge-origen-{{ informe.origen.nombre|lower }}">{{ informe.origen.nombre }}</span>
                         </td>
                         <td class="text-center fecha-compact">{{ informe.fecha_hora|date:"d/m/y H:i" }}</td>
-                        <td class="text-center">
+                        <td>
                             <div class="d-flex gap-1 justify-content-center flex-wrap">
-                                <a href="{% url 'informes:editar_informe' informe.pk %}?next={{ request.get_full_path }}"
-                                   class="btn btn-sm btn-pastel-orange" title="Editar">
-                                    <i class="bi bi-pencil-fill"></i> Editar
+                                <a href="{% url 'informes:editar_informe' informe.pk %}?next={{ request.path }}"
+                                   class="btn btn-sm btn-pastel-orange" title="Editar informe">
+                                    <i class="bi bi-pencil"></i>
                                 </a>
 
-                                <a href="{% url 'informes:cargar_fotos' informe.pk %}?next={{ request.get_full_path }}"
-                                   class="btn btn-sm btn-pastel-pink" title="Imágenes">
-                                    <i class="bi bi-camera-fill"></i> Fotos ({{ informe.fotos.count }})
+                                <a href="{% url 'informes:cargar_fotos' informe.pk %}?next={{ request.path }}"
+                                   class="btn btn-sm btn-pastel-pink" title="Gestionar imágenes">
+                                    <i class="bi bi-image"></i> {{ informe.fotos.count }}
                                 </a>
 
-                                <a href="{% url 'informes:cargar_video' informe.pk %}?next={{ request.get_full_path }}"
-                                   class="btn btn-sm btn-pastel-cyan" title="Videos">
-                                    <i class="bi bi-play-circle-fill"></i> Videos ({{ informe.videos.count }})
+                                <a href="{% url 'informes:cargar_video' informe.pk %}?next={{ request.path }}"
+                                   class="btn btn-sm btn-pastel-cyan" title="Gestionar videos">
+                                    <i class="bi bi-camera-video"></i> {{ informe.videos.count }}
                                 </a>
 
                                 <a href="{% url 'informes:enviar_informe_email' informe.pk %}?next={{ request.get_full_path }}"
-                                   class="btn btn-sm btn-pastel-purple" title="Enviar por email">
-                                    <i class="bi bi-envelope-fill"></i> Enviar
+                                   class="btn btn-sm btn-pastel-purple" title="Enviar por correo">
+                                    <i class="bi bi-envelope"></i>
                                 </a>
                             </div>
                         </td>
