@@ -177,6 +177,10 @@
         background: #1e2530;
         color: #e9ecef;
     }
+    .spin-icon {
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
 </style>
 
 <div class="container mt-3">
@@ -388,6 +392,10 @@
         </div>
         <p class="text-muted small" id="upload-status">Preparando...</p>
         <p class="text-muted small" id="upload-percent">0%</p>
+        <div id="conversion-status" class="mt-3 text-info small" style="display: none;">
+            <i class="bi bi-gear-fill spin-icon me-1"></i>
+            <span id="conversion-text"></span>
+        </div>
     </div>
 </div>
 
@@ -597,18 +605,45 @@
         document.getElementById('upload-status').textContent = 'Enviando formulario...';
         document.getElementById('submit-button').disabled = true;
 
+        // Obtener videos seleccionados para mostrar mensajes de conversión
+        const videoFiles = Array.from(document.getElementById('id_videos').files);
+        const hasVideos = videoFiles.length > 0;
+        let currentVideoIndex = 0;
+
         // Simular progreso
         let progress = 0;
         const progressBar = document.getElementById('progress-bar');
         const uploadPercent = document.getElementById('upload-percent');
         const uploadStatus = document.getElementById('upload-status');
+        const conversionStatus = document.getElementById('conversion-status');
+        const conversionText = document.getElementById('conversion-text');
 
         const interval = setInterval(() => {
-            progress += Math.random() * 15;
-            if (progress > 95) {
-                progress = 95;
+            progress += Math.random() * 10;
+
+            if (progress >= 50 && progress < 95 && hasVideos) {
+                // Fase de conversión de videos
                 uploadStatus.textContent = 'Procesando archivos en el servidor...';
+                conversionStatus.style.display = 'block';
+
+                // Calcular qué video está siendo "convertido"
+                const conversionProgress = (progress - 50) / 45; // 0 a 1 entre 50% y 95%
+                currentVideoIndex = Math.min(
+                    Math.floor(conversionProgress * videoFiles.length),
+                    videoFiles.length - 1
+                );
+
+                if (currentVideoIndex < videoFiles.length) {
+                    conversionText.textContent = `Convirtiendo video ${currentVideoIndex + 1} de ${videoFiles.length}: ${videoFiles[currentVideoIndex].name}`;
+                }
+            } else if (progress >= 95) {
+                progress = 95;
+                uploadStatus.textContent = 'Finalizando...';
+                if (hasVideos) {
+                    conversionText.textContent = `Videos procesados: ${videoFiles.length} de ${videoFiles.length}`;
+                }
             }
+
             progressBar.style.width = progress + '%';
             uploadPercent.textContent = Math.round(progress) + '%';
         }, 500);

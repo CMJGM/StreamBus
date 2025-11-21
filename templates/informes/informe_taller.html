@@ -3,107 +3,629 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card shadow-sm border-0 rounded-3">
+<style>
+    .search-container {
+        position: relative;
+    }
+    .search-results {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 0 0 8px 8px;
+        max-height: 250px;
+        overflow-y: auto;
+        z-index: 1050;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: none;
+    }
+    .search-results.active {
+        display: block;
+    }
+    .search-result-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.2s;
+    }
+    .search-result-item:hover {
+        background: #f8f9fa;
+    }
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+    .search-result-item .main-text {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+    .search-result-item .sub-text {
+        font-size: 0.85em;
+        color: #6c757d;
+    }
+    .selected-item {
+        background: #d4edda;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        padding: 8px 12px;
+        margin-top: 8px;
+        display: none;
+    }
+    .selected-item.active {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .selected-item .remove-btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+        cursor: pointer;
+        font-size: 1.2em;
+    }
+    .field-required::after {
+        content: " *";
+        color: #dc3545;
+    }
+    .card-search-overflow {
+        overflow: visible !important;
+    }
+    .upload-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+    .upload-overlay.active {
+        display: flex;
+    }
+    .upload-progress-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 450px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    .upload-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid #e9ecef;
+        border-top-color: #28a745;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1.5rem;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    .progress-bar-container {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 10px;
+    }
+    .file-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .file-preview-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 0.85em;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .file-preview-item.valid {
+        background: #d4edda;
+        border-color: #28a745;
+    }
+    .file-preview-item.invalid {
+        background: #f8d7da;
+        border-color: #dc3545;
+    }
+    .sucursal-warning {
+        color: #856404;
+        background: #fff3cd;
+        padding: 8px 12px;
+        border-radius: 6px;
+        margin-top: 8px;
+        display: none;
+        font-size: 0.9em;
+    }
+    .sucursal-warning.active {
+        display: block;
+    }
+    [data-bs-theme="dark"] .search-results {
+        background: #2c3e50;
+        border-color: #495057;
+    }
+    [data-bs-theme="dark"] .search-result-item:hover {
+        background: #34495e;
+    }
+    [data-bs-theme="dark"] .search-result-item .main-text {
+        color: #e9ecef;
+    }
+    [data-bs-theme="dark"] .selected-item {
+        background: #1e4620;
+        border-color: #28a745;
+        color: #e9ecef;
+    }
+    [data-bs-theme="dark"] .upload-progress-card {
+        background: #1e2530;
+        color: #e9ecef;
+    }
+    .spin-icon {
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
+</style>
+
+<div class="container mt-3">
+    <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body p-4">
-            <h4 class="card-title text-center mb-3">🔧 Crear Informe de Taller</h4>
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-info bg-gradient rounded-3 p-3 me-3">
+                    <i class="bi bi-tools text-white fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="card-title mb-0">Crear Informe de Taller</h4>
+                    <p class="text-muted mb-0 small">Complete los campos obligatorios (*)</p>
+                </div>
+            </div>
 
             <form method="post" enctype="multipart/form-data" id="form-informe">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
 
-                <div class="row g-3">
-
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>{{ form.titulo.label }}</strong></label>
-                        {{ form.titulo|add_class:"form-control form-control-sm" }}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>{{ form.origen.label }}</strong></label>
-                        <input type="text" name="origen" class="form-control form-control-sm" value="{{ form.initial.origen }}" readonly>
-                    </div>
-
-                    <div class="col-12">
-                        <label class="form-label"><strong>{{ form.descripcion.label }}</strong></label>
-                        {{ form.descripcion|add_class:"form-control form-control-sm" }}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>{{ form.sucursal.label }}</strong></label>
-                        {{ form.sucursal|add_class:"form-select form-select-sm" }}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>{{ form.bus.label }}</strong></label>
-                        {{ form.bus|add_class:"form-select form-select-sm" }}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>{{ form.empleado.label }}</strong></label>
-                        {{ form.empleado|add_class:"form-select form-select-sm" }}
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>{{ form.fecha_hora.label }}</strong></label>
-                        {{ form.fecha_hora }}
-                    </div>
-
+                {% if form.errors %}
+                <div class="alert alert-danger mb-3">
+                    <strong>Por favor corrija los siguientes errores:</strong>
+                    <ul class="mb-0 mt-2">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    </ul>
                 </div>
+                {% endif %}
 
-                <hr class="my-3">
+                {{ form.origen.as_hidden }}
 
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>📷 Subir Imágenes (opcional):</strong></label>
-                        <input type="file" name="imagenes" multiple class="form-control form-control-sm">
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label field-required"><strong>{{ form.titulo.label }}</strong></label>
+                            {{ form.titulo|add_class:"form-control" }}
+                            {% if form.titulo.errors %}
+                                <div class="text-danger small mt-1">{{ form.titulo.errors.0 }}</div>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label"><strong>🎥 Subir Videos (opcional):</strong></label>
-                        <input type="file" name="videos" id="id_videos" multiple class="form-control form-control-sm">
-                        <div id="video-error" class="text-danger mt-2 d-none">
-                            Uno o más archivos superan el tamaño máximo permitido de 60 MB. No se pueden subir.
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label"><strong>Origen</strong></label>
+                            <input type="text" class="form-control bg-light" value="Taller" readonly>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success px-4 py-2 rounded-pill shadow-sm" id="submit-button">
-                        💾 Guardar Informe
-                    </button>
-                    <img id="loading-indicator" src="{% static 'ruta/a/tu/loading.gif' %}" alt="Enviando..." style="display: none; margin-left: 10px;">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label field-required"><strong>{{ form.descripcion.label }}</strong></label>
+                            {{ form.descripcion|add_class:"form-control"|attr:"rows:3" }}
+                            {% if form.descripcion.errors %}
+                                <div class="text-danger small mt-1">{{ form.descripcion.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label field-required"><strong>{{ form.fecha_hora.label }}</strong></label>
+                            {{ form.fecha_hora }}
+                            {% if form.fecha_hora.errors %}
+                                <div class="text-danger small mt-1">{{ form.fecha_hora.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label field-required"><strong>{{ form.sucursal.label }}</strong></label>
+                            {{ form.sucursal|add_class:"form-select"|attr:"id:id_sucursal" }}
+                            {% if form.sucursal.errors %}
+                                <div class="text-danger small mt-1">{{ form.sucursal.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3 card-search-overflow">
+                            <label class="form-label field-required"><strong>Bus (Ficha)</strong></label>
+                            <div class="search-container">
+                                <input type="text"
+                                       id="bus-search"
+                                       class="form-control"
+                                       placeholder="Escriba al menos 3 caracteres..."
+                                       autocomplete="off">
+                                <input type="hidden" name="bus" id="id_bus">
+                                <div class="search-results" id="bus-results"></div>
+                            </div>
+                            <div class="selected-item" id="bus-selected">
+                                <span id="bus-selected-text"></span>
+                                <button type="button" class="remove-btn" onclick="clearBusSelection()">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </div>
+                            {% if form.bus.errors %}
+                                <div class="text-danger small mt-1">{{ form.bus.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3 card-search-overflow">
+                            <label class="form-label"><strong>Empleado</strong> <small class="text-muted">(opcional)</small></label>
+                            <div class="search-container">
+                                <input type="text"
+                                       id="empleado-search"
+                                       class="form-control"
+                                       placeholder="Primero seleccione una sucursal..."
+                                       autocomplete="off"
+                                       disabled>
+                                <input type="hidden" name="empleado" id="id_empleado">
+                                <div class="search-results" id="empleado-results"></div>
+                            </div>
+                            <div class="sucursal-warning" id="sucursal-warning">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                Seleccione una sucursal primero
+                            </div>
+                            <div class="selected-item" id="empleado-selected">
+                                <span id="empleado-selected-text"></span>
+                                <button type="button" class="remove-btn" onclick="clearEmpleadoSelection()">
+                                    <i class="bi bi-x-circle"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3"><i class="bi bi-paperclip me-2"></i>Archivos Multimedia</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label">
+                                <i class="bi bi-image me-1"></i>
+                                <strong>Imagenes</strong>
+                                <small class="text-muted">(opcional, max {{ max_image_size_mb }}MB c/u)</small>
+                            </label>
+                            <input type="file"
+                                   name="imagenes"
+                                   id="id_imagenes"
+                                   multiple
+                                   accept="image/jpeg,image/png,image/gif"
+                                   class="form-control">
+                            <div class="file-preview" id="imagen-preview"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                            <label class="form-label">
+                                <i class="bi bi-camera-video me-1"></i>
+                                <strong>Videos</strong>
+                                <small class="text-muted">(opcional, max {{ max_video_size_mb }}MB c/u)</small>
+                            </label>
+                            <input type="file"
+                                   name="videos"
+                                   id="id_videos"
+                                   multiple
+                                   accept="video/mp4,video/quicktime,video/x-msvideo"
+                                   class="form-control">
+                            <div class="file-preview" id="video-preview"></div>
+                            <div id="video-error" class="text-danger mt-2 d-none"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'inicio' %}" class="btn btn-outline-secondary px-4">
+                        <i class="bi bi-arrow-left me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-success px-5" id="submit-button">
+                        <i class="bi bi-check-circle me-2"></i>Guardar Informe
+                    </button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
+<div class="upload-overlay" id="upload-overlay">
+    <div class="upload-progress-card">
+        <div class="upload-spinner"></div>
+        <h5>Procesando informe...</h5>
+        <p class="text-muted mb-2">Por favor espere mientras se suben los archivos</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <p class="text-muted small" id="upload-status">Preparando...</p>
+        <p class="text-muted small" id="upload-percent">0%</p>
+        <div id="conversion-status" class="mt-3 text-info small" style="display: none;">
+            <i class="bi bi-gear-fill spin-icon me-1"></i>
+            <span id="conversion-text"></span>
+        </div>
+    </div>
+</div>
+
 <script>
-    document.getElementById("form-informe").addEventListener("submit", function(event) {
-        const input = document.getElementById("id_videos");
-        const files = input.files;
-        const errorDiv = document.getElementById("video-error");
-        const maxSizeMB = 60;
-        const maxSizeBytes = maxSizeMB * 1024 * 1024;
-        const submitButton = document.getElementById("submit-button");
-        const loadingIndicator = document.getElementById("loading-indicator");
+    const MAX_VIDEO_SIZE_MB = {{ max_video_size_mb }};
+    const MAX_IMAGE_SIZE_MB = {{ max_image_size_mb }};
+    let selectedSucursalId = null;
 
-        errorDiv.classList.add("d-none");
+    document.getElementById('id_sucursal').addEventListener('change', function() {
+        selectedSucursalId = this.value;
+        const empleadoSearch = document.getElementById('empleado-search');
+        const sucursalWarning = document.getElementById('sucursal-warning');
 
-        for (let i = 0; i < files.length; i++) {
-            if (files[i].size > maxSizeBytes) {
-                errorDiv.classList.remove("d-none");
+        if (selectedSucursalId) {
+            empleadoSearch.disabled = false;
+            empleadoSearch.placeholder = 'Escriba legajo o nombre (min 3 caracteres)...';
+            sucursalWarning.classList.remove('active');
+        } else {
+            empleadoSearch.disabled = true;
+            empleadoSearch.placeholder = 'Primero seleccione una sucursal...';
+            sucursalWarning.classList.add('active');
+            clearEmpleadoSelection();
+        }
+    });
+
+    let busSearchTimeout;
+    document.getElementById('bus-search').addEventListener('input', function() {
+        clearTimeout(busSearchTimeout);
+        const query = this.value.trim();
+        const resultsDiv = document.getElementById('bus-results');
+
+        if (query.length < 3) {
+            resultsDiv.classList.remove('active');
+            return;
+        }
+
+        busSearchTimeout = setTimeout(() => {
+            fetch(`{% url 'informes:buscar_buses_ajax' %}?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultsDiv.innerHTML = '';
+                    if (data.buses && data.buses.length > 0) {
+                        data.buses.forEach(bus => {
+                            const div = document.createElement('div');
+                            div.className = 'search-result-item';
+                            div.innerHTML = `
+                                <div class="main-text">Ficha ${bus.ficha}</div>
+                                <div class="sub-text">${bus.dominio}</div>
+                            `;
+                            div.onclick = () => selectBus(bus);
+                            resultsDiv.appendChild(div);
+                        });
+                        resultsDiv.classList.add('active');
+                    } else {
+                        resultsDiv.innerHTML = '<div class="search-result-item text-muted">No se encontraron buses</div>';
+                        resultsDiv.classList.add('active');
+                    }
+                });
+        }, 300);
+    });
+
+    function selectBus(bus) {
+        document.getElementById('id_bus').value = bus.id;
+        document.getElementById('bus-search').value = '';
+        document.getElementById('bus-search').style.display = 'none';
+        document.getElementById('bus-selected-text').textContent = `Ficha ${bus.ficha} - ${bus.dominio}`;
+        document.getElementById('bus-selected').classList.add('active');
+        document.getElementById('bus-results').classList.remove('active');
+    }
+
+    function clearBusSelection() {
+        document.getElementById('id_bus').value = '';
+        document.getElementById('bus-search').value = '';
+        document.getElementById('bus-search').style.display = 'block';
+        document.getElementById('bus-selected').classList.remove('active');
+    }
+
+    let empleadoSearchTimeout;
+    document.getElementById('empleado-search').addEventListener('input', function() {
+        clearTimeout(empleadoSearchTimeout);
+        const query = this.value.trim();
+        const resultsDiv = document.getElementById('empleado-results');
+
+        if (query.length < 3 || !selectedSucursalId) {
+            resultsDiv.classList.remove('active');
+            return;
+        }
+
+        empleadoSearchTimeout = setTimeout(() => {
+            fetch(`{% url 'informes:buscar_empleados_ajax' %}?q=${encodeURIComponent(query)}&sucursal_id=${selectedSucursalId}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultsDiv.innerHTML = '';
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<div class="search-result-item text-danger">${data.error}</div>`;
+                        resultsDiv.classList.add('active');
+                    } else if (data.empleados && data.empleados.length > 0) {
+                        data.empleados.forEach(emp => {
+                            const div = document.createElement('div');
+                            div.className = 'search-result-item';
+                            div.innerHTML = `
+                                <div class="main-text">${emp.nombre_completo}</div>
+                                <div class="sub-text">Legajo: ${emp.legajo}</div>
+                            `;
+                            div.onclick = () => selectEmpleado(emp);
+                            resultsDiv.appendChild(div);
+                        });
+                        resultsDiv.classList.add('active');
+                    } else {
+                        resultsDiv.innerHTML = '<div class="search-result-item text-muted">No se encontraron empleados</div>';
+                        resultsDiv.classList.add('active');
+                    }
+                });
+        }, 300);
+    });
+
+    function selectEmpleado(emp) {
+        document.getElementById('id_empleado').value = emp.id;
+        document.getElementById('empleado-search').value = '';
+        document.getElementById('empleado-search').style.display = 'none';
+        document.getElementById('empleado-selected-text').textContent = `${emp.nombre_completo} (Legajo: ${emp.legajo})`;
+        document.getElementById('empleado-selected').classList.add('active');
+        document.getElementById('empleado-results').classList.remove('active');
+    }
+
+    function clearEmpleadoSelection() {
+        document.getElementById('id_empleado').value = '';
+        document.getElementById('empleado-search').value = '';
+        document.getElementById('empleado-search').style.display = 'block';
+        document.getElementById('empleado-selected').classList.remove('active');
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-container')) {
+            document.querySelectorAll('.search-results').forEach(r => r.classList.remove('active'));
+        }
+    });
+
+    document.getElementById('id_imagenes').addEventListener('change', function() {
+        const preview = document.getElementById('imagen-preview');
+        preview.innerHTML = '';
+        Array.from(this.files).forEach(file => {
+            const sizeMB = file.size / (1024 * 1024);
+            const isValid = sizeMB <= MAX_IMAGE_SIZE_MB;
+            const div = document.createElement('div');
+            div.className = `file-preview-item ${isValid ? 'valid' : 'invalid'}`;
+            div.innerHTML = `<i class="bi bi-${isValid ? 'check' : 'x'}-circle"></i> ${file.name} (${sizeMB.toFixed(1)}MB)`;
+            preview.appendChild(div);
+        });
+    });
+
+    document.getElementById('id_videos').addEventListener('change', function() {
+        const preview = document.getElementById('video-preview');
+        const errorDiv = document.getElementById('video-error');
+        preview.innerHTML = '';
+        errorDiv.classList.add('d-none');
+        let hasError = false;
+
+        Array.from(this.files).forEach(file => {
+            const sizeMB = file.size / (1024 * 1024);
+            const isValid = sizeMB <= MAX_VIDEO_SIZE_MB;
+            if (!isValid) hasError = true;
+            const div = document.createElement('div');
+            div.className = `file-preview-item ${isValid ? 'valid' : 'invalid'}`;
+            div.innerHTML = `<i class="bi bi-${isValid ? 'check' : 'x'}-circle"></i> ${file.name} (${sizeMB.toFixed(1)}MB)`;
+            preview.appendChild(div);
+        });
+
+        if (hasError) {
+            errorDiv.textContent = `Algunos archivos superan el limite de ${MAX_VIDEO_SIZE_MB}MB y no se subiran.`;
+            errorDiv.classList.remove('d-none');
+        }
+    });
+
+    document.getElementById('form-informe').addEventListener('submit', function(event) {
+        const titulo = document.querySelector('[name="titulo"]').value.trim();
+        const descripcion = document.querySelector('[name="descripcion"]').value.trim();
+        const fecha = document.querySelector('[name="fecha_hora"]').value;
+        const sucursal = document.getElementById('id_sucursal').value;
+        const bus = document.getElementById('id_bus').value;
+
+        if (!titulo || !descripcion || !fecha || !sucursal || !bus) {
+            event.preventDefault();
+            alert('Por favor complete todos los campos obligatorios:\n- Titulo\n- Descripcion\n- Fecha y Hora\n- Sucursal\n- Bus');
+            return false;
+        }
+
+        const videoInput = document.getElementById('id_videos');
+        for (let file of videoInput.files) {
+            if (file.size > MAX_VIDEO_SIZE_MB * 1024 * 1024) {
                 event.preventDefault();
-                return; // Detener el envío si hay errores de tamaño
+                alert(`El video "${file.name}" supera el tamano maximo de ${MAX_VIDEO_SIZE_MB}MB`);
+                return false;
             }
         }
 
-        // Desactivar el botón y mostrar el indicador de carga
-        submitButton.disabled = true;
-        submitButton.innerHTML = 'Enviando...'; // Opcional: cambiar el texto del botón
-        loadingIndicator.style.display = 'inline';
+        document.getElementById('upload-overlay').classList.add('active');
+        document.getElementById('upload-status').textContent = 'Enviando formulario...';
+        document.getElementById('submit-button').disabled = true;
+
+        const videoFiles = Array.from(document.getElementById('id_videos').files);
+        const hasVideos = videoFiles.length > 0;
+        let currentVideoIndex = 0;
+
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        const uploadPercent = document.getElementById('upload-percent');
+        const uploadStatus = document.getElementById('upload-status');
+        const conversionStatus = document.getElementById('conversion-status');
+        const conversionText = document.getElementById('conversion-text');
+
+        const interval = setInterval(() => {
+            progress += Math.random() * 10;
+
+            if (progress >= 50 && progress < 95 && hasVideos) {
+                uploadStatus.textContent = 'Procesando archivos en el servidor...';
+                conversionStatus.style.display = 'block';
+
+                const conversionProgress = (progress - 50) / 45;
+                currentVideoIndex = Math.min(
+                    Math.floor(conversionProgress * videoFiles.length),
+                    videoFiles.length - 1
+                );
+
+                if (currentVideoIndex < videoFiles.length) {
+                    conversionText.textContent = `Convirtiendo video ${currentVideoIndex + 1} de ${videoFiles.length}: ${videoFiles[currentVideoIndex].name}`;
+                }
+            } else if (progress >= 95) {
+                progress = 95;
+                uploadStatus.textContent = 'Finalizando...';
+                if (hasVideos) {
+                    conversionText.textContent = `Videos procesados: ${videoFiles.length} de ${videoFiles.length}`;
+                }
+            }
+
+            progressBar.style.width = progress + '%';
+            uploadPercent.textContent = Math.round(progress) + '%';
+        }, 500);
+
+        return true;
     });
 </script>
 {% endblock %}
