@@ -286,26 +286,12 @@
                                 </small>
                             </td>
                             <td class="text-end pe-4">
-                                <div class="d-flex gap-1 justify-content-end">
-                                    <a href="{% url 'informes:editar_informe' informe.pk %}?next={% url 'informes:informes_sin_legajo_sucursal' sucursal.id %}"
-                                       class="btn btn-sm btn-pastel-orange"
-                                       title="Editar y asignar empleado">
-                                        <i class="bi bi-pencil-square"></i>
-                                        <span class="d-none d-md-inline ms-1">Asignar</span>
-                                    </a>
-                                    <a href="{% url 'informes:cargar_fotos' informe.pk %}?next={% url 'informes:informes_sin_legajo_sucursal' sucursal.id %}"
-                                       class="btn btn-sm btn-pastel-pink"
-                                       title="Ver fotos">
-                                        <i class="bi bi-image"></i>
-                                        <span class="d-none d-lg-inline">{{ informe.fotos.count }}</span>
-                                    </a>
-                                    <a href="{% url 'informes:cargar_video' informe.pk %}?next={% url 'informes:informes_sin_legajo_sucursal' sucursal.id %}"
-                                       class="btn btn-sm btn-pastel-cyan"
-                                       title="Ver videos">
-                                        <i class="bi bi-camera-video"></i>
-                                        <span class="d-none d-lg-inline">{{ informe.videos.count }}</span>
-                                    </a>
-                                </div>
+                                <a href="{% url 'informes:editar_informe' informe.pk %}?next={% url 'informes:informes_sin_legajo_sucursal' sucursal.id %}"
+                                   class="btn btn-sm btn-pastel-orange"
+                                   title="Editar y asignar empleado">
+                                    <i class="bi bi-pencil-square"></i>
+                                    <span class="d-none d-md-inline ms-1">Asignar</span>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}

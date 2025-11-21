@@ -1,125 +1,402 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <style>
+    .stats-card {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-radius: 16px;
+        color: white;
+        padding: 1.5rem;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(220, 53, 69, 0.1);
+    }
+    .informe-row {
+        transition: all 0.2s ease;
+    }
+    .informe-row:hover {
+        transform: translateX(5px);
+    }
+    .sucursal-badge {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f8f9fa;
+        border-radius: 50px;
+        border: 2px solid #dc3545;
+    }
+    [data-bs-theme="dark"] .sucursal-badge {
+        background: #2c3e50;
+        border-color: #dc3545;
+    }
+    .dropdown-sucursal {
+        min-width: 250px;
+    }
+    .thumbnail-cell {
+        width: 70px;
+        padding: 0.5rem !important;
+    }
+    .thumbnail-img {
+        width: 60px;
+        height: 45px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 2px solid #dee2e6;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .thumbnail-img:hover {
+        transform: scale(1.5);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10;
+        position: relative;
+    }
+    .no-photo {
+        width: 60px;
+        height: 45px;
+        background: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+    }
+    [data-bs-theme="dark"] .no-photo {
+        background: #2c3e50;
+        border-color: #495057;
+    }
+
+    /* Colores distintivos por origen */
+    .badge-origen-sistemas {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .badge-origen-guardia {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    .badge-origen-rrhh {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+    .badge-origen-taller {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: #2d2d2d;
+    }
+    .badge-origen-siniestros {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        color: #8b0000;
+    }
+    .badge-origen-inspectores {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #2d5f5f;
+    }
+
+    /* Botones pastel */
+    .btn-pastel-pink {
+        background-color: #ffd4e5;
+        border-color: #ffb8d4;
+        color: #8b004b;
+        font-weight: 500;
+    }
+    .btn-pastel-pink:hover {
+        background-color: #ffb8d4;
+        border-color: #ff9cc3;
+        color: #8b004b;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(255, 180, 212, 0.3);
+    }
+    .btn-pastel-purple {
+        background-color: #e8d4ff;
+        border-color: #d4b8ff;
+        color: #4b008b;
+        font-weight: 500;
+    }
+    .btn-pastel-purple:hover {
+        background-color: #d4b8ff;
+        border-color: #c09cff;
+        color: #4b008b;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(212, 184, 255, 0.3);
+    }
+    [class*="btn-pastel-"] {
+        transition: all 0.2s ease;
+    }
+
+    /* Checkbox mejorado */
     .form-check-input {
-        width: 1.5em;
-        height: 1.5em;
-        margin-top: 0.3em;
-        border: 2px solid #004085;
+        width: 1.3em;
+        height: 1.3em;
+        border: 2px solid #dc3545;
         box-shadow: none;
-        background-color: #fff;
     }
-
     .form-check-input:focus {
-        box-shadow: 0 0 0 0.15rem rgba(0, 64, 133, 0.25);
+        box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
     }
-
     .form-check-input:checked {
         background-color: #198754;
         border-color: #198754;
     }
-
-    .checkbox-container {
-        background-color: #f0f8ff;
-        border-radius: 8px;
-        padding: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .img-preview {
-        object-fit: cover;
-        height: 100%;
-        border-radius: 8px;
-    }
 </style>
 
-<div class="container mt-4">
-    <h2 class="mb-4">❌📧 Informes No Enviados</h2>
-
-    {% if messages %}
-        <div class="mb-4">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    <form method="POST">
-        {% csrf_token %}
-
-        {% if informes_no_enviados %}
-            <div class="row">
-                {% for informe in informes_no_enviados %}
-                    <div class="col-md-6">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-body d-flex">
-                                <div class="flex-grow-1">
-                                    <div class="d-flex align-items-start mb-2">
-                                        <div class="checkbox-container me-2">                                            
-                                            <input class="form-check-input" type="checkbox" name="informes_ids" value="{{ informe.id }}">
-                                        </div>
-                                        <div>
-                                            <strong>Nº {{ informe.id|stringformat:"010d" }}</strong>
-                                            <h5 class="card-title mb-1">{{ informe.titulo }}</h5>
-                                            <p class="mb-1"><strong>Fecha:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
-                                            <p class="mb-1"><strong>Sucursal:</strong> {{ informe.sucursal.abreviatura }}</p>
-                                            <p class="mb-1"><strong>Bus:</strong> {{ informe.bus.ficha }}</p>
-                                            {% if informe.empleado.legajo %}
-                                                <p class="mb-1"><strong>Empleado:</strong>{{ informe.empleado.legajo }} - {{ informe.empleado.apellido }}, {{ informe.empleado.nombre }}</p>
-                                            {% else %}
-                                                <p class="mb-1"><strong>Empleado:</strong>EMPLEADO NO DETERMINADO</p>
-                                            {% endif %}
-                                            <p class="mb-0 text-muted"><small>{{ informe.descripcion|truncatewords:20 }}</small></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% with informe.fotos.first as foto %}
-                                    {% if foto %}
-                                        <div class="me-3" style="width: 33%;">
-                                            <img src="{{ foto.imagen.url }}" class="img-fluid img-preview" alt="Imagen del informe">
-                                        </div>
-                                    {% endif %}
-                                {% endwith %}
+<div class="container-fluid mt-3">
+    <!-- Header con estadisticas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-danger bg-gradient rounded-3 p-3 me-3">
+                                <i class="bi bi-envelope-x text-white fs-3"></i>
+                            </div>
+                            <div>
+                                <h4 class="card-title mb-0">Informes No Enviados</h4>
+                                <p class="text-muted mb-0 small">
+                                    Informes pendientes de envio por email
+                                </p>
                             </div>
                         </div>
+
+                        <!-- Selector de sucursal -->
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="sucursal-badge">
+                                <i class="bi bi-building"></i>
+                                <span class="fw-bold">{{ sucursal.descripcion }}</span>
+                            </div>
+
+                            {% if sucursales.count > 1 %}
+                            <div class="dropdown">
+                                <button class="btn btn-outline-danger dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-arrow-repeat"></i> Cambiar
+                                </button>
+                                <ul class="dropdown-menu dropdown-sucursal shadow">
+                                    {% for suc in sucursales %}
+                                    <li>
+                                        <a class="dropdown-item {% if suc.id == sucursal.id %}active{% endif %}"
+                                           href="{% url 'informes:informes_no_enviados_sucursal' suc.id %}">
+                                            <i class="bi bi-building me-2"></i>{{ suc.descripcion }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="text-center mt-6">
-                <button type="button" class="btn btn-outline-primary me-2" onclick="seleccionarTodos()">
-                    Seleccionar todos
-                </button>
-                <button type="button" class="btn btn-outline-secondary" onclick="quitarSeleccion()">
-                    Quitar selección
-                </button>
-                <button type="submit" class="btn px-4" style="background-color: #d8b4fe; color:black;">
-                    <i class="bi bi-send-fill me-1"></i> 📧 Enviar Seleccionados
-                </button>
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stats-card shadow">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">Total Pendientes</h6>
+                        <h2 class="mb-0 fw-bold">{{ informes_no_enviados|length }}</h2>
+                    </div>
+                    <div class="opacity-75">
+                        <i class="bi bi-envelope-exclamation fs-1"></i>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
 
-        {% else %}
-            <div class="alert alert-info">
-                No hay informes pendientes de envío.
+    <!-- Mensajes -->
+    {% if messages %}
+    <div class="row mb-3">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Tabla de informes -->
+    {% if informes_no_enviados %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead>
+                            <tr class="bg-light">
+                                <th class="border-0 ps-4" style="width: 50px;">
+                                    <input type="checkbox" class="form-check-input" id="selectAll"
+                                           onclick="toggleAll(this)">
+                                </th>
+                                <th class="border-0" style="width: 60px;">#</th>
+                                <th class="border-0 text-center" style="width: 80px;">Foto</th>
+                                <th class="border-0">Titulo</th>
+                                <th class="border-0 text-center">Origen</th>
+                                <th class="border-0 text-center">Bus</th>
+                                <th class="border-0">Empleado</th>
+                                <th class="border-0">Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for informe in informes_no_enviados %}
+                            <tr class="informe-row">
+                                <td class="ps-4">
+                                    <input class="form-check-input" type="checkbox"
+                                           name="informes_ids" value="{{ informe.id }}">
+                                </td>
+                                <td>
+                                    <span class="text-muted small">{{ informe.id }}</span>
+                                </td>
+                                <td class="thumbnail-cell text-center">
+                                    {% with first_foto=informe.fotos.first %}
+                                    {% if first_foto %}
+                                    <img src="{{ first_foto.imagen.url }}"
+                                         alt="Foto informe"
+                                         class="thumbnail-img"
+                                         loading="lazy">
+                                    {% else %}
+                                    <div class="no-photo">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <span class="fw-semibold">{{ informe.titulo|truncatechars:40 }}</span>
+                                            {% if informe.descripcion %}
+                                            <br>
+                                            <small class="text-muted">{{ informe.descripcion|truncatechars:60 }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {% if informe.origen %}
+                                    <span class="badge badge-origen-{{ informe.origen.nombre|lower }}">
+                                        {{ informe.origen.nombre }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if informe.bus %}
+                                    <span class="badge bg-info">
+                                        <i class="bi bi-bus-front me-1"></i>{{ informe.bus.ficha }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if informe.empleado %}
+                                    <span class="small">
+                                        <i class="bi bi-person me-1"></i>
+                                        {{ informe.empleado.legajo }} - {{ informe.empleado.apellido|truncatechars:15 }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted small">Sin asignar</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="text-muted">
+                                        <i class="bi bi-calendar3 me-1"></i>
+                                        {{ informe.fecha_hora|date:"d/m/Y" }}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock me-1"></i>
+                                        {{ informe.fecha_hora|time:"H:i" }}
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Acciones -->
+            <div class="card-footer bg-light border-0 p-3">
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary" onclick="selectAll()">
+                        <i class="bi bi-check-all me-1"></i> Seleccionar Todos
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="deselectAll()">
+                        <i class="bi bi-x-lg me-1"></i> Quitar Seleccion
+                    </button>
+                    <button type="submit" class="btn btn-pastel-purple">
+                        <i class="bi bi-send-fill me-1"></i> Enviar Seleccionados
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
+    {% else %}
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center py-5">
+            <div class="mb-4">
+                <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center"
+                     style="width: 100px; height: 100px;">
+                    <i class="bi bi-check-circle text-success fs-1"></i>
+                </div>
+            </div>
+            <h5 class="text-success">Todos los informes han sido enviados</h5>
+            <p class="text-muted mb-0">
+                No hay informes pendientes de envio en {{ sucursal.descripcion }}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Boton volver -->
+    <div class="d-flex justify-content-between mt-4">
+        {% if sucursales.count > 1 %}
+        <a href="{% url 'informes:informes_no_enviados' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Cambiar Sucursal
+        </a>
+        {% else %}
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+        {% endif %}
+
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-house me-2"></i>Inicio
+        </a>
+    </div>
 </div>
 
-
 <script>
-    function seleccionarTodos() {
-        document.querySelectorAll('input[name="informes_ids"]').forEach(checkbox => checkbox.checked = true);
-    }
+function toggleAll(source) {
+    document.querySelectorAll('input[name="informes_ids"]').forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+}
 
-    function quitarSeleccion() {
-        document.querySelectorAll('input[name="informes_ids"]').forEach(checkbox => checkbox.checked = false);
-    }
+function selectAll() {
+    document.querySelectorAll('input[name="informes_ids"]').forEach(checkbox => {
+        checkbox.checked = true;
+    });
+    document.getElementById('selectAll').checked = true;
+}
+
+function deselectAll() {
+    document.querySelectorAll('input[name="informes_ids"]').forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    document.getElementById('selectAll').checked = false;
+}
 </script>
-
 {% endblock %}
