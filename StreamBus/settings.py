@@ -13,9 +13,10 @@ SECRET_KEY = config('DJANGO_SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-# Configuración de archivos
+# Configuración de archivos multimedia
 DATA_UPLOAD_MAX_MEMORY_SIZE = config('DATA_UPLOAD_MAX_MEMORY_SIZE', default=524288000, cast=int)
-MAX_VIDEO_UPLOAD_SIZE_MB = config('MAX_VIDEO_UPLOAD_SIZE_MB', default=60, cast=int) 
+MAX_VIDEO_UPLOAD_SIZE_MB = config('MAX_VIDEO_UPLOAD_SIZE_MB', default=60, cast=int)
+MAX_IMAGE_UPLOAD_SIZE_MB = config('MAX_IMAGE_UPLOAD_SIZE_MB', default=10, cast=int) 
 
 
 # Application definition
