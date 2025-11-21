@@ -80,8 +80,16 @@ class InformeCreateSistemas(SucursalFormMixin, CreateView):
     success_url = reverse_lazy("inicio")
 
     def get_initial(self):
+        from .models import Origen
+        # Obtener el origen "Sistemas"
+        try:
+            origen_sistemas = Origen.objects.get(nombre='Sistemas')
+            origen_id = origen_sistemas.id
+        except Origen.DoesNotExist:
+            origen_id = None
+
         return {
-            'origen': 'Sistemas',
+            'origen': origen_id,
             'fecha_hora': timezone.now(),
         }
 
@@ -93,10 +101,10 @@ class InformeCreateSistemas(SucursalFormMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        # Configurar campos - el queryset de bus/empleado será manejado por AJAX
-        form.fields['bus'].queryset = Buses.objects.none()
+        # Permitir todos los buses y empleados (la selección se hace por AJAX)
+        form.fields['bus'].queryset = Buses.objects.filter(estado=True).order_by('ficha')
         form.fields['bus'].required = True
-        form.fields['empleado'].queryset = Empleado.objects.none()
+        form.fields['empleado'].queryset = Empleado.objects.all().order_by('apellido')
         form.fields['empleado'].required = False
         form.fields['titulo'].required = True
         form.fields['descripcion'].required = True
@@ -108,11 +116,18 @@ class InformeCreateSistemas(SucursalFormMixin, CreateView):
         })
         return form
 
+    def form_invalid(self, form):
+        # Log de errores para debug
+        logger.error(f"Form errors: {form.errors}")
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
     def form_valid(self, form):
         from .validators import validate_image_file, validate_video_file, convert_video_to_h264, get_video_info_ffprobe, needs_conversion
 
         self.object = form.save()
-        form.instance.origen = 'Sistemas'
         informe = self.object
         conversion_messages = []
 
@@ -135,7 +150,7 @@ class InformeCreateSistemas(SucursalFormMixin, CreateView):
         # Validar, subir y convertir videos
         for index, vid in enumerate(self.request.FILES.getlist("videos"), start=1):
             try:
-                validate_video_file(vid, validate_codec=False)  # Validar MIME sin codec
+                validate_video_file(vid, validate_codec=False)
                 id_formateado = str(informe.id).zfill(10)
                 numero_video = str(index).zfill(3)
                 nombre_archivo = f"V{id_formateado}{numero_video}.mp4"
@@ -160,7 +175,6 @@ class InformeCreateSistemas(SucursalFormMixin, CreateView):
                 logger.error(f"Error procesando video {vid.name}: {e}")
                 messages.warning(self.request, f"Video {vid.name} no válido: {str(e)}")
 
-        # Mostrar mensajes de conversión
         if conversion_messages:
             messages.info(self.request, " | ".join(conversion_messages))
 
