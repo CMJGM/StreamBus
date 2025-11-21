@@ -1105,7 +1105,29 @@ def informes_no_enviados(request, sucursal_id=None):
     })
 
 @login_required
-def informes_asociar_sitinforme(request):
+def informes_asociar_sitinforme(request, sucursal_id=None):
+    """Vista para asociar informes a expedientes SIT, filtrados por sucursal."""
+    # Obtener sucursales del usuario
+    if hasattr(request.user, 'profile'):
+        sucursales = request.user.profile.get_sucursales_permitidas()
+    else:
+        sucursales = Sucursales.objects.none()
+
+    # Si no hay sucursal_id, mostrar selector o redirigir
+    if sucursal_id is None:
+        if sucursales.count() == 1:
+            return redirect('informes:sit_informe_sucursal', sucursal_id=sucursales.first().id)
+        return render(request, 'informes/seleccionar_sucursal_sit_informe.html', {
+            'sucursales': sucursales
+        })
+
+    # Verificar acceso a la sucursal
+    sucursal = get_object_or_404(Sucursales, id=sucursal_id)
+    if hasattr(request.user, 'profile'):
+        if not request.user.profile.tiene_acceso_sucursal(sucursal):
+            messages.error(request, 'No tiene permisos para ver informes de esta sucursal.')
+            return redirect('informes:sit_informe')
+
     if request.method == 'POST':
         ids = request.POST.getlist('informes_ids')
         if ids:
@@ -1124,7 +1146,7 @@ def informes_asociar_sitinforme(request):
                         )
                         if not created:
                             expediente.nro_expediente = int(nro_expediente)
-                            expediente.tipo = 'I'                            
+                            expediente.tipo = 'I'
                             expediente.save()
                 except Informe.DoesNotExist:
                     continue
@@ -1133,10 +1155,19 @@ def informes_asociar_sitinforme(request):
         else:
             messages.warning(request, 'No seleccionaste ningún informe.')
 
-        return redirect('informes:sit_informe')
+        return redirect('informes:sit_informe_sucursal', sucursal_id=sucursal.id)
 
-    informes_no_generados = Informe.objects.filter(generado=False).select_related('sucursal', 'bus', 'empleado').prefetch_related('fotos')
-    return render(request, 'informes/sit_asociarinforme.html', { 'informes_no_generados': informes_no_generados })
+    # Filtrar por sucursal y ordenar por más nuevos primero
+    informes_no_generados = Informe.objects.filter(
+        generado=False,
+        sucursal=sucursal
+    ).select_related('sucursal', 'bus', 'empleado', 'origen').prefetch_related('fotos').order_by('-fecha_hora')
+
+    return render(request, 'informes/sit_asociarinforme.html', {
+        'informes_no_generados': informes_no_generados,
+        'sucursal': sucursal,
+        'sucursales': sucursales,
+    })
 
 @login_required
 def informes_asociar_sitsiniestro(request):
