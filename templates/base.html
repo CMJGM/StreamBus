@@ -271,25 +271,71 @@
             box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
         }
 
-        /* Toggle mode mejorado */
-        .modo-toggle {
-            background: var(--blur-bg) !important;
+        /* Botones Auth modernos */
+        .btn-auth {
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            color: white;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
+            color: white;
+        }
+
+        /* Toggle theme moderno */
+        .btn-theme-toggle {
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 12px !important;
-            font-size: 1.1rem;
-            width: 50px;
-            height: 45px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+            width: 42px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
-            z-index: 1051; /* Asegurar que el botón sea clickeable */
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: white;
+            font-size: 1.1rem;
         }
 
-        .modo-toggle:hover {
-            transform: scale(1.1) rotate(10deg);
-            background: var(--gradient-primary) !important;
+        .btn-theme-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-theme-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-theme-toggle:hover i {
+            transform: rotate(20deg);
         }
 
         /* Main content */
@@ -807,22 +853,23 @@
                                 <li class="nav-item">
                                     <form method="post" action="{% url 'logout' %}" class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                                        <button type="submit" class="btn btn-auth btn-logout">
+                                            <i class="bi bi-box-arrow-right me-1"></i>Salir
                                         </button>
                                     </form>
                                 </li>
                             {% else %}
                                 <li class="nav-item">
-                                    <a class="btn btn-primary btn-sm" href="{% url 'login' %}">
-                                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                                    <a class="btn btn-auth btn-login" href="{% url 'login' %}">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>Ingresar
                                     </a>
                                 </li>
                             {% endif %}
-                            
+
                             <li class="nav-item ms-2">
-                                <button class="modo-toggle" onclick="toggleMode()" title="Cambiar tema">
-                                    <span id="theme-icon">🌙</span>
+                                <button class="btn-theme-toggle" onclick="toggleMode()" title="Cambiar tema">
+                                    <i class="bi bi-moon-stars-fill" id="theme-icon-moon"></i>
+                                    <i class="bi bi-sun-fill" id="theme-icon-sun" style="display: none;"></i>
                                 </button>
                             </li> 
                         </ul>
@@ -865,31 +912,37 @@
     <script>
         function toggleMode() {
             const body = document.body;
-            const themeIcon = document.getElementById('theme-icon');
-            
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const sunIcon = document.getElementById('theme-icon-sun');
+
             body.classList.toggle('dark-mode');
             const isDarkMode = body.classList.contains('dark-mode');
-            
-            // Cambiar icono con animación
-            themeIcon.style.transform = 'scale(0)';
-            setTimeout(() => {
-                themeIcon.textContent = isDarkMode ? '☀️' : '🌙';
-                themeIcon.style.transform = 'scale(1)';
-            }, 150);
-            
+
+            // Cambiar iconos
+            if (isDarkMode) {
+                moonIcon.style.display = 'none';
+                sunIcon.style.display = 'inline';
+            } else {
+                moonIcon.style.display = 'inline';
+                sunIcon.style.display = 'none';
+            }
+
             localStorage.setItem('modoOscuro', isDarkMode);
         }
 
         // Inicializar tema
         window.addEventListener('DOMContentLoaded', () => {
             const modoOscuro = localStorage.getItem('modoOscuro') === 'true';
-            const themeIcon = document.getElementById('theme-icon');
-            
+            const moonIcon = document.getElementById('theme-icon-moon');
+            const sunIcon = document.getElementById('theme-icon-sun');
+
             if (modoOscuro) {
                 document.body.classList.add('dark-mode');
-                themeIcon.textContent = '☀️';
+                if (moonIcon) moonIcon.style.display = 'none';
+                if (sunIcon) sunIcon.style.display = 'inline';
             } else {
-                themeIcon.textContent = '🌙';
+                if (moonIcon) moonIcon.style.display = 'inline';
+                if (sunIcon) sunIcon.style.display = 'none';
             }
             
             // Animación de entrada
