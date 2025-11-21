@@ -1010,7 +1010,7 @@ def informes_sin_legajo(request, sucursal_id=None):
     informes = Informe.objects.filter(
         empleado__isnull=True,
         sucursal=sucursal
-    ).select_related('bus', 'sucursal', 'origen').order_by('-fecha_hora')
+    ).select_related('bus', 'sucursal', 'origen').prefetch_related('fotos', 'videos').order_by('-fecha_hora')
 
     return render(request, 'informes/sin_legajo.html', {
         'informes': informes,
