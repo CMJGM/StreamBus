@@ -17,7 +17,7 @@
         border-radius: 0 0 8px 8px;
         max-height: 250px;
         overflow-y: auto;
-        z-index: 1000;
+        z-index: 1050;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         display: none;
     }
@@ -45,8 +45,8 @@
         color: #6c757d;
     }
     .selected-item {
-        background: #e8f4f8;
-        border: 1px solid #17a2b8;
+        background: #d4edda;
+        border: 1px solid #28a745;
         border-radius: 8px;
         padding: 8px 12px;
         margin-top: 8px;
@@ -67,6 +67,10 @@
     .field-required::after {
         content: " *";
         color: #dc3545;
+    }
+    /* Permitir overflow en cards de búsqueda */
+    .card-search-overflow {
+        overflow: visible !important;
     }
     .upload-overlay {
         display: none;
@@ -165,8 +169,9 @@
         color: #e9ecef;
     }
     [data-bs-theme="dark"] .selected-item {
-        background: #1e3a5f;
-        border-color: #17a2b8;
+        background: #1e4620;
+        border-color: #28a745;
+        color: #e9ecef;
     }
     [data-bs-theme="dark"] .upload-progress-card {
         background: #1e2530;
@@ -251,13 +256,13 @@
                 <!-- Fila 4: Bus y Empleado con AJAX -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3 card-search-overflow">
                             <label class="form-label field-required"><strong>Bus (Ficha)</strong></label>
                             <div class="search-container">
                                 <input type="text"
                                        id="bus-search"
                                        class="form-control"
-                                       placeholder="Escriba al menos 3 caracteres para buscar..."
+                                       placeholder="Escriba al menos 3 caracteres..."
                                        autocomplete="off">
                                 <input type="hidden" name="bus" id="id_bus">
                                 <div class="search-results" id="bus-results"></div>
@@ -275,7 +280,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <div class="card border-0 shadow-sm rounded-3 p-3">
+                        <div class="card border-0 shadow-sm rounded-3 p-3 card-search-overflow">
                             <label class="form-label"><strong>Empleado</strong> <small class="text-muted">(opcional)</small></label>
                             <div class="search-container">
                                 <input type="text"
@@ -289,7 +294,7 @@
                             </div>
                             <div class="sucursal-warning" id="sucursal-warning">
                                 <i class="bi bi-exclamation-triangle me-1"></i>
-                                Seleccione una sucursal para habilitar la búsqueda de empleados
+                                Seleccione una sucursal primero
                             </div>
                             <div class="selected-item" id="empleado-selected">
                                 <span id="empleado-selected-text"></span>
@@ -383,7 +388,7 @@
 
         if (selectedSucursalId) {
             empleadoSearch.disabled = false;
-            empleadoSearch.placeholder = 'Escriba al menos 3 caracteres para buscar...';
+            empleadoSearch.placeholder = 'Escriba legajo o nombre (mín 3 caracteres)...';
             sucursalWarning.classList.remove('active');
         } else {
             empleadoSearch.disabled = true;
@@ -423,7 +428,7 @@
                         });
                         resultsDiv.classList.add('active');
                     } else {
-                        resultsDiv.innerHTML = '<div class="search-result-item text-muted">No se encontraron resultados</div>';
+                        resultsDiv.innerHTML = '<div class="search-result-item text-muted">No se encontraron buses</div>';
                         resultsDiv.classList.add('active');
                     }
                 });
@@ -463,12 +468,15 @@
                 .then(response => response.json())
                 .then(data => {
                     resultsDiv.innerHTML = '';
-                    if (data.empleados && data.empleados.length > 0) {
+                    if (data.error) {
+                        resultsDiv.innerHTML = `<div class="search-result-item text-danger">${data.error}</div>`;
+                        resultsDiv.classList.add('active');
+                    } else if (data.empleados && data.empleados.length > 0) {
                         data.empleados.forEach(emp => {
                             const div = document.createElement('div');
                             div.className = 'search-result-item';
                             div.innerHTML = `
-                                <div class="main-text">${emp.apellido}, ${emp.nombre}</div>
+                                <div class="main-text">${emp.nombre_completo}</div>
                                 <div class="sub-text">Legajo: ${emp.legajo}</div>
                             `;
                             div.onclick = () => selectEmpleado(emp);
@@ -476,7 +484,7 @@
                         });
                         resultsDiv.classList.add('active');
                     } else {
-                        resultsDiv.innerHTML = '<div class="search-result-item text-muted">No se encontraron resultados</div>';
+                        resultsDiv.innerHTML = '<div class="search-result-item text-muted">No se encontraron empleados</div>';
                         resultsDiv.classList.add('active');
                     }
                 });
@@ -487,7 +495,7 @@
         document.getElementById('id_empleado').value = emp.id;
         document.getElementById('empleado-search').value = '';
         document.getElementById('empleado-search').style.display = 'none';
-        document.getElementById('empleado-selected-text').textContent = `${emp.apellido}, ${emp.nombre} (Legajo: ${emp.legajo})`;
+        document.getElementById('empleado-selected-text').textContent = `${emp.nombre_completo} (Legajo: ${emp.legajo})`;
         document.getElementById('empleado-selected').classList.add('active');
         document.getElementById('empleado-results').classList.remove('active');
     }
@@ -543,10 +551,8 @@
         }
     });
 
-    // Submit con progreso
+    // Validación antes de enviar
     document.getElementById('form-informe').addEventListener('submit', function(event) {
-        event.preventDefault();
-
         // Validar campos obligatorios
         const titulo = document.querySelector('[name="titulo"]').value.trim();
         const descripcion = document.querySelector('[name="descripcion"]').value.trim();
@@ -555,55 +561,44 @@
         const bus = document.getElementById('id_bus').value;
 
         if (!titulo || !descripcion || !fecha || !sucursal || !bus) {
-            alert('Por favor complete todos los campos obligatorios: Título, Descripción, Fecha, Sucursal y Bus');
-            return;
+            event.preventDefault();
+            alert('Por favor complete todos los campos obligatorios:\n- Título\n- Descripción\n- Fecha y Hora\n- Sucursal\n- Bus');
+            return false;
         }
 
         // Validar tamaño de videos
         const videoInput = document.getElementById('id_videos');
         for (let file of videoInput.files) {
             if (file.size > MAX_VIDEO_SIZE_MB * 1024 * 1024) {
+                event.preventDefault();
                 alert(`El video "${file.name}" supera el tamaño máximo de ${MAX_VIDEO_SIZE_MB}MB`);
-                return;
+                return false;
             }
         }
 
-        // Mostrar overlay
-        const overlay = document.getElementById('upload-overlay');
+        // Mostrar overlay de carga (el form se enviará normalmente)
+        document.getElementById('upload-overlay').classList.add('active');
+        document.getElementById('upload-status').textContent = 'Enviando formulario...';
+        document.getElementById('submit-button').disabled = true;
+
+        // Simular progreso
+        let progress = 0;
         const progressBar = document.getElementById('progress-bar');
-        const uploadStatus = document.getElementById('upload-status');
         const uploadPercent = document.getElementById('upload-percent');
-        overlay.classList.add('active');
+        const uploadStatus = document.getElementById('upload-status');
 
-        const formData = new FormData(this);
-        const xhr = new XMLHttpRequest();
-
-        xhr.upload.addEventListener('progress', function(e) {
-            if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                progressBar.style.width = percent + '%';
-                uploadPercent.textContent = percent + '%';
-                uploadStatus.textContent = percent < 100 ? 'Subiendo archivos...' : 'Procesando (conversión de videos si aplica)...';
+        const interval = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 95) {
+                progress = 95;
+                uploadStatus.textContent = 'Procesando archivos en el servidor...';
             }
-        });
+            progressBar.style.width = progress + '%';
+            uploadPercent.textContent = Math.round(progress) + '%';
+        }, 500);
 
-        xhr.addEventListener('load', function() {
-            if (xhr.status === 200 || xhr.status === 302) {
-                uploadStatus.textContent = 'Completado. Redirigiendo...';
-                window.location.href = '{% url "inicio" %}';
-            } else {
-                overlay.classList.remove('active');
-                alert('Error al guardar el informe. Intente nuevamente.');
-            }
-        });
-
-        xhr.addEventListener('error', function() {
-            overlay.classList.remove('active');
-            alert('Error de conexión. Intente nuevamente.');
-        });
-
-        xhr.open('POST', this.action || window.location.href);
-        xhr.send(formData);
+        // El formulario se envía normalmente
+        return true;
     });
 </script>
 {% endblock %}
