@@ -981,9 +981,42 @@ def ver_foto(request, foto_id):
     return render(request, 'informes/ver_foto.html', contexto)
 
 @login_required
-def informes_sin_legajo(request):
-    informes = Informe.objects.filter(empleado__isnull=True)    
-    return render(request, 'informes/sin_legajo.html', {'informes': informes})
+def informes_sin_legajo(request, sucursal_id=None):
+    """Vista para mostrar informes sin empleado asignado, filtrados por sucursal."""
+    # Obtener sucursales permitidas para el usuario
+    if hasattr(request.user, 'profile'):
+        sucursales = request.user.profile.get_sucursales_permitidas()
+    else:
+        sucursales = Sucursales.objects.none()
+
+    # Si no hay sucursal_id, verificar si tiene solo una sucursal
+    if sucursal_id is None:
+        if sucursales.count() == 1:
+            # Redirigir directamente a la única sucursal
+            return redirect('informes:informes_sin_legajo_sucursal', sucursal_id=sucursales.first().id)
+        # Mostrar selección de sucursal
+        return render(request, 'informes/seleccionar_sucursal_sin_legajo.html', {
+            'sucursales': sucursales
+        })
+
+    # Verificar acceso a la sucursal
+    sucursal = get_object_or_404(Sucursales, id=sucursal_id)
+    if hasattr(request.user, 'profile'):
+        if not request.user.profile.tiene_acceso_sucursal(sucursal):
+            messages.error(request, 'No tiene permisos para ver informes de esta sucursal.')
+            return redirect('informes:informes_sin_legajo')
+
+    # Filtrar informes sin empleado de la sucursal seleccionada
+    informes = Informe.objects.filter(
+        empleado__isnull=True,
+        sucursal=sucursal
+    ).select_related('bus', 'sucursal', 'origen').order_by('-fecha_hora')
+
+    return render(request, 'informes/sin_legajo.html', {
+        'informes': informes,
+        'sucursal': sucursal,
+        'sucursales': sucursales
+    })
 
 class EnviarInformeEmailView(LoginRequiredMixin, FormView):
     template_name = 'informes/enviar_email.html'

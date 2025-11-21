@@ -18,6 +18,7 @@ urlpatterns = [
     path('video/<int:video_id>/stream/', views.stream_video, name='stream_video'),
     path('foto/<int:foto_id>/ver/', views.ver_foto, name='ver_foto'),
     path('informes/sin-legajo/', views.informes_sin_legajo, name='informes_sin_legajo'),
+    path('informes/sin-legajo/<int:sucursal_id>/', views.informes_sin_legajo, name='informes_sin_legajo_sucursal'),
     path('informes/<int:pk>/enviar/', views.EnviarInformeEmailView.as_view(), name='enviar_informe_email'),
     path('informes/no_enviados/', views.informes_no_enviados, name="informes_no_enviados"),
     path('informes/sit_informe/', views.informes_asociar_sitinforme, name='sit_informe'),
