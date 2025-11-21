@@ -1,40 +1,228 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">❓👤 Informes sin Legajo</h2>
+<style>
+    .stats-card {
+        background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+        border-radius: 16px;
+        color: white;
+        padding: 1.5rem;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(255, 193, 7, 0.1);
+    }
+    .badge-pendiente {
+        background: linear-gradient(135deg, #f39c12 0%, #e74c3c 100%);
+    }
+    .informe-row {
+        transition: all 0.2s ease;
+    }
+    .informe-row:hover {
+        transform: translateX(5px);
+    }
+    .sucursal-badge {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f8f9fa;
+        border-radius: 50px;
+        border: 2px solid #ffc107;
+    }
+    [data-bs-theme="dark"] .sucursal-badge {
+        background: #2c3e50;
+        border-color: #ffc107;
+    }
+    .dropdown-sucursal {
+        min-width: 250px;
+    }
+</style>
 
+<div class="container-fluid mt-3">
+    <!-- Header con estadisticas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-warning bg-gradient rounded-3 p-3 me-3">
+                                <i class="bi bi-person-exclamation text-white fs-3"></i>
+                            </div>
+                            <div>
+                                <h4 class="card-title mb-0">Informes sin Legajo Asignado</h4>
+                                <p class="text-muted mb-0 small">
+                                    Informes que requieren asignacion de empleado
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Selector de sucursal -->
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="sucursal-badge">
+                                <i class="bi bi-building"></i>
+                                <span class="fw-bold">{{ sucursal.descripcion }}</span>
+                            </div>
+
+                            {% if sucursales.count > 1 %}
+                            <div class="dropdown">
+                                <button class="btn btn-outline-warning dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-arrow-repeat"></i> Cambiar
+                                </button>
+                                <ul class="dropdown-menu dropdown-sucursal shadow">
+                                    {% for suc in sucursales %}
+                                    <li>
+                                        <a class="dropdown-item {% if suc.id == sucursal.id %}active{% endif %}"
+                                           href="{% url 'informes:informes_sin_legajo_sucursal' suc.id %}">
+                                            <i class="bi bi-building me-2"></i>{{ suc.descripcion }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stats-card shadow">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">Total Pendientes</h6>
+                        <h2 class="mb-0 fw-bold">{{ informes|length }}</h2>
+                    </div>
+                    <div class="opacity-75">
+                        <i class="bi bi-exclamation-circle fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de informes -->
     {% if informes %}
-    <table class="table table-bordered table-hover">
-        <thead class="table-light">
-            <tr>
-                <th>Título</th>
-                <th>Empleado</th>
-                <th>Bus</th>
-                <th>Sucursal</th>
-                <th>Fecha</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for informe in informes %}
-            <tr>
-                <td>{{ informe.titulo }}</td>
-                <td>No asignado</td>
-                <td>{{ informe.bus.ficha }}</td>
-                <td>{{ informe.sucursal.abreviatura }}</td>
-                <td>{{ informe.fecha_hora|date:"d/m/Y H:i" }}</td>
-                <td>
-                    <a href="{% url 'informes:editar_informe' informe.pk %}" class="btn btn-sm btn-warning">
-                        📝 Editar
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead>
+                        <tr class="bg-light">
+                            <th class="border-0 ps-4" style="width: 50px;">#</th>
+                            <th class="border-0">Titulo</th>
+                            <th class="border-0">Origen</th>
+                            <th class="border-0">Bus</th>
+                            <th class="border-0">Fecha</th>
+                            <th class="border-0 text-center">Estado</th>
+                            <th class="border-0 text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for informe in informes %}
+                        <tr class="informe-row">
+                            <td class="ps-4">
+                                <span class="text-muted small">{{ informe.id }}</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <span class="fw-semibold">{{ informe.titulo|truncatechars:40 }}</span>
+                                        {% if informe.descripcion %}
+                                        <br>
+                                        <small class="text-muted">{{ informe.descripcion|truncatechars:60 }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% if informe.origen %}
+                                <span class="badge bg-secondary">{{ informe.origen.nombre }}</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if informe.bus %}
+                                <span class="badge bg-info">
+                                    <i class="bi bi-bus-front me-1"></i>{{ informe.bus.ficha }}
+                                </span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    {{ informe.fecha_hora|date:"d/m/Y" }}
+                                </span>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ informe.fecha_hora|time:"H:i" }}
+                                </small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge badge-pendiente">
+                                    <i class="bi bi-person-x me-1"></i>Sin Asignar
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <a href="{% url 'informes:editar_informe' informe.pk %}"
+                                       class="btn btn-sm btn-warning"
+                                       title="Editar y asignar empleado">
+                                        <i class="bi bi-pencil-square"></i>
+                                        <span class="d-none d-md-inline ms-1">Asignar</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     {% else %}
-    <p>No hay informes sin legajo.</p>
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center py-5">
+            <div class="mb-4">
+                <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center"
+                     style="width: 100px; height: 100px;">
+                    <i class="bi bi-check-circle text-success fs-1"></i>
+                </div>
+            </div>
+            <h5 class="text-success">Todos los informes tienen empleado asignado</h5>
+            <p class="text-muted mb-0">
+                No hay informes pendientes de asignar empleado en {{ sucursal.descripcion }}
+            </p>
+        </div>
+    </div>
     {% endif %}
+
+    <!-- Boton volver -->
+    <div class="d-flex justify-content-between mt-4">
+        {% if sucursales.count > 1 %}
+        <a href="{% url 'informes:informes_sin_legajo' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Cambiar Sucursal
+        </a>
+        {% else %}
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+        {% endif %}
+
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-house me-2"></i>Inicio
+        </a>
+    </div>
 </div>
 {% endblock %}
