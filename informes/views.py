@@ -1,7 +1,10 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, Count
 from django.urls import reverse_lazy
 from django.utils import timezone
+
+logger = logging.getLogger('informes.views')
 from django.utils.timezone import now
 from django.utils.crypto import get_random_string
 from django.utils.text import slugify
