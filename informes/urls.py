@@ -23,6 +23,7 @@ urlpatterns = [
     path('informes/no_enviados/', views.informes_no_enviados, name="informes_no_enviados"),
     path('informes/no_enviados/<int:sucursal_id>/', views.informes_no_enviados, name='informes_no_enviados_sucursal'),
     path('informes/sit_informe/', views.informes_asociar_sitinforme, name='sit_informe'),
+    path('informes/sit_informe/<int:sucursal_id>/', views.informes_asociar_sitinforme, name='sit_informe_sucursal'),
     path('informes/sit_siniestro/', views.informes_asociar_sitsiniestro, name='sit_siniestro'),
     path('informes/informe_guardia/', views.InformeCreateGuardia.as_view(), name='informe_guardia'),
     path('informes/informe_sistemas/', views.InformeCreateSistemas.as_view(), name='informe_sistemas'),

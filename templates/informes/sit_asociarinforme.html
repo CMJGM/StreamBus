@@ -1,126 +1,445 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <style>
-    .custom-checkbox input[type="checkbox"] {
-        width: 25px;
-        height: 25px;
-        accent-color: #28a745;
-        border: 2px solid #888;
-        cursor: pointer;
+    .stats-card {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        border-radius: 16px;
+        color: white;
+        padding: 1.5rem;
     }
-    .custom-checkbox input[type="checkbox"]:not(:checked) {
-        background-color: white;
+    .table-hover tbody tr:hover {
+        background-color: rgba(23, 162, 184, 0.1);
     }
-    .card-body.texto-grande p,
-    .card-body.texto-grande p strong {
-        font-size: 1rem !important;
+    .informe-row {
+        transition: all 0.2s ease;
+    }
+    .informe-row:hover {
+        transform: translateX(5px);
+    }
+    .sucursal-badge {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f8f9fa;
+        border-radius: 50px;
+        border: 2px solid #17a2b8;
+    }
+    [data-bs-theme="dark"] .sucursal-badge {
+        background: #2c3e50;
+        border-color: #17a2b8;
+    }
+    .dropdown-sucursal {
+        min-width: 250px;
+    }
+    .thumbnail-cell {
+        width: 100px;
+        padding: 0.5rem !important;
+    }
+    .thumbnail-img {
+        width: 90px;
+        height: 68px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 2px solid #dee2e6;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .thumbnail-img:hover {
+        transform: scale(1.5);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10;
+        position: relative;
+    }
+    .no-photo {
+        width: 90px;
+        height: 68px;
+        background: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #adb5bd;
+    }
+    [data-bs-theme="dark"] .no-photo {
+        background: #2c3e50;
+        border-color: #495057;
+    }
+
+    /* Colores distintivos por origen */
+    .badge-origen-sistemas {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .badge-origen-guardia {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+    }
+    .badge-origen-rrhh {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+    .badge-origen-taller {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        color: #2d2d2d;
+    }
+    .badge-origen-siniestros {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        color: #8b0000;
+    }
+    .badge-origen-inspectores {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #2d5f5f;
+    }
+
+    /* Botones pastel */
+    .btn-pastel-cyan {
+        background-color: #b3e5fc;
+        border-color: #81d4fa;
+        color: #01579b;
+        font-weight: 500;
+    }
+    .btn-pastel-cyan:hover {
+        background-color: #81d4fa;
+        border-color: #4fc3f7;
+        color: #01579b;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(129, 212, 250, 0.3);
+    }
+    .btn-pastel-green {
+        background-color: #c8e6c9;
+        border-color: #a5d6a7;
+        color: #1b5e20;
+        font-weight: 500;
+    }
+    .btn-pastel-green:hover {
+        background-color: #a5d6a7;
+        border-color: #81c784;
+        color: #1b5e20;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(165, 214, 167, 0.3);
+    }
+    [class*="btn-pastel-"] {
+        transition: all 0.2s ease;
+    }
+
+    /* Checkbox mejorado */
+    .form-check-input {
+        width: 1.3em;
+        height: 1.3em;
+        border: 2px solid #17a2b8;
+        box-shadow: none;
+    }
+    .form-check-input:focus {
+        box-shadow: 0 0 0 0.15rem rgba(23, 162, 184, 0.25);
+    }
+    .form-check-input:checked {
+        background-color: #198754;
+        border-color: #198754;
+    }
+
+    /* Input expediente */
+    .expediente-input {
+        max-width: 150px;
+    }
+    .expediente-input input {
+        font-size: 0.85rem;
+        padding: 0.25rem 0.5rem;
     }
 </style>
 
-<div class="container mt-4">
-    <h2 class="mb-4">🚫🗂️ Asociar SIT-Expediente Informe</h2>
+<div class="container-fluid mt-3">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-info bg-gradient rounded-3 p-3 me-3">
+                                <i class="bi bi-folder2-open text-white fs-3"></i>
+                            </div>
+                            <div>
+                                <h4 class="card-title mb-0">Asociar SIT-Expediente Informe</h4>
+                                <p class="text-muted mb-0 small">
+                                    Informes pendientes de asociar a expediente
+                                </p>
+                            </div>
+                        </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-
-    <form method="POST">
-        {% csrf_token %}
-        {% if informes_no_generados %}
-            {% for informe in informes_no_generados %}
-                <div class="card mb-4 col-10 mx-auto shadow">
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- IZQUIERDA -->
-                            <div class="col-md-6">
-                                <div class="form-check mb-3 custom-checkbox d-flex align-items-center">
-                                    <input class="form-check-input me-2" type="checkbox" name="informes_ids" value="{{ informe.id }}" id="check{{ informe.id }}">
-                                    <label class="form-check-label fw-bold me-3 mb-2" for="check{{ informe.id }}">
-                                        Informe Nº {{ informe.id|stringformat:"010d" }}
-                                    </label>
-                                    <span class="tipo-informe 
-                                        {% if informe.origen == 'Sistemas' %}tipo-sistemas
-                                        {% elif informe.origen == 'Guardia' %}tipo-guardia
-                                        {% elif informe.origen == 'RRHH' %}tipo-rrhh
-                                        {% elif informe.origen == 'Siniestros' %}tipo-siniestros
-                                        {% elif informe.origen == 'Taller' %}tipo-taller
-                                        {% else %}bg-secondary text-white
-                                        {% endif %}">
-                                        {{ informe.origen }}
-                                    </span>  
-                                </div>
-                                <div class="mb-3 expediente-input" id="expediente_div_{{ informe.id }}" style="display: none;">
-                                    <label for="nro_expediente_{{ informe.id }}" class="form-label fw-bold">N° de Expediente</label>
-                                    <input type="number" class="form-control" name="nro_expediente_{{ informe.id }}" id="nro_expediente_{{ informe.id }}" placeholder="Ej: 20250001">                                                                
-                                  
-                                </div>
-                                <div class="card-body texto-grande" >
-                                    <p><strong>Título:</strong> {{ informe.titulo }}</p>                                    
-                                    <p><strong>Descripción:</strong> {{ informe.descripcion }}</p>
-                                    <p><strong>Empleado:</strong>
-                                        {% if informe.empleado %}
-                                            {{ informe.empleado }}
-                                        {% else %}
-                                            <em class="text-muted">No asignado</em>
-                                        {% endif %}
-                                    </p>
-                                    <p><strong>Bus:</strong> {{ informe.bus.ficha }} - {{ informe.bus.marca.nombre }} {{ informe.bus.modelo.nombre }} ({{ informe.bus.dominio }})</p>
-                                    <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
-                                    <p><strong>Fecha y hora:</strong> {{ informe.fecha_hora|date:"d/m/Y H:i" }}</p>
-                                    <p><strong>Enviado por mail:</strong>
-                                        {% if informe.historial_envios.exists %}
-                                            ✅ <span class="text-success">Sí</span>
-                                        {% else %}
-                                            ❌ <span class="text-danger">No</span>
-                                        {% endif %}
-                                    </p>
-                                </div>
+                        <!-- Selector de sucursal -->
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="sucursal-badge">
+                                <i class="bi bi-building"></i>
+                                <span class="fw-bold">{{ sucursal.descripcion }}</span>
                             </div>
 
-                            <!-- DERECHA: Imagen -->
-                            <div class="col-md-6 d-flex align-items-center justify-content-center">
-                                {% if informe.fotos.first %}
-                                    <img src="{{ informe.fotos.first.imagen.url }}" class="img-fluid rounded shadow" style="max-height: 300px;" alt="Foto del informe {{ informe.id }}">
-                                {% else %}
-                                    <p class="text-muted text-center">📷 Sin imagen disponible</p>
-                                {% endif %}
+                            {% if sucursales.count > 1 %}
+                            <div class="dropdown">
+                                <button class="btn btn-outline-info dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-arrow-repeat"></i> Cambiar
+                                </button>
+                                <ul class="dropdown-menu dropdown-sucursal shadow">
+                                    {% for suc in sucursales %}
+                                    <li>
+                                        <a class="dropdown-item {% if suc.id == sucursal.id %}active{% endif %}"
+                                           href="{% url 'informes:sit_informe_sucursal' suc.id %}">
+                                            <i class="bi bi-building me-2"></i>{{ suc.descripcion }}
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-success mt-3">✅ Marcar como Generados</button>
             </div>
-        {% else %}
-            <p>No hay informes sin generar.</p>
-        {% endif %}
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stats-card shadow">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 mb-1">Total Pendientes</h6>
+                        <h2 class="mb-0 fw-bold">{{ informes_no_generados|length }}</h2>
+                    </div>
+                    <div class="opacity-75">
+                        <i class="bi bi-folder-x fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensajes -->
+    {% if messages %}
+    <div class="row mb-3">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Tabla de informes -->
+    {% if informes_no_generados %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead>
+                            <tr class="bg-light">
+                                <th class="border-0 ps-4" style="width: 50px;">
+                                    <input type="checkbox" class="form-check-input" id="selectAll"
+                                           onclick="toggleAll(this)">
+                                </th>
+                                <th class="border-0" style="width: 60px;">#</th>
+                                <th class="border-0 text-center" style="width: 110px;">Foto</th>
+                                <th class="border-0">Titulo / Descripcion</th>
+                                <th class="border-0 text-center">Origen</th>
+                                <th class="border-0 text-center">Bus</th>
+                                <th class="border-0">Empleado</th>
+                                <th class="border-0">Fecha</th>
+                                <th class="border-0 text-center">Email</th>
+                                <th class="border-0 text-center">N Expediente</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for informe in informes_no_generados %}
+                            <tr class="informe-row">
+                                <td class="ps-4">
+                                    <input class="form-check-input informe-checkbox" type="checkbox"
+                                           name="informes_ids" value="{{ informe.id }}"
+                                           data-id="{{ informe.id }}">
+                                </td>
+                                <td>
+                                    <span class="text-muted small">{{ informe.id }}</span>
+                                </td>
+                                <td class="thumbnail-cell text-center">
+                                    {% with first_foto=informe.fotos.first %}
+                                    {% if first_foto %}
+                                    <img src="{{ first_foto.imagen.url }}"
+                                         alt="Foto informe"
+                                         class="thumbnail-img"
+                                         loading="lazy">
+                                    {% else %}
+                                    <div class="no-photo">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    <div>
+                                        <span class="fw-semibold">{{ informe.titulo|truncatechars:35 }}</span>
+                                        {% if informe.descripcion %}
+                                        <br>
+                                        <small class="text-muted">{{ informe.descripcion|truncatechars:50 }}</small>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {% if informe.origen %}
+                                    <span class="badge badge-origen-{{ informe.origen.nombre|lower }}">
+                                        {{ informe.origen.nombre }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if informe.bus %}
+                                    <span class="badge bg-secondary">
+                                        <i class="bi bi-bus-front me-1"></i>{{ informe.bus.ficha }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if informe.empleado %}
+                                    <span class="small">
+                                        {{ informe.empleado.legajo }} - {{ informe.empleado.apellido|truncatechars:12 }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted small">Sin asignar</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="text-muted small">
+                                        {{ informe.fecha_hora|date:"d/m/Y" }}
+                                        <br>
+                                        {{ informe.fecha_hora|time:"H:i" }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    {% if informe.historial_envios.exists %}
+                                    <span class="badge bg-success"><i class="bi bi-check"></i></span>
+                                    {% else %}
+                                    <span class="badge bg-danger"><i class="bi bi-x"></i></span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    <div class="expediente-input" id="expediente_div_{{ informe.id }}" style="display: none;">
+                                        <input type="number" class="form-control form-control-sm"
+                                               name="nro_expediente_{{ informe.id }}"
+                                               placeholder="Ej: 20250001">
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Acciones -->
+            <div class="card-footer bg-light border-0 p-3">
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary" onclick="selectAll()">
+                        <i class="bi bi-check-all me-1"></i> Seleccionar Todos
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="deselectAll()">
+                        <i class="bi bi-x-lg me-1"></i> Quitar Seleccion
+                    </button>
+                    <button type="submit" class="btn btn-pastel-green">
+                        <i class="bi bi-check-circle me-1"></i> Marcar como Generados
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
+    {% else %}
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center py-5">
+            <div class="mb-4">
+                <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center"
+                     style="width: 100px; height: 100px;">
+                    <i class="bi bi-check-circle text-success fs-1"></i>
+                </div>
+            </div>
+            <h5 class="text-success">Todos los informes tienen expediente asignado</h5>
+            <p class="text-muted mb-0">
+                No hay informes pendientes de asociar expediente en {{ sucursal.descripcion }}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Boton volver -->
+    <div class="d-flex justify-content-between mt-4">
+        {% if sucursales.count > 1 %}
+        <a href="{% url 'informes:sit_informe' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Cambiar Sucursal
+        </a>
+        {% else %}
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+        {% endif %}
+
+        <a href="{% url 'inicio' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-house me-2"></i>Inicio
+        </a>
+    </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkboxes = document.querySelectorAll('input[name="informes_ids"]');
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.informe-checkbox');
 
-        checkboxes.forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                const informeId = this.value;
-                const divExpediente = document.getElementById(`expediente_div_${informeId}`);
-                if (this.checked) {
-                    divExpediente.style.display = 'block';
-                } else {
-                    divExpediente.style.display = 'none';
-                    // Limpiar el valor si se destilda
-                    const input = divExpediente.querySelector('input');
-                    if (input) input.value = '';
-                }
-            });
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            const informeId = this.dataset.id;
+            const divExpediente = document.getElementById(`expediente_div_${informeId}`);
+            if (this.checked) {
+                divExpediente.style.display = 'block';
+            } else {
+                divExpediente.style.display = 'none';
+                const input = divExpediente.querySelector('input');
+                if (input) input.value = '';
+            }
         });
     });
-</script>
+});
 
+function toggleAll(source) {
+    document.querySelectorAll('.informe-checkbox').forEach(checkbox => {
+        checkbox.checked = source.checked;
+        const event = new Event('change');
+        checkbox.dispatchEvent(event);
+    });
+}
+
+function selectAll() {
+    document.querySelectorAll('.informe-checkbox').forEach(checkbox => {
+        checkbox.checked = true;
+        const event = new Event('change');
+        checkbox.dispatchEvent(event);
+    });
+    document.getElementById('selectAll').checked = true;
+}
+
+function deselectAll() {
+    document.querySelectorAll('.informe-checkbox').forEach(checkbox => {
+        checkbox.checked = false;
+        const event = new Event('change');
+        checkbox.dispatchEvent(event);
+    });
+    document.getElementById('selectAll').checked = false;
+}
+</script>
 {% endblock %}
