@@ -50,8 +50,9 @@ class AuthenticationTestCase(TestCase):
         self.assertEqual(response.status_code, 302)  # Redirect to login
 
     def test_buscar_informes_requires_login(self):
-        """Verificar que buscar_informes requiere autenticación"""
-        response = self.client.get(reverse('informes:buscar_informes'))
+        """Verificar que lista_informes requiere autenticación"""
+        # NOTA: 'buscar_informes' no es una URL pública, se usa 'lista_informes'
+        response = self.client.get(reverse('informes:lista_informes'))
         self.assertEqual(response.status_code, 302)  # Redirect to login
 
     def test_informes_sin_legajo_requires_login(self):
@@ -86,7 +87,7 @@ class AuthenticationTestCase(TestCase):
 
     def test_informes_disciplinarios_requires_login(self):
         """Verificar que informes_disciplinarios requiere autenticación"""
-        response = self.client.get(reverse('informes:disciplinarios'))
+        response = self.client.get(reverse('informes:informes_disciplinarios'))
         self.assertEqual(response.status_code, 302)  # Redirect to login
 
 
@@ -108,7 +109,7 @@ class CBVAuthenticationTestCase(TestCase):
 
     def test_enviar_informe_email_requires_login(self):
         """Verificar que EnviarInformeEmailView requiere autenticación"""
-        response = self.client.get(reverse('informes:enviar_email', args=[1]))
+        response = self.client.get(reverse('informes:enviar_informe_email', args=[1]))
         self.assertEqual(response.status_code, 302)  # Redirect to login
 
     def test_informes_por_empleado_requires_login(self):
@@ -130,11 +131,11 @@ class SucursalAccessTestCase(TestCase):
 
         # Crear sucursales
         self.sucursal_a = Sucursales.objects.create(
-            codigo=1,
+            abreviatura='SA',
             descripcion='Sucursal A'
         )
         self.sucursal_b = Sucursales.objects.create(
-            codigo=2,
+            abreviatura='SB',
             descripcion='Sucursal B'
         )
 
