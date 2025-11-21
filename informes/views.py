@@ -188,42 +188,93 @@ class InformeCreateGuardia(SucursalFormMixin, CreateView):
     success_url = reverse_lazy("inicio")
 
     def get_initial(self):
-        return {'origen': 'Guardia',
-                'fecha_hora': timezone.now(),}
-    
+        from .models import Origen
+        try:
+            origen_obj = Origen.objects.get(nombre='Guardia')
+            origen_id = origen_obj.id
+        except Origen.DoesNotExist:
+            origen_id = None
+        return {
+            'origen': origen_id,
+            'fecha_hora': timezone.now(),
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['max_video_size_mb'] = settings.MAX_VIDEO_UPLOAD_SIZE_MB
+        context['max_image_size_mb'] = getattr(settings, 'MAX_IMAGE_UPLOAD_SIZE_MB', 10)
+        return context
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['bus'].queryset = Buses.objects.all().order_by('ficha')
+        form.fields['bus'].queryset = Buses.objects.filter(estado=True).order_by('ficha')
+        form.fields['bus'].required = True
         form.fields['empleado'].queryset = Empleado.objects.all().order_by('apellido')
-        form.fields['fecha_hora'].widget.attrs.update({'type': 'datetime-local','class': 'form-control form-control-sm',})
+        form.fields['empleado'].required = False
+        form.fields['titulo'].required = True
+        form.fields['descripcion'].required = True
+        form.fields['sucursal'].required = True
+        form.fields['fecha_hora'].required = True
+        form.fields['fecha_hora'].widget.attrs.update({
+            'type': 'datetime-local',
+            'class': 'form-control form-control-sm',
+        })
         return form
-    
+
+    def form_invalid(self, form):
+        logger.error(f"Form errors: {form.errors}")
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
     def form_valid(self, form):
+        from .validators import validate_image_file, validate_video_file, convert_video_to_h264, get_video_info_ffprobe, needs_conversion
+
         self.object = form.save()
-        form.instance.origen = 'Guardia'
         informe = self.object
 
-        # Subir imágenes renombradas
+        # Validar y subir imágenes
         for index, img in enumerate(self.request.FILES.getlist("imagenes"), start=1):
-            id_formateado = str(informe.id).zfill(10)
-            numero_imagen = str(index).zfill(3)
-            extension = os.path.splitext(img.name)[1] or ".jpg"
-            nombre_archivo = f"F{id_formateado}{numero_imagen}{extension}"
+            try:
+                validate_image_file(img)
+                id_formateado = str(informe.id).zfill(10)
+                numero_imagen = str(index).zfill(3)
+                extension = os.path.splitext(img.name)[1].lower() or ".jpg"
+                nombre_archivo = f"F{id_formateado}{numero_imagen}{extension}"
 
-            foto = FotoInforme(informe=informe)
-            foto.imagen.save(nombre_archivo, ContentFile(img.read()))
-            foto.save()
+                foto = FotoInforme(informe=informe)
+                foto.imagen.save(nombre_archivo, ContentFile(img.read()))
+                foto.save()
+            except Exception as e:
+                logger.error(f"Error validando imagen {img.name}: {e}")
+                messages.warning(self.request, f"Imagen {img.name} no válida: {str(e)}")
 
-        # Subir videos renombrados
+        # Validar, subir y convertir videos
         for index, vid in enumerate(self.request.FILES.getlist("videos"), start=1):
-            id_formateado = str(informe.id).zfill(10)
-            numero_video = str(index).zfill(3)
-            extension = os.path.splitext(vid.name)[1] or ".mp4"
-            nombre_archivo = f"V{id_formateado}{numero_video}{extension}"
+            try:
+                validate_video_file(vid, validate_codec=False)
+                id_formateado = str(informe.id).zfill(10)
+                numero_video = str(index).zfill(3)
+                nombre_archivo = f"V{id_formateado}{numero_video}.mp4"
 
-            video = VideoInforme(informe=informe)
-            video.video.save(nombre_archivo, ContentFile(vid.read()))
-            video.save()
+                video = VideoInforme(informe=informe)
+                video.video.save(nombre_archivo, ContentFile(vid.read()))
+                video.save()
+
+                # Verificar si necesita conversión
+                video_path = video.video.path
+                video_info = get_video_info_ffprobe(video_path)
+                if video_info and needs_conversion(video_info):
+                    logger.info(f"Convirtiendo video {vid.name} de {video_info.get('video_codec')} a H.264")
+                    success = convert_video_to_h264(video_path)
+                    if success:
+                        logger.info(f"Video {vid.name} convertido exitosamente")
+                    else:
+                        logger.warning(f"No se pudo convertir el video {vid.name}")
+            except Exception as e:
+                logger.error(f"Error procesando video {vid.name}: {e}")
+                messages.warning(self.request, f"Video {vid.name} no válido: {str(e)}")
 
         return super().form_valid(form)
 
@@ -234,40 +285,93 @@ class InformeCreateSiniestros(SucursalFormMixin, CreateView):
     success_url = reverse_lazy("inicio")
 
     def get_initial(self):
-        return {'origen': 'Siniestros',
-                'fecha_hora': timezone.now(),}
-    
+        from .models import Origen
+        try:
+            origen_obj = Origen.objects.get(nombre='Siniestros')
+            origen_id = origen_obj.id
+        except Origen.DoesNotExist:
+            origen_id = None
+        return {
+            'origen': origen_id,
+            'fecha_hora': timezone.now(),
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['max_video_size_mb'] = settings.MAX_VIDEO_UPLOAD_SIZE_MB
+        context['max_image_size_mb'] = getattr(settings, 'MAX_IMAGE_UPLOAD_SIZE_MB', 10)
+        return context
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['bus'].queryset = Buses.objects.all().order_by('ficha')
+        form.fields['bus'].queryset = Buses.objects.filter(estado=True).order_by('ficha')
+        form.fields['bus'].required = True
         form.fields['empleado'].queryset = Empleado.objects.all().order_by('apellido')
-        form.fields['fecha_hora'].widget.attrs.update({'type': 'datetime-local','class': 'form-control form-control-sm',})
+        form.fields['empleado'].required = False
+        form.fields['titulo'].required = True
+        form.fields['descripcion'].required = True
+        form.fields['sucursal'].required = True
+        form.fields['fecha_hora'].required = True
+        form.fields['fecha_hora'].widget.attrs.update({
+            'type': 'datetime-local',
+            'class': 'form-control form-control-sm',
+        })
         return form
-    
+
+    def form_invalid(self, form):
+        logger.error(f"Form errors: {form.errors}")
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
     def form_valid(self, form):
+        from .validators import validate_image_file, validate_video_file, convert_video_to_h264, get_video_info_ffprobe, needs_conversion
+
         self.object = form.save()
-        form.instance.origen = 'Siniestro'
         informe = self.object
 
+        # Validar y subir imágenes
         for index, img in enumerate(self.request.FILES.getlist("imagenes"), start=1):
-            id_formateado = str(informe.id).zfill(10)
-            numero_imagen = str(index).zfill(3)
-            extension = os.path.splitext(img.name)[1] or ".jpg"
-            nombre_archivo = f"F{id_formateado}{numero_imagen}{extension}"
+            try:
+                validate_image_file(img)
+                id_formateado = str(informe.id).zfill(10)
+                numero_imagen = str(index).zfill(3)
+                extension = os.path.splitext(img.name)[1].lower() or ".jpg"
+                nombre_archivo = f"F{id_formateado}{numero_imagen}{extension}"
 
-            foto = FotoInforme(informe=informe)
-            foto.imagen.save(nombre_archivo, ContentFile(img.read()))
-            foto.save()
+                foto = FotoInforme(informe=informe)
+                foto.imagen.save(nombre_archivo, ContentFile(img.read()))
+                foto.save()
+            except Exception as e:
+                logger.error(f"Error validando imagen {img.name}: {e}")
+                messages.warning(self.request, f"Imagen {img.name} no válida: {str(e)}")
 
+        # Validar, subir y convertir videos
         for index, vid in enumerate(self.request.FILES.getlist("videos"), start=1):
-            id_formateado = str(informe.id).zfill(10)
-            numero_video = str(index).zfill(3)
-            extension = os.path.splitext(vid.name)[1] or ".mp4"
-            nombre_archivo = f"V{id_formateado}{numero_video}{extension}"
+            try:
+                validate_video_file(vid, validate_codec=False)
+                id_formateado = str(informe.id).zfill(10)
+                numero_video = str(index).zfill(3)
+                nombre_archivo = f"V{id_formateado}{numero_video}.mp4"
 
-            video = VideoInforme(informe=informe)
-            video.video.save(nombre_archivo, ContentFile(vid.read()))
-            video.save()
+                video = VideoInforme(informe=informe)
+                video.video.save(nombre_archivo, ContentFile(vid.read()))
+                video.save()
+
+                # Verificar si necesita conversión
+                video_path = video.video.path
+                video_info = get_video_info_ffprobe(video_path)
+                if video_info and needs_conversion(video_info):
+                    logger.info(f"Convirtiendo video {vid.name} de {video_info.get('video_codec')} a H.264")
+                    success = convert_video_to_h264(video_path)
+                    if success:
+                        logger.info(f"Video {vid.name} convertido exitosamente")
+                    else:
+                        logger.warning(f"No se pudo convertir el video {vid.name}")
+            except Exception as e:
+                logger.error(f"Error procesando video {vid.name}: {e}")
+                messages.warning(self.request, f"Video {vid.name} no válido: {str(e)}")
 
         return super().form_valid(form)
 
@@ -278,40 +382,93 @@ class InformeCreateTaller(SucursalFormMixin, CreateView):
     success_url = reverse_lazy("inicio")
 
     def get_initial(self):
-        return {'origen': 'Taller',
-                'fecha_hora': timezone.now(),}
-    
+        from .models import Origen
+        try:
+            origen_obj = Origen.objects.get(nombre='Taller')
+            origen_id = origen_obj.id
+        except Origen.DoesNotExist:
+            origen_id = None
+        return {
+            'origen': origen_id,
+            'fecha_hora': timezone.now(),
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['max_video_size_mb'] = settings.MAX_VIDEO_UPLOAD_SIZE_MB
+        context['max_image_size_mb'] = getattr(settings, 'MAX_IMAGE_UPLOAD_SIZE_MB', 10)
+        return context
+
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        form.fields['bus'].queryset = Buses.objects.all().order_by('ficha')
+        form.fields['bus'].queryset = Buses.objects.filter(estado=True).order_by('ficha')
+        form.fields['bus'].required = True
         form.fields['empleado'].queryset = Empleado.objects.all().order_by('apellido')
-        form.fields['fecha_hora'].widget.attrs.update({'type': 'datetime-local','class': 'form-control form-control-sm',})
+        form.fields['empleado'].required = False
+        form.fields['titulo'].required = True
+        form.fields['descripcion'].required = True
+        form.fields['sucursal'].required = True
+        form.fields['fecha_hora'].required = True
+        form.fields['fecha_hora'].widget.attrs.update({
+            'type': 'datetime-local',
+            'class': 'form-control form-control-sm',
+        })
         return form
-    
+
+    def form_invalid(self, form):
+        logger.error(f"Form errors: {form.errors}")
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
     def form_valid(self, form):
+        from .validators import validate_image_file, validate_video_file, convert_video_to_h264, get_video_info_ffprobe, needs_conversion
+
         self.object = form.save()
-        form.instance.origen = 'Taller'
         informe = self.object
 
+        # Validar y subir imágenes
         for index, img in enumerate(self.request.FILES.getlist("imagenes"), start=1):
-            id_formateado = str(informe.id).zfill(10)
-            numero_imagen = str(index).zfill(3)
-            extension = os.path.splitext(img.name)[1] or ".jpg"
-            nombre_archivo = f"F{id_formateado}{numero_imagen}{extension}"
+            try:
+                validate_image_file(img)
+                id_formateado = str(informe.id).zfill(10)
+                numero_imagen = str(index).zfill(3)
+                extension = os.path.splitext(img.name)[1].lower() or ".jpg"
+                nombre_archivo = f"F{id_formateado}{numero_imagen}{extension}"
 
-            foto = FotoInforme(informe=informe)
-            foto.imagen.save(nombre_archivo, ContentFile(img.read()))
-            foto.save()
+                foto = FotoInforme(informe=informe)
+                foto.imagen.save(nombre_archivo, ContentFile(img.read()))
+                foto.save()
+            except Exception as e:
+                logger.error(f"Error validando imagen {img.name}: {e}")
+                messages.warning(self.request, f"Imagen {img.name} no válida: {str(e)}")
 
+        # Validar, subir y convertir videos
         for index, vid in enumerate(self.request.FILES.getlist("videos"), start=1):
-            id_formateado = str(informe.id).zfill(10)
-            numero_video = str(index).zfill(3)
-            extension = os.path.splitext(vid.name)[1] or ".mp4"
-            nombre_archivo = f"V{id_formateado}{numero_video}{extension}"
+            try:
+                validate_video_file(vid, validate_codec=False)
+                id_formateado = str(informe.id).zfill(10)
+                numero_video = str(index).zfill(3)
+                nombre_archivo = f"V{id_formateado}{numero_video}.mp4"
 
-            video = VideoInforme(informe=informe)
-            video.video.save(nombre_archivo, ContentFile(vid.read()))
-            video.save()
+                video = VideoInforme(informe=informe)
+                video.video.save(nombre_archivo, ContentFile(vid.read()))
+                video.save()
+
+                # Verificar si necesita conversión
+                video_path = video.video.path
+                video_info = get_video_info_ffprobe(video_path)
+                if video_info and needs_conversion(video_info):
+                    logger.info(f"Convirtiendo video {vid.name} de {video_info.get('video_codec')} a H.264")
+                    success = convert_video_to_h264(video_path)
+                    if success:
+                        logger.info(f"Video {vid.name} convertido exitosamente")
+                    else:
+                        logger.warning(f"No se pudo convertir el video {vid.name}")
+            except Exception as e:
+                logger.error(f"Error procesando video {vid.name}: {e}")
+                messages.warning(self.request, f"Video {vid.name} no válido: {str(e)}")
 
         return super().form_valid(form)
 
