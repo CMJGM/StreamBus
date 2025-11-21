@@ -30,6 +30,25 @@
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     }
 
+    .metric-card.clickable {
+        cursor: pointer;
+    }
+
+    .metric-card.clickable:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .metric-card.clickable::after {
+        content: '\F138';
+        font-family: 'bootstrap-icons';
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.75rem;
+        opacity: 0.5;
+    }
+
     .metric-card.total::before { background: linear-gradient(90deg, #667eea, #764ba2); }
     .metric-card.warning::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
     .metric-card.danger::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
@@ -269,15 +288,17 @@
     <!-- Metrics Row -->
     <div class="row g-4 mb-4">
         <div class="col-6 col-md-4 col-xl-2">
-            <div class="metric-card total">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="metric-icon total">
-                        <i class="bi bi-file-earmark-text"></i>
+            <a href="{% url 'informes:lista_informes' %}" class="text-decoration-none">
+                <div class="metric-card total clickable">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="metric-icon total">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
                     </div>
+                    <div class="metric-value">{{ total_informes }}</div>
+                    <div class="metric-label">Total Informes</div>
                 </div>
-                <div class="metric-value">{{ total_informes }}</div>
-                <div class="metric-label">Total Informes</div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
             <div class="metric-card success">
@@ -291,37 +312,43 @@
             </div>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
-            <div class="metric-card warning">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="metric-icon warning">
-                        <i class="bi bi-person-x"></i>
+            <a href="{% url 'informes:informes_sin_legajo' %}" class="text-decoration-none">
+                <div class="metric-card warning clickable">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="metric-icon warning">
+                            <i class="bi bi-person-x"></i>
+                        </div>
                     </div>
+                    <div class="metric-value">{{ sin_empleado }}</div>
+                    <div class="metric-label">Sin Empleado</div>
                 </div>
-                <div class="metric-value">{{ sin_empleado }}</div>
-                <div class="metric-label">Sin Empleado</div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
-            <div class="metric-card danger">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="metric-icon danger">
-                        <i class="bi bi-envelope-x"></i>
+            <a href="{% url 'informes:informes_no_enviados' %}" class="text-decoration-none">
+                <div class="metric-card danger clickable">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="metric-icon danger">
+                            <i class="bi bi-envelope-x"></i>
+                        </div>
                     </div>
+                    <div class="metric-value">{{ no_enviados }}</div>
+                    <div class="metric-label">No Enviados</div>
                 </div>
-                <div class="metric-value">{{ no_enviados }}</div>
-                <div class="metric-label">No Enviados</div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
-            <div class="metric-card info">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="metric-icon info">
-                        <i class="bi bi-folder-x"></i>
+            <a href="{% url 'informes:sit_informe' %}" class="text-decoration-none">
+                <div class="metric-card info clickable">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="metric-icon info">
+                            <i class="bi bi-folder-x"></i>
+                        </div>
                     </div>
+                    <div class="metric-value">{{ sin_expediente }}</div>
+                    <div class="metric-label">Sin Expediente</div>
                 </div>
-                <div class="metric-value">{{ sin_expediente }}</div>
-                <div class="metric-label">Sin Expediente</div>
-            </div>
+            </a>
         </div>
         <div class="col-6 col-md-4 col-xl-2">
             <div class="metric-card total">
@@ -391,24 +418,28 @@
     <!-- Charts Row -->
     <div class="row g-4 mb-4">
         <!-- Grafico de barras -->
-        <div class="col-md-8">
-            <div class="chart-card h-100">
+        <div class="col-md-7">
+            <div class="chart-card">
                 <div class="chart-title">
                     <i class="bi bi-bar-chart-fill"></i>
                     Informes ultimos 7 dias
                 </div>
-                <canvas id="chartBarras" height="200"></canvas>
+                <div style="height: 180px;">
+                    <canvas id="chartBarras"></canvas>
+                </div>
             </div>
         </div>
 
         <!-- Grafico de dona -->
-        <div class="col-md-4">
-            <div class="chart-card h-100">
+        <div class="col-md-5">
+            <div class="chart-card">
                 <div class="chart-title">
                     <i class="bi bi-pie-chart-fill"></i>
                     Distribucion por Origen
                 </div>
-                <canvas id="chartDona" height="200"></canvas>
+                <div style="height: 180px;">
+                    <canvas id="chartDona"></canvas>
+                </div>
             </div>
         </div>
     </div>
