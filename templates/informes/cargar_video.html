@@ -654,8 +654,8 @@
                                 </div>
 
                                 <!-- Video player con controles completos -->
-                                <video controls preload="metadata" controlsList="nodownload">
-                                    <source src="{{ video.video.url }}" type="video/mp4">
+                                <video controls preload="auto" playsinline>
+                                    <source src="{% url 'informes:stream_video' video.id %}" type="video/mp4">
                                     Tu navegador no soporta el formato de video.
                                 </video>
                             </div>
