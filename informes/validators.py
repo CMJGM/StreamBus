@@ -539,6 +539,208 @@ class VideoValidator:
 
 
 # ============================================================================
+# CONVERSIÓN DE VIDEO
+# ============================================================================
+
+# Codecs que requieren conversión a H.264 para compatibilidad web
+CODECS_REQUIRING_CONVERSION = ['hevc', 'hev1', 'av1', 'vp9']
+
+
+def is_ffmpeg_available():
+    """Verifica si ffmpeg está disponible en el sistema."""
+    try:
+        result = subprocess.run(
+            ['ffmpeg', '-version'],
+            capture_output=True,
+            timeout=5
+        )
+        return result.returncode == 0
+    except:
+        return False
+
+
+def convert_video_to_h264(input_path, output_path=None):
+    """
+    Convierte un video a H.264 para máxima compatibilidad web.
+
+    Args:
+        input_path: Ruta al archivo de video original
+        output_path: Ruta de salida (opcional, si no se especifica reemplaza el original)
+
+    Returns:
+        dict: {
+            'success': bool,
+            'output_path': str,
+            'original_codec': str,
+            'message': str
+        }
+    """
+    if not is_ffmpeg_available():
+        logger.error("ffmpeg no está disponible para conversión")
+        return {
+            'success': False,
+            'message': 'ffmpeg no está instalado en el servidor'
+        }
+
+    # Obtener información del video original
+    video_info = get_video_info_ffprobe(input_path)
+    if not video_info:
+        return {
+            'success': False,
+            'message': 'No se pudo analizar el video original'
+        }
+
+    original_codec = video_info.get('video_codec', 'unknown')
+
+    # Si ya es H.264, no convertir
+    if original_codec.lower() in ['h264', 'avc1']:
+        logger.info(f"Video ya está en H.264, no requiere conversión")
+        return {
+            'success': True,
+            'output_path': str(input_path),
+            'original_codec': original_codec,
+            'converted': False,
+            'message': 'Video ya compatible (H.264)'
+        }
+
+    # Verificar si necesita conversión
+    if original_codec.lower() not in CODECS_REQUIRING_CONVERSION:
+        logger.info(f"Codec {original_codec} no requiere conversión forzada")
+        return {
+            'success': True,
+            'output_path': str(input_path),
+            'original_codec': original_codec,
+            'converted': False,
+            'message': f'Codec {original_codec} compatible'
+        }
+
+    # Preparar rutas
+    input_path = str(input_path)
+    if output_path is None:
+        # Crear archivo temporal para la conversión
+        base, ext = os.path.splitext(input_path)
+        temp_output = f"{base}_h264_temp.mp4"
+    else:
+        temp_output = str(output_path)
+
+    logger.info(f"Iniciando conversión de {original_codec} a H.264: {input_path}")
+
+    try:
+        # Comando ffmpeg para conversión
+        # -c:v libx264 = codec de video H.264
+        # -preset medium = balance entre velocidad y compresión
+        # -crf 23 = calidad (18-28, menor = mejor calidad)
+        # -c:a aac = codec de audio AAC
+        # -movflags +faststart = optimización para streaming web
+        cmd = [
+            'ffmpeg',
+            '-i', input_path,
+            '-c:v', 'libx264',
+            '-preset', 'medium',
+            '-crf', '23',
+            '-c:a', 'aac',
+            '-b:a', '128k',
+            '-movflags', '+faststart',
+            '-y',  # Sobrescribir sin preguntar
+            temp_output
+        ]
+
+        logger.debug(f"Ejecutando: {' '.join(cmd)}")
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=300  # 5 minutos timeout
+        )
+
+        if result.returncode != 0:
+            logger.error(f"Error en conversión ffmpeg: {result.stderr}")
+            # Limpiar archivo temporal si existe
+            if os.path.exists(temp_output):
+                os.unlink(temp_output)
+            return {
+                'success': False,
+                'original_codec': original_codec,
+                'message': f'Error en conversión: {result.stderr[:200]}'
+            }
+
+        # Verificar que el archivo de salida se creó
+        if not os.path.exists(temp_output):
+            return {
+                'success': False,
+                'original_codec': original_codec,
+                'message': 'El archivo convertido no se creó'
+            }
+
+        # Si no se especificó output_path, reemplazar el original
+        if output_path is None:
+            # Eliminar original
+            os.unlink(input_path)
+            # Renombrar temporal al nombre original (pero con .mp4)
+            final_path = f"{base}.mp4"
+            os.rename(temp_output, final_path)
+            output_path = final_path
+        else:
+            output_path = temp_output
+
+        # Obtener info del video convertido
+        converted_info = get_video_info_ffprobe(output_path)
+
+        logger.info(
+            f"Conversión exitosa: {original_codec} → H.264, "
+            f"tamaño original: {os.path.getsize(input_path) if os.path.exists(input_path) else 'N/A'}, "
+            f"tamaño convertido: {os.path.getsize(output_path)}"
+        )
+
+        return {
+            'success': True,
+            'output_path': output_path,
+            'original_codec': original_codec,
+            'converted': True,
+            'new_codec': 'h264',
+            'video_info': converted_info,
+            'message': f'Convertido exitosamente de {original_codec} a H.264'
+        }
+
+    except subprocess.TimeoutExpired:
+        logger.error("Timeout en conversión de video")
+        if os.path.exists(temp_output):
+            os.unlink(temp_output)
+        return {
+            'success': False,
+            'original_codec': original_codec,
+            'message': 'Timeout: el video es muy largo o el servidor está sobrecargado'
+        }
+    except Exception as e:
+        logger.error(f"Error en conversión: {e}")
+        if os.path.exists(temp_output):
+            os.unlink(temp_output)
+        return {
+            'success': False,
+            'original_codec': original_codec,
+            'message': f'Error inesperado: {str(e)}'
+        }
+
+
+def needs_conversion(video_info):
+    """
+    Determina si un video necesita conversión basado en su codec.
+
+    Args:
+        video_info: Dict con información del video (de get_video_info_ffprobe)
+
+    Returns:
+        bool: True si necesita conversión
+    """
+    if not video_info:
+        return False
+
+    codec = video_info.get('video_codec', '').lower()
+    return codec in CODECS_REQUIRING_CONVERSION
+
+
+# ============================================================================
 # FUNCIONES DE UTILIDAD
 # ============================================================================
 

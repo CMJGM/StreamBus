@@ -589,8 +589,11 @@ def cargar_fotos(request, pk):
 @check_sucursal_access
 @audit_file_access(action='upload_video')
 def cargar_video(request, pk):
+    from .validators import convert_video_to_h264, get_video_info_ffprobe, needs_conversion
+
     informe = get_object_or_404(Informe, pk=pk)
     videos = VideoInforme.objects.filter(informe=informe)
+    conversion_message = None
 
     if request.method == 'POST':
         form = VideoForm(request.POST, request.FILES)
@@ -598,19 +601,44 @@ def cargar_video(request, pk):
             video = form.save(commit=False)
             video.informe = informe
 
-            archivo = form.cleaned_data['video'] 
+            archivo = form.cleaned_data['video']
             if archivo.size > settings.MAX_VIDEO_UPLOAD_SIZE_MB * 1024 * 1024:
                 form.add_error('video', 'El archivo excede el tamaño máximo permitido de 60MB.')
-            else: 
+            else:
                 cantidad_actual = videos.count() + 1
                 id_formateado = str(informe.id).zfill(10)
                 numero_video = str(cantidad_actual).zfill(3)
-                extension = os.path.splitext(archivo.name)[1] or ".mp4"
-                nombre_archivo = f"V{id_formateado}{numero_video}{extension}"            
+                # Siempre guardar como .mp4 (será convertido si es necesario)
+                nombre_archivo = f"V{id_formateado}{numero_video}.mp4"
                 video.video.save(nombre_archivo, ContentFile(archivo.read()))
                 video.save()
 
-            return redirect('informes:cargar_video', pk=informe.pk)  # Evita reenviar formulario al refrescar
+                # Obtener la ruta completa del archivo guardado
+                video_path = video.video.path
+
+                # Verificar si necesita conversión
+                video_info = get_video_info_ffprobe(video_path)
+                if video_info and needs_conversion(video_info):
+                    logger.info(f"Video requiere conversión: {video_info.get('video_codec')} → H.264")
+
+                    # Convertir a H.264
+                    result = convert_video_to_h264(video_path)
+
+                    if result['success'] and result.get('converted'):
+                        conversion_message = f"Video convertido de {result['original_codec'].upper()} a H.264 para compatibilidad web."
+                        logger.info(conversion_message)
+
+                        # Si la ruta cambió, actualizar el modelo
+                        if result['output_path'] != video_path:
+                            new_relative_path = os.path.relpath(result['output_path'], settings.MEDIA_ROOT)
+                            video.video.name = new_relative_path
+                            video.save()
+                    elif not result['success']:
+                        logger.error(f"Error en conversión: {result['message']}")
+                        conversion_message = f"Advertencia: {result['message']}. El video puede no reproducirse en todos los navegadores."
+
+                messages.success(request, conversion_message or "Video subido correctamente.")
+            return redirect('informes:cargar_video', pk=informe.pk)
     else:
         form = VideoForm()
 
