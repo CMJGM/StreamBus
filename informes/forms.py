@@ -3,6 +3,7 @@ from django.utils.timezone import localtime
 from .models import Informe, FotoInforme, VideoInforme, Sucursales, Empleado, Buses
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from .validators import validate_image_file, validate_video_file, get_video_codec_info
 
 class InformeGuardia(forms.ModelForm):
     class Meta:
@@ -159,24 +160,65 @@ class FotoInformeForm(forms.ModelForm):
     def clean_imagen(self):
         imagen = self.cleaned_data.get('imagen')
         if imagen:
-            if not imagen.name.lower().endswith(('.jpg', '.jpeg', '.png')):
-                raise forms.ValidationError("Solo se permiten archivos .jpg, .jpeg o .png")
+            # Validación robusta: MIME type + contenido real del archivo
+            try:
+                validate_image_file(imagen)
+            except ValidationError as e:
+                raise forms.ValidationError(str(e.message if hasattr(e, 'message') else e))
         return imagen        
     
 class VideoForm(forms.ModelForm):
+    """
+    Formulario para subida de videos con validación de:
+    - Tamaño máximo (configurable en settings.MAX_VIDEO_UPLOAD_SIZE_MB)
+    - MIME type real del archivo
+    - Codecs de video permitidos (H.264, H.265, VP9, AV1, MPEG-4)
+
+    Si ffprobe está instalado, valida también el codec del video.
+    """
     class Meta:
         model = VideoInforme
         fields = ['video']
         widgets = {
-                    'video': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-                }  
+            'video': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agregar información de formatos aceptados
+        self.fields['video'].help_text = (
+            "Formatos permitidos: MP4, AVI, MOV, MKV, WEBM. "
+            "Codecs: H.264, H.265/HEVC, VP9, AV1"
+        )
+
     def clean_video(self):
         video = self.cleaned_data.get('video')
         if video:
-            ext = video.name.split('.')[-1].lower()
-            if ext not in ['mp4', 'avi']:
-                raise forms.ValidationError('Solo se permiten archivos .mp4 o .avi')
-        return video   
+            # Validación robusta: MIME type + codec de video
+            try:
+                video_info = validate_video_file(video, validate_codec=True)
+
+                # Guardar información del codec para uso posterior
+                if video_info:
+                    self._video_info = video_info
+                    codec = video_info.get('video_codec', '')
+                    codec_info = get_video_codec_info(codec)
+                    if codec_info:
+                        # Log informativo del codec detectado
+                        import logging
+                        logger = logging.getLogger('informes.forms')
+                        logger.info(
+                            f"Video aceptado: {video.name}, "
+                            f"codec: {codec_info['name']}, "
+                            f"resolución: {video_info.get('width')}x{video_info.get('height')}"
+                        )
+            except ValidationError as e:
+                raise forms.ValidationError(str(e.message if hasattr(e, 'message') else e))
+        return video
+
+    def get_video_info(self):
+        """Retorna información del video si fue analizado con ffprobe."""
+        return getattr(self, '_video_info', None)   
 
 class EnviarInformeEmailForm(forms.Form):
     destinatarios = forms.CharField(label='Destinatarios', widget=forms.Textarea(attrs={'rows': 2}))
