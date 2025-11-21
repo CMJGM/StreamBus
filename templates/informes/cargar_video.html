@@ -67,7 +67,137 @@
     .video-card video {
         width: 100%;
         display: block;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .video-card-actions {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 10;
+    }
+
+    .btn-delete-video {
+        background: rgba(220, 53, 69, 0.9);
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .btn-delete-video:hover {
+        background: #dc3545;
+        transform: scale(1.1);
+    }
+
+    .delete-confirm {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.85);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         border-radius: 12px;
+        z-index: 20;
+        padding: 1rem;
+    }
+
+    .delete-confirm.active {
+        display: flex;
+    }
+
+    .delete-confirm p {
+        color: white;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .delete-confirm .btn-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    /* Upload Progress Overlay */
+    .upload-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-overlay.active {
+        display: flex;
+    }
+
+    .upload-progress-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .upload-spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid #e9ecef;
+        border-top-color: #fa709a;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1.5rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .progress-bar-container {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        margin: 1rem 0;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        width: 0%;
+        transition: width 0.3s ease;
+        border-radius: 10px;
+    }
+
+    .upload-status {
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+
+    [data-bs-theme="dark"] .upload-progress-card {
+        background: #1e2530;
+        color: #e9ecef;
+    }
+
+    [data-bs-theme="dark"] .delete-confirm {
+        background: rgba(30, 37, 48, 0.95);
     }
 
     .empty-gallery {
@@ -499,13 +629,35 @@
                 {% if videos %}
                     <div class="video-grid">
                         {% for video in videos %}
-                            <div class="video-card">
-                                {% if '.mp4' in video.video.url %}
-                                    <video controls>
-                                        <source src="{{ video.video.url }}" type="video/mp4">
-                                        Tu navegador no soporta el formato de video.
-                                    </video>
-                                {% endif %}
+                            <div class="video-card" id="video-card-{{ video.id }}">
+                                <!-- Botón eliminar -->
+                                <div class="video-card-actions">
+                                    <button type="button" class="btn-delete-video" onclick="showDeleteConfirm({{ video.id }})" title="Eliminar video">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Confirmación de eliminación inline -->
+                                <div class="delete-confirm" id="delete-confirm-{{ video.id }}">
+                                    <p><i class="bi bi-exclamation-triangle fs-2 text-warning"></i><br>¿Eliminar este video?<br><small>Esta acción no se puede deshacer</small></p>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-secondary btn-sm" onclick="hideDeleteConfirm({{ video.id }})">
+                                            <i class="bi bi-x me-1"></i>Cancelar
+                                        </button>
+                                        <form method="POST" action="{% url 'informes:eliminar_video' video.id %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash me-1"></i>Eliminar
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Video player con controles completos -->
+                                <video controls preload="metadata" controlsList="nodownload">
+                                    <source src="{{ video.video.url }}" type="video/mp4">
+                                    Tu navegador no soporta el formato de video.
+                                </video>
                             </div>
                         {% endfor %}
                     </div>
@@ -637,32 +789,114 @@
     </div>
 </div>
 
-<!-- Validación de tamaño y nombre del archivo -->
+<!-- Overlay de progreso de carga -->
+<div class="upload-overlay" id="upload-overlay">
+    <div class="upload-progress-card">
+        <div class="upload-spinner"></div>
+        <h5>Subiendo video...</h5>
+        <p class="text-muted mb-2">Por favor espere, esto puede tomar unos momentos</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+        <p class="upload-status" id="upload-status">Preparando archivo...</p>
+        <p class="text-muted small" id="upload-percent">0%</p>
+    </div>
+</div>
+
+<!-- Scripts -->
 <script>
+    // Funciones para confirmación de eliminación
+    function showDeleteConfirm(videoId) {
+        document.getElementById('delete-confirm-' + videoId).classList.add('active');
+    }
+
+    function hideDeleteConfirm(videoId) {
+        document.getElementById('delete-confirm-' + videoId).classList.remove('active');
+    }
+
     // Mostrar nombre del archivo seleccionado
     document.getElementById('id_video').addEventListener('change', function(e) {
         const fileName = e.target.files[0]?.name;
+        const fileSize = e.target.files[0]?.size;
         const label = document.querySelector('.file-input-label strong');
         if (fileName) {
-            label.textContent = fileName;
+            const sizeMB = (fileSize / (1024 * 1024)).toFixed(2);
+            label.textContent = `${fileName} (${sizeMB} MB)`;
             label.parentElement.querySelector('i').className = 'bi bi-check-circle d-block';
         }
     });
 
-    // Validación de tamaño en el cliente
+    // Subida con progreso usando XMLHttpRequest
     document.getElementById("form-video").addEventListener("submit", function(event) {
+        event.preventDefault();
+
         const input = document.getElementById("id_video");
         const errorDiv = document.getElementById("video-error");
         const file = input.files[0];
-        const maxSizeMB = 60;
+        const maxSizeMB = {{ max_video_size_mb }};
         const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
         errorDiv.classList.add("d-none");
 
-        if (file && file.size > maxSizeBytes) {
+        if (!file) {
+            errorDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> <strong>Error:</strong> Seleccione un archivo de video.';
             errorDiv.classList.remove("d-none");
-            event.preventDefault();
+            return;
         }
+
+        if (file.size > maxSizeBytes) {
+            errorDiv.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <strong>Error:</strong> El archivo excede el tamaño máximo permitido de ${maxSizeMB}MB.`;
+            errorDiv.classList.remove("d-none");
+            return;
+        }
+
+        // Mostrar overlay de progreso
+        const overlay = document.getElementById('upload-overlay');
+        const progressBar = document.getElementById('progress-bar');
+        const uploadStatus = document.getElementById('upload-status');
+        const uploadPercent = document.getElementById('upload-percent');
+        overlay.classList.add('active');
+
+        // Crear FormData
+        const formData = new FormData(this);
+
+        // Crear XMLHttpRequest para trackear progreso
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', function(e) {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressBar.style.width = percent + '%';
+                uploadPercent.textContent = percent + '%';
+
+                if (percent < 100) {
+                    uploadStatus.textContent = 'Subiendo archivo...';
+                } else {
+                    uploadStatus.textContent = 'Procesando video (conversión si es necesaria)...';
+                }
+            }
+        });
+
+        xhr.addEventListener('load', function() {
+            if (xhr.status === 200) {
+                uploadStatus.textContent = 'Completado. Redirigiendo...';
+                // Recargar la página para ver el video
+                window.location.reload();
+            } else {
+                overlay.classList.remove('active');
+                errorDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> <strong>Error:</strong> Error al subir el video. Intente nuevamente.';
+                errorDiv.classList.remove("d-none");
+            }
+        });
+
+        xhr.addEventListener('error', function() {
+            overlay.classList.remove('active');
+            errorDiv.innerHTML = '<i class="bi bi-exclamation-triangle"></i> <strong>Error:</strong> Error de conexión. Intente nuevamente.';
+            errorDiv.classList.remove("d-none");
+        });
+
+        xhr.open('POST', this.action || window.location.href);
+        xhr.send(formData);
     });
 </script>
 {% endblock %}

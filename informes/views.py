@@ -652,6 +652,40 @@ def cargar_video(request, pk):
         'max_video_size_mb': settings.MAX_VIDEO_UPLOAD_SIZE_MB,
     })
 
+
+@login_required
+def eliminar_video(request, video_id):
+    """Elimina un video físicamente y de la base de datos."""
+    video = get_object_or_404(VideoInforme, id=video_id)
+    informe_pk = video.informe.pk
+
+    # Verificar acceso a la sucursal
+    if hasattr(request.user, 'profile'):
+        if not request.user.profile.tiene_acceso_sucursal(video.informe.sucursal):
+            messages.error(request, "No tiene permiso para eliminar este video.")
+            return redirect('informes:cargar_video', pk=informe_pk)
+
+    if request.method == 'POST':
+        try:
+            # Eliminar archivo físico
+            if video.video and hasattr(video.video, 'path'):
+                video_path = video.video.path
+                if os.path.exists(video_path):
+                    os.remove(video_path)
+                    logger.info(f"Video eliminado físicamente: {video_path}")
+
+            # Eliminar registro de BD
+            video.delete()
+            messages.success(request, "Video eliminado correctamente.")
+            logger.info(f"Video {video_id} eliminado por usuario {request.user.username}")
+
+        except Exception as e:
+            logger.error(f"Error eliminando video {video_id}: {e}")
+            messages.error(request, f"Error al eliminar el video: {str(e)}")
+
+    return redirect('informes:cargar_video', pk=informe_pk)
+
+
 @login_required
 @check_sucursal_access
 @audit_file_access(action='view_photo')
