@@ -1053,8 +1053,34 @@ class EnviarInformeEmailView(LoginRequiredMixin, FormView):
         return context
 
 @login_required
-def informes_no_enviados(request):
-    informes_no_enviados = Informe.objects.filter(historial_envios__isnull=True)
+def informes_no_enviados(request, sucursal_id=None):
+    """Vista para mostrar informes no enviados por email, filtrados por sucursal."""
+    # Obtener sucursales del usuario
+    if hasattr(request.user, 'profile'):
+        sucursales = request.user.profile.get_sucursales_permitidas()
+    else:
+        sucursales = Sucursales.objects.none()
+
+    # Si no hay sucursal_id, mostrar selector o redirigir
+    if sucursal_id is None:
+        if sucursales.count() == 1:
+            return redirect('informes:informes_no_enviados_sucursal', sucursal_id=sucursales.first().id)
+        return render(request, 'informes/seleccionar_sucursal_no_enviados.html', {
+            'sucursales': sucursales
+        })
+
+    # Verificar acceso a la sucursal
+    sucursal = get_object_or_404(Sucursales, id=sucursal_id)
+    if hasattr(request.user, 'profile'):
+        if not request.user.profile.tiene_acceso_sucursal(sucursal):
+            messages.error(request, 'No tiene permisos para ver informes de esta sucursal.')
+            return redirect('informes:informes_no_enviados')
+
+    # Filtrar informes no enviados de la sucursal, ordenar por más nuevos primero
+    informes = Informe.objects.filter(
+        historial_envios__isnull=True,
+        sucursal=sucursal
+    ).select_related('bus', 'sucursal', 'empleado', 'origen').prefetch_related('fotos').order_by('-fecha_hora')
 
     if request.method == "POST":
         informes_ids = request.POST.getlist("informes_ids")
@@ -1063,17 +1089,19 @@ def informes_no_enviados(request):
             for informe_id in informes_ids:
                 informe = Informe.objects.get(id=informe_id)
                 destinatarios = informe.sucursal.obtener_destinatarios()
-                
+
                 try:
                     enviar_informe_por_mail(informe, destinatarios)
                     messages.success(request, f"Informe {informe.id} enviado correctamente.")
                 except Exception as e:
                     messages.error(request, f"Error al enviar el informe {informe.id}: {str(e)}")
 
-            return redirect("informes:informes_no_enviados")  
+            return redirect("informes:informes_no_enviados_sucursal", sucursal_id=sucursal.id)
 
     return render(request, "informes/informes_no_enviados.html", {
-        "informes_no_enviados": informes_no_enviados,
+        "informes_no_enviados": informes,
+        "sucursal": sucursal,
+        "sucursales": sucursales,
     })
 
 @login_required
