@@ -143,11 +143,20 @@
 
     /* Input expediente */
     .expediente-input {
-        max-width: 150px;
+        max-width: 200px;
     }
     .expediente-input input {
         font-size: 0.85rem;
         padding: 0.25rem 0.5rem;
+        width: 120px;
+    }
+    .expediente-input input.is-invalid {
+        border-color: #dc3545;
+        background-color: #fff5f5;
+    }
+    .quick-confirm {
+        padding: 0.25rem 0.5rem;
+        white-space: nowrap;
     }
 </style>
 
@@ -334,10 +343,18 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-center">
-                                    <div class="expediente-input" id="expediente_div_{{ informe.id }}" style="display: none;">
-                                        <input type="number" class="form-control form-control-sm"
+                                    <div class="expediente-input d-flex align-items-center gap-1" id="expediente_div_{{ informe.id }}" style="display: none;">
+                                        <input type="number" class="form-control form-control-sm expediente-number"
                                                name="nro_expediente_{{ informe.id }}"
-                                               placeholder="Ej: 20250001">
+                                               data-id="{{ informe.id }}"
+                                               placeholder="N° Exp."
+                                               required>
+                                        <button type="submit" class="btn btn-sm btn-success quick-confirm"
+                                                id="quick_btn_{{ informe.id }}"
+                                                style="display: none;"
+                                                title="Confirmar este informe">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -400,19 +417,69 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const checkboxes = document.querySelectorAll('.informe-checkbox');
+    const expedienteInputs = document.querySelectorAll('.expediente-number');
+    const form = document.querySelector('form');
 
+    // Manejar checkbox change
     checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
             const informeId = this.dataset.id;
             const divExpediente = document.getElementById(`expediente_div_${informeId}`);
+            const input = divExpediente.querySelector('input');
+            const quickBtn = document.getElementById(`quick_btn_${informeId}`);
+
             if (this.checked) {
-                divExpediente.style.display = 'block';
+                divExpediente.style.display = 'flex';
+                input.focus();
             } else {
                 divExpediente.style.display = 'none';
-                const input = divExpediente.querySelector('input');
-                if (input) input.value = '';
+                input.value = '';
+                quickBtn.style.display = 'none';
+                input.classList.remove('is-invalid');
             }
         });
+    });
+
+    // Mostrar boton rapido cuando se escribe numero
+    expedienteInputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+            const informeId = this.dataset.id;
+            const quickBtn = document.getElementById(`quick_btn_${informeId}`);
+
+            if (this.value.trim() !== '') {
+                quickBtn.style.display = 'block';
+                this.classList.remove('is-invalid');
+            } else {
+                quickBtn.style.display = 'none';
+            }
+        });
+    });
+
+    // Validar antes de enviar
+    form.addEventListener('submit', function (e) {
+        let valid = true;
+        const checkedBoxes = document.querySelectorAll('.informe-checkbox:checked');
+
+        if (checkedBoxes.length === 0) {
+            e.preventDefault();
+            alert('Debe seleccionar al menos un informe.');
+            return false;
+        }
+
+        checkedBoxes.forEach(function (checkbox) {
+            const informeId = checkbox.dataset.id;
+            const input = document.querySelector(`input[name="nro_expediente_${informeId}"]`);
+
+            if (!input.value.trim()) {
+                input.classList.add('is-invalid');
+                valid = false;
+            }
+        });
+
+        if (!valid) {
+            e.preventDefault();
+            alert('Debe ingresar el N° de Expediente para todos los informes seleccionados.');
+        }
     });
 });
 
