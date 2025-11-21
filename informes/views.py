@@ -687,6 +687,61 @@ def eliminar_video(request, video_id):
 
 
 @login_required
+def stream_video(request, video_id):
+    """Sirve videos con soporte para Range Requests (seek)."""
+    from django.http import StreamingHttpResponse, FileResponse
+    import re
+
+    video = get_object_or_404(VideoInforme, id=video_id)
+
+    # Verificar acceso a la sucursal
+    if hasattr(request.user, 'profile'):
+        if not request.user.profile.tiene_acceso_sucursal(video.informe.sucursal):
+            return HttpResponse("No autorizado", status=403)
+
+    video_path = video.video.path
+    if not os.path.exists(video_path):
+        return HttpResponse("Video no encontrado", status=404)
+
+    file_size = os.path.getsize(video_path)
+    content_type = 'video/mp4'
+
+    # Manejar Range Request para seek
+    range_header = request.META.get('HTTP_RANGE', '').strip()
+    range_match = re.match(r'bytes=(\d+)-(\d*)', range_header)
+
+    if range_match:
+        start = int(range_match.group(1))
+        end = int(range_match.group(2)) if range_match.group(2) else file_size - 1
+        end = min(end, file_size - 1)
+        length = end - start + 1
+
+        def file_iterator():
+            with open(video_path, 'rb') as f:
+                f.seek(start)
+                remaining = length
+                while remaining > 0:
+                    chunk_size = min(8192, remaining)
+                    data = f.read(chunk_size)
+                    if not data:
+                        break
+                    remaining -= len(data)
+                    yield data
+
+        response = StreamingHttpResponse(file_iterator(), status=206, content_type=content_type)
+        response['Content-Length'] = length
+        response['Content-Range'] = f'bytes {start}-{end}/{file_size}'
+    else:
+        # Sin Range, enviar archivo completo
+        response = FileResponse(open(video_path, 'rb'), content_type=content_type)
+        response['Content-Length'] = file_size
+
+    response['Accept-Ranges'] = 'bytes'
+    response['Content-Disposition'] = f'inline; filename="{os.path.basename(video_path)}"'
+    return response
+
+
+@login_required
 @check_sucursal_access
 @audit_file_access(action='view_photo')
 def ver_foto(request, foto_id):
