@@ -1,4 +1,5 @@
 import requests
+import logging
 import json
 import threading
 import datetime
@@ -33,6 +34,8 @@ from .utils import make_request, AlarmAPIError
 
 
 BASE_URL = "http://190.183.254.253:8088"
+
+logger = logging.getLogger('sit.views')
 
 #Para la descarga de imagenes
 download_jobs = {}
@@ -87,7 +90,7 @@ def mapa_ubicacion(request):
                     raise ValueError("Coordenadas fuera del rango válido")
                 
                 coordinates = {'lat': latitud, 'lng': longitud}
-                print("Coordenadas en la función mapa_ubicaciones", coordinates)
+                logger.debug("Coordenadas en la función mapa_ubicaciones", coordinates)
                 
                 return render(request, 'sit/mapa_ubicacion.html', {
                     'coordinates': json.dumps({'lat': coordinates['lat'], 'lng': coordinates['lng']})
@@ -165,7 +168,7 @@ def ubicaciones_vehiculos(request):
                             "direccion": direccion,
                         })
             except Exception as err:
-                print(f"Error procesando vehículo {veh.get('nm')}: {err}")
+                logger.info(f"Error procesando vehículo {veh.get('nm')}: {err}")
                 continue
 
     except Exception as e:
@@ -241,7 +244,7 @@ def ubicaciones_vehiculos_json(request):
                             "direccion": direccion,
                         })
             except Exception as err:
-                print(f"Error procesando vehículo {veh.get('nm')}: {err}")
+                logger.info(f"Error procesando vehículo {veh.get('nm')}: {err}")
                 continue
 
     except Exception as e:
@@ -565,7 +568,7 @@ def obtener_empresas_y_vehiculos(jsession, empresa_id=None):
         return empresas, vehiculos
 
     except Exception as e:
-        print(f"Error al obtener empresas/vehículos: {e}")
+        logger.info(f"Error al obtener empresas/vehículos: {e}")
         return [], []
 
 class DownloadStatistics:
@@ -714,10 +717,10 @@ def query_security_photos(
         
         params["vehiIdno"] = ','.join(vehicles_chunk)
         filtro_aplicado = True
-        print(f"[🔍 FILTRO PRE-API] Aplicando filtro por vehículos: {len(vehicles_chunk)} fichas")
+        logger.info(f"[🔍 FILTRO PRE-API] Aplicando filtro por vehículos: {len(vehicles_chunk)} fichas")
         
         if len(vehiIdnos) > max_vehicles:
-            print(f"[⚠️ ADVERTENCIA] Se truncaron {len(vehiIdnos) - max_vehicles} vehículos por límite de API")
+            logger.info(f"[⚠️ ADVERTENCIA] Se truncaron {len(vehiIdnos) - max_vehicles} vehículos por límite de API")
     
     # Opción 2: Filtrar por dispositivos (como fallback)
     elif devIdnos and len(devIdnos) > 0:
@@ -726,26 +729,26 @@ def query_security_photos(
         
         params["devIdno"] = ','.join(devices_chunk)
         filtro_aplicado = True
-        print(f"[🔍 FILTRO PRE-API] Aplicando filtro por dispositivos: {len(devices_chunk)} devices")
+        logger.info(f"[🔍 FILTRO PRE-API] Aplicando filtro por dispositivos: {len(devices_chunk)} devices")
         
         if len(devIdnos) > max_devices:
-            print(f"[⚠️ ADVERTENCIA] Se truncaron {len(devIdnos) - max_devices} dispositivos por límite de API")
+            logger.info(f"[⚠️ ADVERTENCIA] Se truncaron {len(devIdnos) - max_devices} dispositivos por límite de API")
     
     try:
         response_data = make_request(endpoint, params)
         
         if filtro_aplicado and response_data:
             total_records = response_data.get('pagination', {}).get('totalRecords', 0)
-            print(f"[✅ FILTRO PRE-API] Exitoso - {total_records} fotos encontradas para la empresa")
+            logger.info(f"[✅ FILTRO PRE-API] Exitoso - {total_records} fotos encontradas para la empresa")
         
         return response_data
         
     except AlarmAPIError as e:
-        print(f"[❌ ERROR FILTRO PRE-API] {e}")
+        logger.info(f"[❌ ERROR FILTRO PRE-API] {e}")
         
         # FALLBACK: Intentar sin filtros si falla
         if filtro_aplicado:
-            print("[🔄 FALLBACK] Reintentando sin filtros de empresa...")
+            logger.info("[🔄 FALLBACK] Reintentando sin filtros de empresa...")
             
             # Remover filtros y reintentar
             params.pop("vehiIdno", None)
@@ -753,15 +756,15 @@ def query_security_photos(
             
             try:
                 response_data = make_request(endpoint, params)
-                print("[⚠️ FALLBACK] Descarga sin filtro empresarial - se aplicará filtrado POST-API")
+                logger.info("[⚠️ FALLBACK] Descarga sin filtro empresarial - se aplicará filtrado POST-API")
                 return response_data
             except Exception as fallback_error:
-                print(f"[💥 FALLBACK FAILED] {fallback_error}")
+                logger.info(f"[💥 FALLBACK FAILED] {fallback_error}")
                 return None
         
         return None
     except Exception as e:
-        print(f"[💥 ERROR INESPERADO] {e}")
+        logger.info(f"[💥 ERROR INESPERADO] {e}")
         return None
 
 def obtener_empresas_disponibles():
@@ -802,7 +805,7 @@ def obtener_empresas_disponibles():
         return empresas_principales, vehiculos_data
 
     except Exception as e:
-        print(f"Error obteniendo empresas: {e}")
+        logger.info(f"Error obteniendo empresas: {e}")
         return [], []
 
 def obtener_vehiculos_por_empresa(empresa_id):
@@ -874,7 +877,7 @@ def obtener_vehiculos_por_empresa(empresa_id):
             }
         }
         
-        print(f"""
+        logger.info(f"""
 [🏢 EMPRESA SELECCIONADA]
 ├── Nombre: {resultado['empresa_info']['nombre']}
 ├── ID: {resultado['empresa_info']['id']}
@@ -887,7 +890,7 @@ def obtener_vehiculos_por_empresa(empresa_id):
         return resultado
 
     except Exception as e:
-        print(f"Error obteniendo vehículos de empresa {empresa_id}: {e}")
+        logger.info(f"Error obteniendo vehículos de empresa {empresa_id}: {e}")
         return None
 
 def security_photos_form(request):
@@ -939,11 +942,11 @@ def process_photos_page(page_result, photos_dir, all_photos, global_stats=None):
         devices_validos = [str(d) for d in empresa_filter.get('devIdnos', [])]
         empresa_nombre = empresa_filter['empresa_info']['nombre']
         
-        print(f"[🏢 APLICANDO FILTRO] {empresa_nombre}")
-        print(f"├── Fichas válidas: {fichas_validas}")
-        print(f"└── Devices válidos: {devices_validos}")
+        logger.info(f"[🏢 APLICANDO FILTRO] {empresa_nombre}")
+        logger.info(f"├── Fichas válidas: {fichas_validas}")
+        logger.info(f"└── Devices válidos: {devices_validos}")
     else:
-        print("[🌐 SIN FILTRO] Procesando todas las empresas")
+        logger.info("[🌐 SIN FILTRO] Procesando todas las empresas")
         fichas_validas = None
         devices_validos = None
         empresa_nombre = "Todas"
@@ -968,10 +971,10 @@ def process_photos_page(page_result, photos_dir, all_photos, global_stats=None):
                 # Debe cumplir al menos uno de los criterios
                 if not (ficha_valida or device_valido):
                     page_stats['excluidas_empresa'] += 1
-                    print(f"[🚫 EXCLUIDA] Ficha {vehiIdno} / Device {devIdno} → NO pertenece a {empresa_nombre}")
+                    logger.info(f"[🚫 EXCLUIDA] Ficha {vehiIdno} / Device {devIdno} → NO pertenece a {empresa_nombre}")
                     continue
                 else:
-                    print(f"[✅ INCLUIDA] Ficha {vehiIdno} / Device {devIdno} → SÍ pertenece a {empresa_nombre}")
+                    logger.info(f"[✅ INCLUIDA] Ficha {vehiIdno} / Device {devIdno} → SÍ pertenece a {empresa_nombre}")
             
             # Si llega aquí, la foto pasa el filtro (o no hay filtro)
             photos.append(photo)
@@ -981,7 +984,7 @@ def process_photos_page(page_result, photos_dir, all_photos, global_stats=None):
                 
         except ValueError:
             page_stats['errores'] += 1
-            print(f"[ERROR] No se pudo interpretar devIdno: {photo.get('devIdno')}")
+            logger.info(f"[ERROR] No se pudo interpretar devIdno: {photo.get('devIdno')}")
             continue
 
     # RESTO DE LA LÓGICA DE DESCARGA (sin cambios)
@@ -1022,7 +1025,7 @@ def process_photos_page(page_result, photos_dir, all_photos, global_stats=None):
                 
         except Exception as e:
             page_stats['errores'] += 1
-            print(f"[💥 ERROR] {vehiIdno}-{devIdno}: {e}")
+            logger.info(f"[💥 ERROR] {vehiIdno}-{devIdno}: {e}")
             return None
 
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -1034,7 +1037,7 @@ def process_photos_page(page_result, photos_dir, all_photos, global_stats=None):
             if result:
                 all_photos.append(result)
 
-    print(f"""
+    logger.info(f"""
 [📊 ESTADÍSTICAS - {empresa_nombre}]
 ├── Total procesadas: {page_stats['total_procesadas']}
 ├── ✅ Incluidas: {page_stats['incluidas']}
@@ -1063,9 +1066,9 @@ def begin_download_process(request):
     
     # ⭐ DEBUGGING: Verificar si llega el filtro
     if empresa_filter:
-        print(f"[🎯 FILTRO RECIBIDO] {empresa_filter['empresa_info']['nombre']} - {len(empresa_filter.get('vehiIdnos', []))} vehículos")
+        logger.info(f"[🎯 FILTRO RECIBIDO] {empresa_filter['empresa_info']['nombre']} - {len(empresa_filter.get('vehiIdnos', []))} vehículos")
     else:
-        print("[❌ FILTRO FALTANTE] No se recibió filtro de empresa")
+        logger.info("[❌ FILTRO FALTANTE] No se recibió filtro de empresa")
     
     # Inicializar estadísticas consolidadas
     global_stats = DownloadStatistics()
@@ -1110,7 +1113,7 @@ def begin_download_process(request):
     # Lista para almacenar todos los datos de las fotos
     all_photos = []
     
-    print(f"🚀 INICIANDO DESCARGA: {total_pages} páginas, {total_records} fotos estimadas")
+    logger.info(f"🚀 INICIANDO DESCARGA: {total_pages} páginas, {total_records} fotos estimadas")
     
     # ⭐ PASAR FILTRO DIRECTAMENTE A process_photos_page
     process_photos_page_with_filter(first_page_result, photos_dir, all_photos, global_stats, empresa_filter)
@@ -1123,7 +1126,7 @@ def begin_download_process(request):
     
     # Descargar las páginas restantes
     for page in range(2, total_pages + 1):
-        print(f"📄 Procesando página {page}/{total_pages}...")
+        logger.info(f"📄 Procesando página {page}/{total_pages}...")
         
         page_result = query_security_photos(begin_time, end_time, page)
         if not page_result or page_result.get('result') != 0:
@@ -1141,7 +1144,7 @@ def begin_download_process(request):
     # Finalizar estadísticas
     global_stats.finalize()
     final_report = global_stats.get_final_report()
-    print(final_report)
+    logger.info(final_report)
     
     # Guardar los datos de las fotos en la sesión
     request.session['security_photos_data'] = all_photos
@@ -1182,11 +1185,11 @@ def process_photos_page_with_filter(page_result, photos_dir, all_photos, global_
         devices_validos = [str(d) for d in empresa_filter.get('devIdnos', [])]
         empresa_nombre = empresa_filter['empresa_info']['nombre']
         
-        print(f"[🏢 APLICANDO FILTRO] {empresa_nombre}")
-        print(f"├── Fichas válidas: {fichas_validas}")
-        print(f"└── Devices válidos: {devices_validos}")
+        logger.info(f"[🏢 APLICANDO FILTRO] {empresa_nombre}")
+        logger.info(f"├── Fichas válidas: {fichas_validas}")
+        logger.info(f"└── Devices válidos: {devices_validos}")
     else:
-        print("[🌐 SIN FILTRO] Procesando todas las empresas")
+        logger.info("[🌐 SIN FILTRO] Procesando todas las empresas")
         fichas_validas = None
         devices_validos = None
         empresa_nombre = "Todas"
@@ -1211,10 +1214,10 @@ def process_photos_page_with_filter(page_result, photos_dir, all_photos, global_
                 # Debe cumplir al menos uno de los criterios
                 if not (ficha_valida or device_valido):
                     page_stats['excluidas_empresa'] += 1
-                    print(f"[🚫 EXCLUIDA] Ficha {vehiIdno} / Device {devIdno} → NO pertenece a {empresa_nombre}")
+                    logger.info(f"[🚫 EXCLUIDA] Ficha {vehiIdno} / Device {devIdno} → NO pertenece a {empresa_nombre}")
                     continue
                 else:
-                    print(f"[✅ INCLUIDA] Ficha {vehiIdno} / Device {devIdno} → SÍ pertenece a {empresa_nombre}")
+                    logger.info(f"[✅ INCLUIDA] Ficha {vehiIdno} / Device {devIdno} → SÍ pertenece a {empresa_nombre}")
             
             # Si llega aquí, la foto pasa el filtro (o no hay filtro)
             photos.append(photo)
@@ -1224,7 +1227,7 @@ def process_photos_page_with_filter(page_result, photos_dir, all_photos, global_
                 
         except ValueError:
             page_stats['errores'] += 1
-            print(f"[ERROR] No se pudo interpretar devIdno: {photo.get('devIdno')}")
+            logger.info(f"[ERROR] No se pudo interpretar devIdno: {photo.get('devIdno')}")
             continue
 
     # DESCARGA (mismo código que antes)
@@ -1265,7 +1268,7 @@ def process_photos_page_with_filter(page_result, photos_dir, all_photos, global_
                 
         except Exception as e:
             page_stats['errores'] += 1
-            print(f"[💥 ERROR] {vehiIdno}-{devIdno}: {e}")
+            logger.info(f"[💥 ERROR] {vehiIdno}-{devIdno}: {e}")
             return None
 
     from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -1277,7 +1280,7 @@ def process_photos_page_with_filter(page_result, photos_dir, all_photos, global_
             if result:
                 all_photos.append(result)
 
-    print(f"""
+    logger.info(f"""
 [📊 ESTADÍSTICAS - {empresa_nombre}]
 ├── Total procesadas: {page_stats['total_procesadas']}
 ├── ✅ Incluidas: {page_stats['incluidas']}
@@ -1305,9 +1308,9 @@ def background_download_process(job_id, job_info):
     
     # ⭐ DEBUG: Verificar si llega el filtro
     if empresa_filter:
-        print(f"[🎯 FILTRO EN BACKGROUND] {empresa_filter['empresa_info']['nombre']} - {len(empresa_filter.get('vehiIdnos', []))} vehículos")
+        logger.info(f"[🎯 FILTRO EN BACKGROUND] {empresa_filter['empresa_info']['nombre']} - {len(empresa_filter.get('vehiIdnos', []))} vehículos")
     else:
-        print("[❌ FILTRO FALTANTE EN BACKGROUND] No se recibió filtro de empresa")
+        logger.info("[❌ FILTRO FALTANTE EN BACKGROUND] No se recibió filtro de empresa")
     
     # Inicializar estadísticas consolidadas
     global_stats = DownloadStatistics()
@@ -1368,7 +1371,7 @@ def background_download_process(job_id, job_info):
 
     # Finalizar con estadísticas completas
     global_stats.finalize()
-    print(global_stats.get_final_report())
+    logger.info(global_stats.get_final_report())
     
     all_photos.sort(key=lambda x: (int(x.get('vehiIdno', 0)), x.get('fileTimeStr', '')))
     job_info['photo_ids'] = list(range(len(all_photos)))
@@ -1405,7 +1408,7 @@ def fetch_security_photos(request):
         # Obtener filtro de empresa
         empresa_filter = None
         if empresa_id and empresa_id.strip():
-            print(f"[🏢 EMPRESA] Aplicando filtro por empresa ID: {empresa_id}")
+            logger.info(f"[🏢 EMPRESA] Aplicando filtro por empresa ID: {empresa_id}")
             empresa_filter = obtener_vehiculos_por_empresa(empresa_id)
             
             if not empresa_filter:
@@ -1416,7 +1419,7 @@ def fetch_security_photos(request):
                 messages.warning(request, f"La empresa seleccionada no tiene vehículos activos.")
                 return redirect('sit:security_photos_form')
         else:
-            print("[🌐 TODAS LAS EMPRESAS] Sin filtro de empresa")
+            logger.info("[🌐 TODAS LAS EMPRESAS] Sin filtro de empresa")
 
         # Guardar parámetros para uso posterior
         request.session['photo_query_params'] = {
@@ -1530,7 +1533,7 @@ def basic_optimized_begin_download(request):
             max_workers = config.get('MAX_DOWNLOAD_WORKERS', 15)
             batch_size = config.get('API_BATCH_SIZE', 30)
             
-            print(f"🚀 [BASIC OPTIMIZED] Iniciando con {max_workers} workers, batch size {batch_size}")
+            logger.info(f"🚀 [BASIC OPTIMIZED] Iniciando con {max_workers} workers, batch size {batch_size}")
             
             # Usar la función de stats optimizada básica
             stats = BasicOptimizedStats()
@@ -1604,13 +1607,13 @@ def basic_optimized_begin_download(request):
             
             download_jobs['default_job'] = job_info
             
-            print(f"✅ [BASIC OPTIMIZED] Descarga completada: {len(all_photos)} fotos")
+            logger.info(f"✅ [BASIC OPTIMIZED] Descarga completada: {len(all_photos)} fotos")
             
         except Exception as e:
             job_info['status'] = 'error'
             job_info['message'] = f'Error en descarga: {str(e)}'
             download_jobs['default_job'] = job_info
-            print(f"❌ [BASIC OPTIMIZED] Error: {e}")
+            logger.info(f"❌ [BASIC OPTIMIZED] Error: {e}")
     
     # Ejecutar en thread separado
     import threading
@@ -1640,12 +1643,12 @@ def basic_optimized_query_photos(begintime, endtime, current_page, page_records,
         vehiIdnos = empresa_filter.get('vehiIdnos', [])
         if vehiIdnos and len(vehiIdnos) <= 30:  # Límite conservador
             params["vehiIdno"] = ','.join(vehiIdnos[:30])
-            print(f"[🎯 FILTRO PRE-API] Aplicando para {len(vehiIdnos[:30])} vehículos")
+            logger.info(f"[🎯 FILTRO PRE-API] Aplicando para {len(vehiIdnos[:30])} vehículos")
     
     try:
         return make_request("StandardApiAction_queryPhoto.action", params)
     except Exception as e:
-        print(f"[❌ ERROR API] {e}")
+        logger.info(f"[❌ ERROR API] {e}")
         return None
 
 def process_photos_page_optimized(page_result, photos_dir, all_photos, stats, empresa_filter, executor):
@@ -1694,7 +1697,7 @@ def process_photos_page_optimized(page_result, photos_dir, all_photos, stats, em
                 all_photos.append(result)
         except Exception as e:
             stats.update('errores', 1)
-            print(f"[❌ DOWNLOAD ERROR] {e}")
+            logger.info(f"[❌ DOWNLOAD ERROR] {e}")
 
 def download_photo_basic_optimized(photo_info, photos_dir, stats):
     """
@@ -1742,7 +1745,7 @@ def download_photo_basic_optimized(photo_info, photos_dir, stats):
             
     except Exception as e:
         stats.update('errores', 1)
-        print(f"[❌ ERROR INDIVIDUAL] {vehiIdno}-{devIdno}: {e}")
+        logger.info(f"[❌ ERROR INDIVIDUAL] {vehiIdno}-{devIdno}: {e}")
         return None
 
 class BasicOptimizedStats:

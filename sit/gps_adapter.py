@@ -87,7 +87,7 @@ class StreamBusGPSAdapter:
     
     def _fallback_to_legacy(self, func_name: str, *args, **kwargs):
         """Fallback a funciones legacy en caso de error con citos"""
-        print(f"🔄 Usando fallback legacy para {func_name}")
+        logger.info(f"🔄 Usando fallback legacy para {func_name}")
         
         # IMPORTANTE: Llamar directamente a función legacy, no a la modificada
         from . import utils as legacy_utils
@@ -97,7 +97,7 @@ class StreamBusGPSAdapter:
         if hasattr(legacy_utils, legacy_function_name):
             return getattr(legacy_utils, legacy_function_name)(*args, **kwargs)
         else:
-            print(f"❌ Función legacy {legacy_function_name} no encontrada")
+            logger.info(f"❌ Función legacy {legacy_function_name} no encontrada")
             return None
     
     # =========================================================================

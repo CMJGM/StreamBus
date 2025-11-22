@@ -26,15 +26,15 @@ if getattr(settings, 'USE_CITOS_LIBRARY', False):
         from .gps_adapter import get_gps_adapter
         _use_citos = True
         _adapter = get_gps_adapter()
-        print("✅ Citos library activada - usando funciones avanzadas")
+        logger.info("✅ Citos library activada - usando funciones avanzadas")
     except ImportError as e:
-        print(f"⚠️ Error importando citos adapter: {e}")
+        logger.info(f"⚠️ Error importando citos adapter: {e}")
         _use_citos = False
         _adapter = None
 else:
     _use_citos = False
     _adapter = None
-    print("ℹ️ Usando funciones GPS legacy")
+    logger.info("ℹ️ Usando funciones GPS legacy")
 
 def _should_use_citos(function_name: str) -> bool:
     """Decide si usar citos para una función específica"""
@@ -73,7 +73,7 @@ def gps_login(account: str, password: str) -> str:
         else:
             raise Exception("Respuesta no es JSON. Puede que el login haya fallado.")
     except Exception as e:
-        print(f"Excepción al intentar hacer login: {e}")
+        logger.info(f"Excepción al intentar hacer login: {e}")
         return None
     
 def logout_api(jsession):    
@@ -108,7 +108,7 @@ def obtener_ultima_ubicacion(vehi_idno=None, to_map=2, geoaddress=0, current_pag
         try:
             return _adapter.obtener_ultima_ubicacion(vehi_idno, to_map, geoaddress, current_page, page_records)
         except Exception as e:
-            print(f"⚠️ Citos falló, usando legacy: {e}")
+            logger.info(f"⚠️ Citos falló, usando legacy: {e}")
             # IMPORTANTE: Llamar directamente a legacy SIN pasar por esta función
             return obtener_ultima_ubicacion_legacy(vehi_idno, to_map, geoaddress, current_page, page_records)
     
@@ -145,10 +145,10 @@ def obtener_ultima_ubicacion_legacy(vehi_idno=None, to_map=2, geoaddress=0, curr
 
             return latitud, longitud, velocidad, timestamp, direccion
         else:
-            print(f"Error en respuesta: {data}")
+            logger.info(f"Error en respuesta: {data}")
             return None, None, None, None, None
     except requests.RequestException as e:
-        print(f"Error de conexión: {e}")
+        logger.info(f"Error de conexión: {e}")
         return None, None, None, None, None
 
 def obtener_vehiculos():
@@ -162,16 +162,16 @@ def obtener_vehiculos():
         response = requests.get(url, params=params, timeout=DEFAULT_TIMEOUT)
         response.raise_for_status()
         data = response.json()
-        print("------------------>>>", data)
+        logger.info("------------------>>>", data)
         # Verificar si estamos desconectados o la sesión expiró
         if data.get("result") in [2, 4, 5] or 'error' in data.get("errmsg", "").lower() or 'expired' in data.get("errmsg", "").lower():
-            print("Sesión expirada o desconectada. Intentando reconexión...")
+            logger.info("Sesión expirada o desconectada. Intentando reconexión...")
             
             # Intentar desconectar la sesión actual primero (por si acaso)
             try:
                 logout_api(settings.JSESSION_GPS)
             except Exception as e:
-                print(f"Error al desconectar la sesión anterior: {e}")
+                logger.info(f"Error al desconectar la sesión anterior: {e}")
                 
             # Realizar un nuevo login
             new_jsession = gps_login(settings.GPS_ACCOUNT, settings.GPS_PASSWORD)
@@ -179,7 +179,7 @@ def obtener_vehiculos():
             if new_jsession:
                 # Actualizar la sesión en settings
                 settings.JSESSION_GPS = new_jsession
-                print(f"Reconexión exitosa. Nueva jsession: {new_jsession[:10]}...")
+                logger.info(f"Reconexión exitosa. Nueva jsession: {new_jsession[:10]}...")
                 
                 # Volver a intentar obtener los vehículos con la nueva sesión
                 params["jsession"] = new_jsession
@@ -191,17 +191,17 @@ def obtener_vehiculos():
         return vehicles
 
     except Exception as e:
-        print(f"Error al obtener vehículos: {e}")
+        logger.info(f"Error al obtener vehículos: {e}")
         
         # Intentar reconexión en caso de cualquier error
         try:
-            print("Intentando reconexión debido a error...")
+            logger.info("Intentando reconexión debido a error...")
             new_jsession = gps_login(settings.GPS_ACCOUNT, settings.GPS_PASSWORD)
             
             if new_jsession:
                 # Actualizar la sesión en settings
                 settings.JSESSION_GPS = new_jsession
-                print(f"Reconexión exitosa. Nueva jsession: {new_jsession[:10]}...")
+                logger.info(f"Reconexión exitosa. Nueva jsession: {new_jsession[:10]}...")
                 
                 # Volver a intentar obtener los vehículos con la nueva sesión
                 params["jsession"] = new_jsession
@@ -210,10 +210,10 @@ def obtener_vehiculos():
                 data = response.json()
                 
                 vehicles = data.get("vehicles", [])
-                print(f"Cantidad de vehículos obtenidos tras reconexión: {len(vehicles)}")
+                logger.info(f"Cantidad de vehículos obtenidos tras reconexión: {len(vehicles)}")
                 return vehicles
         except Exception as reconnect_error:
-            print(f"Error en reconexión: {reconnect_error}")
+            logger.info(f"Error en reconexión: {reconnect_error}")
         
         return []
 
@@ -271,13 +271,13 @@ def obtener_estado_dispositivo(vehi_idno=None, dev_idno=None, to_map=2, geoaddre
             
             return latitud, longitud, velocidad, timestamp, direccion, alertas, direccion_movimiento
         else:
-            print(f"Error en respuesta: {data}")
+            logger.info(f"Error en respuesta: {data}")
             return None, None, None, None, None, None, None
     except requests.RequestException as e:
-        print(f"Error de conexión: {e}")
+        logger.info(f"Error de conexión: {e}")
         return None, None, None, None, None, None, None
     except ValueError as e:
-        print(f"Error al procesar la respuesta JSON: {e}")
+        logger.info(f"Error al procesar la respuesta JSON: {e}")
         return None, None, None, None, None, None, None
     
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ def old_download_and_save_image(url, filename):
         response = requests.get(url, timeout=DEFAULT_TIMEOUT)
         response.raise_for_status()  # Para detectar errores HTTP
     except requests.RequestException as e:
-        print(f"Error descargando {url}: {e}")
+        logger.info(f"Error descargando {url}: {e}")
         return False
     
     with open(file_path, 'wb') as f:
@@ -483,16 +483,16 @@ def verificar_archivo_existe(file_path):
             # Verificar que el archivo no esté corrupto (tamaño > 0)
             size = os.path.getsize(file_path)
             if size > 0:
-                print(f"[⏭️ EXISTE] Archivo ya existe: {os.path.basename(file_path)} ({size} bytes)")
+                logger.info(f"[⏭️ EXISTE] Archivo ya existe: {os.path.basename(file_path)} ({size} bytes)")
                 return True
             else:
-                print(f"[🗑️ CORRUPTO] Archivo existe pero está vacío: {file_path}")
+                logger.info(f"[🗑️ CORRUPTO] Archivo existe pero está vacío: {file_path}")
                 # Eliminar archivo corrupto
                 os.remove(file_path)
                 return False
         return False
     except (OSError, IOError) as e:
-        print(f"[⚠️ ERROR] Error verificando archivo {file_path}: {e}")
+        logger.info(f"[⚠️ ERROR] Error verificando archivo {file_path}: {e}")
         return False
 
 
@@ -538,7 +538,7 @@ def download_and_save_image(url, full_file_path):
     if os.path.exists(full_file_path):
         file_size = os.path.getsize(full_file_path)
         if file_size > 0:
-            print(f"[⏭️ SKIP] Archivo ya existe: {os.path.basename(full_file_path)}")
+            logger.info(f"[⏭️ SKIP] Archivo ya existe: {os.path.basename(full_file_path)}")
             return True
         else:
             # Eliminar archivo corrupto
@@ -556,15 +556,15 @@ def download_and_save_image(url, full_file_path):
         if os.path.getsize(full_file_path) > 0:
             return True
         else:
-            print(f"[❌ ERROR] Archivo descargado está vacío: {full_file_path}")
+            logger.info(f"[❌ ERROR] Archivo descargado está vacío: {full_file_path}")
             os.remove(full_file_path)
             return False
             
     except requests.RequestException as e:
-        print(f"[🌐 ERROR] Error descargando {url}: {e}")
+        logger.info(f"[🌐 ERROR] Error descargando {url}: {e}")
         return False
     except IOError as e:
-        print(f"[💾 ERROR] Error escribiendo archivo {full_file_path}: {e}")
+        logger.info(f"[💾 ERROR] Error escribiendo archivo {full_file_path}: {e}")
         return False
 
 def test_folder_creation():
@@ -581,13 +581,13 @@ def test_folder_creation():
         ("123456789012345678901234567890", "10041")  # Nombre muy largo
     ]
     
-    print("🧪 TESTING - Creación de nombres de carpeta:")
+    logger.info("🧪 TESTING - Creación de nombres de carpeta:")
     for vehiIdno, devIdno in test_cases:
         folder_name = crear_nombre_carpeta_vehiculo(vehiIdno, devIdno)
-        print(f"  Input: vehiIdno='{vehiIdno}', devIdno='{devIdno}'")
-        print(f"  Output: '{folder_name}'")
-        print(f"  Longitud: {len(folder_name)} caracteres")
-        print()
+        logger.info(f"  Input: vehiIdno='{vehiIdno}', devIdno='{devIdno}'")
+        logger.info(f"  Output: '{folder_name}'")
+        logger.info(f"  Longitud: {len(folder_name)} caracteres")
+        logger.debug("")
 
 
 
