@@ -29,8 +29,11 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         """Llamado cuando el login es exitoso"""
         username = form.cleaned_data.get('username')
+        # Primero completar el login (esto autentica al usuario)
+        response = super().form_valid(form)
+        # DESPUÉS loguear (ahora request.user ya es el usuario autenticado)
         logger.info(f"Login exitoso para usuario: {username}")
-        return super().form_valid(form)
+        return response
 
 
 class RegisterView(FormView):

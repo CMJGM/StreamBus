@@ -1,5 +1,5 @@
 from django import forms
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime, make_aware, is_naive
 from .models import Informe, FotoInforme, VideoInforme, Sucursales, Empleado, Buses
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
@@ -39,6 +39,13 @@ class InformeGuardia(forms.ModelForm):
                 # Si no existe 'Guardia' o no está permitido, usar el primero disponible
                 if origenes_permitidos.exists():
                     self.fields['origen'].initial = origenes_permitidos.first().id
+
+    def clean_fecha_hora(self):
+        """Convertir datetime naive a timezone-aware"""
+        fecha_hora = self.cleaned_data.get('fecha_hora')
+        if fecha_hora and is_naive(fecha_hora):
+            fecha_hora = make_aware(fecha_hora)
+        return fecha_hora
 
 class InformeForm(forms.ModelForm):
     # Campos personalizados para autocompletado Ajax
@@ -118,6 +125,13 @@ class InformeForm(forms.ModelForm):
             self.fields['bus_search'].widget.attrs['readonly'] = 'readonly'
             self.fields['bus_search'].widget.attrs['disabled'] = 'disabled'
 
+    def clean_fecha_hora(self):
+        """Convertir datetime naive a timezone-aware"""
+        fecha_hora = self.cleaned_data.get('fecha_hora')
+        if fecha_hora and is_naive(fecha_hora):
+            fecha_hora = make_aware(fecha_hora)
+        return fecha_hora
+
     def save(self, commit=True):
         instance = super().save(commit=False)
 
@@ -149,7 +163,21 @@ class InformeFiltroForm(forms.Form):
         if user and hasattr(user, 'profile'):
             self.fields['origen'].queryset = user.profile.get_origenes_permitidos()
         else:
-            self.fields['origen'].queryset = Origen.objects.filter(activo=True)    
+            self.fields['origen'].queryset = Origen.objects.filter(activo=True)
+
+    def clean_fecha_desde(self):
+        """Convertir datetime naive a timezone-aware"""
+        fecha = self.cleaned_data.get('fecha_desde')
+        if fecha and is_naive(fecha):
+            fecha = make_aware(fecha)
+        return fecha
+
+    def clean_fecha_hasta(self):
+        """Convertir datetime naive a timezone-aware"""
+        fecha = self.cleaned_data.get('fecha_hasta')
+        if fecha and is_naive(fecha):
+            fecha = make_aware(fecha)
+        return fecha    
 
 class FotoInformeForm(forms.ModelForm):
     class Meta:
