@@ -70,3 +70,4 @@ htmlcov/
 # Backups
 *.bak
 *.backup
+*_old.py
