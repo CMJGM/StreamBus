@@ -68,52 +68,7 @@ Observaciones adicionales
 
 ## ⏳ ACTUALIZACIONES PENDIENTES
 
-### [2025-11-25] - Implementar Logging Correcto en Sit App
-**Tipo:** Refactor
-**Prioridad:** Alta
-**Responsable:** TBD
 
-**Descripción:**
-Reemplazar todos los `print()` statements en `sit/` por logging apropiado para producción.
-
-**Archivos Modificados:**
-- sit/views.py (remover ~50 prints)
-- sit/utils.py (remover ~20 prints)
-- sit/gps_adapter.py (remover ~15 prints)
-- sit/tasks.py (remover ~10 prints)
-
-**Migraciones:**
-- [x] No requiere migraciones
-
-**Comandos Post-Deploy:**
-```bash
-# Verificar configuración de logging
-python manage.py check
-
-# Reiniciar servicios
-sudo systemctl restart streambus
-sudo systemctl restart celery-worker
-```
-
-**Testing:**
-- [ ] Verificar logs en /var/log/streambus/ o stdout
-- [ ] Confirmar que errores GPS se loggean correctamente
-- [ ] Validar que Celery tasks loggean progreso
-
-**Rollback Plan:**
-```bash
-# Revertir commit
-git revert <commit-hash>
-git push origin main
-```
-
-**Estado:** ⏳ Pendiente
-
-**Notas:**
-- Coordinar con Ops para verificar rotación de logs
-- Considerar nivel de logging (DEBUG en dev, INFO en prod)
-
----
 
 ### [2025-11-30] - Agregar Tests Unitarios Apps Críticas
 **Tipo:** Testing
@@ -236,6 +191,73 @@ sit/
 ---
 
 ## ✅ ACTUALIZACIONES COMPLETADAS
+
+### [2025-11-22] - Implementar Logging en Lugar de print()
+**Tipo:** Refactor
+**Prioridad:** Alta
+**Responsable:** Claude Agent
+
+**Descripción:**
+Reemplazados 87 `print()` statements por logging apropiado en apps `sit` e `informes` para mejorar trazabilidad en producción.
+
+**Archivos Modificados:**
+- sit/views.py (52 prints → 52 logger statements)
+- sit/utils.py (32 prints → 32 logger statements)
+- sit/gps_adapter.py (2 prints → 22 logger statements)
+- informes/views.py (1 print → 29 logger statements adicionales)
+- sit/views/stats.py (nuevo - clases de estadísticas)
+
+**Migraciones:**
+- [x] No requiere migraciones
+
+**Comandos Post-Deploy:**
+```bash
+# Crear directorio de logs
+mkdir -p /var/www/streambus/logs
+chmod 755 /var/www/streambus/logs
+
+# Verificar sintaxis
+python -m py_compile sit/views.py sit/utils.py sit/gps_adapter.py informes/views.py
+
+# Reiniciar servicios
+sudo systemctl restart streambus
+sudo systemctl restart celery-worker
+```
+
+**Testing:**
+- [x] Sintaxis Python verificada correctamente
+- [x] No quedan print() statements (verificado con grep)
+- [x] 135 logger statements agregados
+- [ ] Verificar logs en producción después de deploy
+
+**Rollback Plan:**
+```bash
+# Revertir commit
+git revert 92d732f
+git push origin claude/project-analysis-improvements-01RNexvQDpVfeuowaWtPP99K
+systemctl restart streambus
+```
+
+**Estado:** ✅ Completado (2025-11-22)
+
+**Commit:** 92d732f - refactor: Reemplazar print() por logging en apps sit e informes
+
+**Beneficios:**
+- ✅ Logs visibles en producción (gunicorn/uwsgi)
+- ✅ Niveles configurables (DEBUG, INFO, WARNING, ERROR)
+- ✅ Trazabilidad para debugging
+- ✅ Integración con herramientas de monitoreo
+
+**Documentación:**
+- Ver DOC/CAMBIOS_LOGGING.md para detalles completos
+- Relacionado con DOC/ANALISIS_PROYECTO_Y_MEJORAS.md (Problema #3)
+
+**Notas:**
+- ⚠️ IMPORTANTE: Configurar rotación de logs en producción
+- Ajustar LOG_LEVEL=INFO en .env de producción (no DEBUG)
+- Verificar permisos del directorio de logs
+
+---
 
 ### [2025-11-22] - Mejoras Estéticas del Menú de Navegación
 **Tipo:** Feature
