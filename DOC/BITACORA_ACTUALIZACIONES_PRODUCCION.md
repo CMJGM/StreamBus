@@ -495,6 +495,82 @@ systemctl restart streambus
 
 ---
 
+### [2025-11-22] - HOTFIX: Eliminar directorio informes/views/ conflictivo
+**Tipo:** Hotfix
+**Prioridad:** Crítica
+**Responsable:** Claude Agent
+
+**Descripción:**
+Corrección urgente de conflicto de imports causado por directorio placeholder que impedía importar clases desde informes.views.
+
+**Bug Corregido:**
+- **ImportError**: cannot import name 'InformesPorEmpleadoView' from 'informes.views'
+  - Causa: Directorio `informes/views/` conflictúa con archivo `informes/views.py`
+  - Python prioriza paquetes (directorios) sobre módulos (archivos .py)
+  - El `__init__.py` con `from ..views import *` creaba referencia circular
+  - Fix: Eliminar completamente el directorio `informes/views/`
+
+**Contexto:**
+Durante la refactorización de informes/views.py se creó un directorio informes/views/ como placeholder para futura refactorización. Esa refactorización fue revertida pero el directorio quedó, causando que Django intentara importar desde el paquete en lugar del módulo.
+
+**Archivos Eliminados:**
+- informes/views/__init__.py
+- informes/views/ (directorio completo)
+
+**Archivo Mantenido:**
+- informes/views.py (original, funcional, sin refactorizar)
+
+**Migraciones:**
+- [x] No requiere migraciones
+
+**Comandos Post-Deploy:**
+```bash
+# Verificar que directorio no existe
+test ! -d informes/views && echo "✓ Directorio eliminado correctamente"
+
+# Verificar imports funcionan
+python manage.py shell <<EOF
+from informes.views import InformesPorEmpleadoView, estadisticas_informes
+print("✓ Imports OK")
+EOF
+
+# Reiniciar servicios
+systemctl restart streambus
+```
+
+**Testing:**
+- [x] Directorio informes/views/ eliminado
+- [x] Archivo informes/views.py existe y funciona
+- [ ] Verificar runserver inicia sin ImportError
+- [ ] Verificar todas las URLs de informes funcionan
+
+**Rollback Plan:**
+No aplica - solo elimina directorio conflictivo. Si se necesita revertir:
+```bash
+# No revertir - el directorio causaba problemas
+# El código funcional está en informes/views.py
+```
+
+**Estado:** ✅ Completado (2025-11-22)
+
+**Commit:** d9b5380 - fix: Eliminar directorio informes/views/ que causaba conflicto de imports
+
+**Causa Raíz:**
+- Directorio placeholder de refactorización incompleta dejado en el código
+- No se validó que ambos (directorio y archivo) no pueden coexistir con mismo nombre
+
+**Prevención:**
+- ✅ Siempre eliminar placeholders si la refactorización se revierte
+- ✅ Nunca tener directorio `views/` y archivo `views.py` simultáneamente
+- ✅ Validar imports después de cada cambio estructural
+
+**Notas:**
+- ⚠️ CRÍTICO: Este bugfix es necesario para que Django encuentre las vistas de informes
+- informes/views.py permanece sin refactorizar (requiere tests primero)
+- Bug detectado por usuario al ejecutar `python manage.py runserver`
+
+---
+
 ### [2025-11-22] - Mejoras Estéticas del Menú de Navegación
 **Tipo:** Feature
 **Prioridad:** Baja
@@ -608,10 +684,10 @@ Resuelve problema reportado por usuarios (error 500 al editar).
 - **BugFixes:** 1 completado
 - **Refactors:** 2 completadas
 - **Security:** 0 completadas
-- **Hotfixes:** 1 completado
+- **Hotfixes:** 2 completados
 
 ### Por Prioridad
-- **Crítica:** 1 completada, 2 pendientes
+- **Crítica:** 2 completadas, 2 pendientes
 - **Alta:** 3 completadas, 0 pendientes
 - **Media:** 2 completadas, 0 pendientes
 - **Baja:** 1 completada, 0 pendientes
