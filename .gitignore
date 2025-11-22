@@ -71,3 +71,4 @@ htmlcov/
 *.bak
 *.backup
 *_old.py
+debug.log
