@@ -25,12 +25,12 @@ from buses.models import Buses
 from urllib.parse import urlencode
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
-from .utils import obtener_informe_sit
-from .utils import obtener_ultima_ubicacion, verificar_archivo_existe
-from .utils import obtener_vehiculos, crear_nombre_archivo_foto
-from .utils import crear_nombre_carpeta_vehiculo
-from .utils import get_performance_report_photos, download_and_save_image
-from .utils import make_request, AlarmAPIError
+from ..utils import obtener_informe_sit
+from ..utils import obtener_ultima_ubicacion, verificar_archivo_existe
+from ..utils import obtener_vehiculos, crear_nombre_archivo_foto
+from ..utils import crear_nombre_carpeta_vehiculo
+from ..utils import get_performance_report_photos, download_and_save_image
+from ..utils import make_request, AlarmAPIError
 
 
 BASE_URL = "http://190.183.254.253:8088"

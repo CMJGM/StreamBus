@@ -26,15 +26,15 @@ if getattr(settings, 'USE_CITOS_LIBRARY', False):
         from .gps_adapter import get_gps_adapter
         _use_citos = True
         _adapter = get_gps_adapter()
-        logger.info("✅ Citos library activada - usando funciones avanzadas")
+        logger.info("Citos library activada - usando funciones avanzadas")
     except ImportError as e:
-        logger.info(f"⚠️ Error importando citos adapter: {e}")
+        logger.info(f"Error importando citos adapter: {e}")
         _use_citos = False
         _adapter = None
 else:
     _use_citos = False
     _adapter = None
-    logger.info("ℹ️ Usando funciones GPS legacy")
+    logger.info("Usando funciones GPS legacy")
 
 def _should_use_citos(function_name: str) -> bool:
     """Decide si usar citos para una función específica"""
