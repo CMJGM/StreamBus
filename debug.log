@@ -40648,3 +40648,10 @@ Not Found: /favicon.ico
 Not Found: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 404 17227
 "GET /favicon.ico HTTP/1.1" 404 17227
+C:\Soft\StreamBus\sit\utils.py changed, reloading.
+C:\Soft\StreamBus\sit\utils.py changed, reloading.
+Starting new HTTP connection (1): 190.183.254.253:8088
+http://190.183.254.253:8088 "POST /StandardApiAction_login.action HTTP/1.1" 200 58
+Excepción al intentar hacer login: Error en login: None
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
