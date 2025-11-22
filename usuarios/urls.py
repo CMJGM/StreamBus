@@ -1,10 +1,9 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import RegisterView
-from django.contrib.auth import views as auth_views
+from .views import RegisterView, CustomLoginView
 
 urlpatterns = [
-    path('login/', auth_views.LoginView.as_view(template_name='usuarios/login.html'), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='usuarios/logout.html'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='usuarios/password_reset_form.html'), name='password_reset'),
