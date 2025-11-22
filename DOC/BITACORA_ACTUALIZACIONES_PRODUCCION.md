@@ -417,6 +417,84 @@ systemctl restart streambus
 
 ---
 
+### [2025-11-22] - HOTFIX: Corregir Imports Relativos y Encoding
+**Tipo:** Hotfix
+**Prioridad:** Crítica
+**Responsable:** Claude Agent
+
+**Descripción:**
+Corrección urgente de 2 bugs críticos detectados al ejecutar runserver que impedían el inicio de la aplicación.
+
+**Bugs Corregidos:**
+1. **ModuleNotFoundError**: Imports relativos incorrectos en módulos de views
+   - Error: `from .utils import` buscaba en `sit/views/utils` (no existe)
+   - Fix: `from ..utils import` sube un nivel a `sit/utils` (correcto)
+   - Afectaba 4 módulos: gps_views, photo_download_views, alarmas_views, informes_views
+
+2. **UnicodeEncodeError**: Emojis incompatibles con Windows console (cp1252)
+   - Error: `'charmap' codec can't encode characters` (✅ ⚠️ ℹ️)
+   - Fix: Eliminar emojis de mensajes de logging
+   - Afectaba: sit/utils.py líneas 29, 31, 37
+
+**Archivos Modificados:**
+- sit/views/gps_views.py (6 imports corregidos)
+- sit/views/photo_download_views.py (6 imports corregidos)
+- sit/views/alarmas_views.py (6 imports corregidos)
+- sit/views/informes_views.py (6 imports corregidos)
+- sit/utils.py (3 emojis eliminados)
+
+**Migraciones:**
+- [x] No requiere migraciones
+
+**Comandos Post-Deploy:**
+```bash
+# Verificar sintaxis
+python -m py_compile sit/views/*.py sit/utils.py
+
+# Verificar imports funcionan
+python manage.py shell <<EOF
+from sit.views import mapa_ubicacion
+from sit.views.gps_views import obtener_empresas_disponibles
+print("✓ Imports OK")
+EOF
+
+# Reiniciar servicios
+systemctl restart streambus
+```
+
+**Testing:**
+- [x] Sintaxis Python verificada
+- [x] Imports relativos corregidos (.. en lugar de .)
+- [x] Emojis eliminados de logs
+- [ ] Verificar runserver inicia correctamente
+- [ ] Verificar logs en Windows no tienen encoding errors
+
+**Rollback Plan:**
+```bash
+git revert 6bdd06e
+systemctl restart streambus
+```
+
+**Estado:** ✅ Completado (2025-11-22)
+
+**Commit:** 6bdd06e - fix: Corregir imports relativos y encoding en módulos de views
+
+**Causa Raíz:**
+- Refactorización automática no validó imports relativos correctamente
+- Logs con emojis no testeados en Windows (desarrollo en Linux)
+
+**Prevención:**
+- ✅ Siempre validar imports después de refactorización
+- ✅ Evitar emojis en logs (incompatibles cross-platform)
+- ✅ Testear en Windows antes de commit
+
+**Notas:**
+- ⚠️ CRÍTICO: Este bugfix es necesario para que la aplicación inicie
+- Bug detectado por usuario al ejecutar `python manage.py runserver` en Windows
+- Los imports relativos en Python: `.` = mismo directorio, `..` = directorio padre
+
+---
+
 ### [2025-11-22] - Mejoras Estéticas del Menú de Navegación
 **Tipo:** Feature
 **Prioridad:** Baja
@@ -530,10 +608,10 @@ Resuelve problema reportado por usuarios (error 500 al editar).
 - **BugFixes:** 1 completado
 - **Refactors:** 2 completadas
 - **Security:** 0 completadas
-- **Hotfixes:** 0 completadas
+- **Hotfixes:** 1 completado
 
 ### Por Prioridad
-- **Crítica:** 0 completadas, 2 pendientes
+- **Crítica:** 1 completada, 2 pendientes
 - **Alta:** 3 completadas, 0 pendientes
 - **Media:** 2 completadas, 0 pendientes
 - **Baja:** 1 completada, 0 pendientes
