@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'StreamBus.middleware.LoggingMiddleware',  # NUEVO: Captura usuario para logs
 ]
 
 # Debug Toolbar (solo en desarrollo)
@@ -193,23 +194,56 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,  # importante para no perder logs de Django
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} | {user} | {levelname} | {name} | {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+        'simple': {
+            'format': '{asctime} | {levelname} | {message}',
+            'style': '{',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'filters': {
+        'add_user': {
+            '()': 'StreamBus.logging_filters.UserFilter',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'filters': ['add_user'],
         },
         'file': {
             'level': 'DEBUG',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'debug.log'),
+            'maxBytes': 10485760,  # 10MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+            'filters': ['add_user'],
         },
     },
     'loggers': {
-        'django': {  # Logs del núcleo de Django
+        'django': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
         },
-        '': {  # Logs personalizados como los tuyos
+        'sit': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'informes': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        '': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
         },
