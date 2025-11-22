@@ -629,6 +629,9 @@ class InformeListView(InformeFilterMixin, ListView):
     paginate_by = 10  # Paginación de 10 informes por página
 
     def get_queryset(self):
+        # Log del acceso del usuario
+        logger.info(f"Usuario {self.request.user.username} accediendo a lista de informes")
+
         # InformeFilterMixin ya aplica filtrado por sucursal y filtros comunes (titulo, fecha, origen)
         queryset = super().get_queryset()
 

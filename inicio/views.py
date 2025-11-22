@@ -4,6 +4,9 @@ from django.db.models.functions import TruncMonth, TruncDate
 from datetime import datetime, timedelta
 from informes.models import Informe, Origen
 from sucursales.models import Sucursales
+import logging
+
+logger = logging.getLogger('inicio.views')
 
 
 def inicio(request):
@@ -11,9 +14,11 @@ def inicio(request):
 
     # Si no está logueado, mostrar página pública
     if not request.user.is_authenticated:
+        logger.debug("Usuario no autenticado accediendo a inicio")
         return render(request, 'inicio/inicio_publico.html')
 
     # Usuario logueado - mostrar dashboard con métricas
+    logger.info(f"Usuario {request.user.username} accediendo a dashboard de inicio")
     grupos_usuario = list(request.user.groups.values_list('name', flat=True))
 
     # Obtener sucursales permitidas del usuario
