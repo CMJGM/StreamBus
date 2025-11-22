@@ -695,7 +695,7 @@ class InformeUpdateView(SucursalAccessMixin, UpdateView):
 @login_required
 def lista_informes(request):
     informes = Informe.objects.all().order_by('-fecha_hora')
-    print(informes)
+    logger.debug(informes)
     return render(request, 'informes/lista_informes.html', {'informes': informes})
 
 @login_required
