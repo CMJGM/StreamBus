@@ -6,16 +6,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login
 import logging
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
 logger = logging.getLogger('usuarios.views')
 
 
+@log_view
 def index(request):
     params = {}
     return render(request,"base.html", params)
 
 
-class CustomLoginView(LoginView):
+class CustomLoginView(LoggingMixin, LoginView):
     """Vista de login personalizada con logging mejorado"""
     template_name = "usuarios/login.html"
 
@@ -36,7 +38,7 @@ class CustomLoginView(LoginView):
         return response
 
 
-class RegisterView(FormView):
+class RegisterView(LoggingMixin, FormView):
     template_name = "usuarios/registration_form.html"
     form_class = CustomUserCreationForm
     success_url = reverse_lazy("login")

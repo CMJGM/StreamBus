@@ -31,14 +31,17 @@ from ..utils import obtener_vehiculos, crear_nombre_archivo_foto
 from ..utils import crear_nombre_carpeta_vehiculo
 from ..utils import get_performance_report_photos, download_and_save_image
 from ..utils import make_request, AlarmAPIError
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
 
 BASE_URL = "http://190.183.254.253:8088"
 
+@log_view
 def listar_informes_sit(request):
     informe = obtener_informe_sit(5)  
     return render(request, 'sit/lista_informes.html', {'informe': informe})
 
+@log_view
 def descargar_expediente_pdf(request):
     parametros = {
         'rs:Format': 'PDF',

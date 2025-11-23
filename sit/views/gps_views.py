@@ -31,10 +31,12 @@ from ..utils import obtener_vehiculos, crear_nombre_archivo_foto
 from ..utils import crear_nombre_carpeta_vehiculo
 from ..utils import get_performance_report_photos, download_and_save_image
 from ..utils import make_request, AlarmAPIError
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
 
 BASE_URL = "http://190.183.254.253:8088"
 
+@log_view
 def mapa_ubicacion(request):
     ficha = request.GET.get('ficha')
     
@@ -71,6 +73,7 @@ def mapa_ubicacion(request):
             'coordinates': json.dumps({'lat': -34.6037, 'lng': -58.3816})  # Valor predeterminado
         })
 
+@log_view
 def ubicacion_json(request):
 
     ficha = request.GET.get('ficha')
@@ -82,6 +85,7 @@ def ubicacion_json(request):
         'longitud': lon
     })
 
+@log_view
 def ubicaciones_vehiculos(request):
     selected_company_id = request.GET.get("empresa")
     try:
@@ -148,8 +152,8 @@ def ubicaciones_vehiculos(request):
         "vehiculos_json": json.dumps(vehiculos),
     })
 
+@log_view
 @require_GET
-
 def ubicaciones_vehiculos_json(request):
     selected_company_id = request.GET.get("empresa")
     filtro = request.GET.get("filtro", "").strip().lower()
@@ -214,6 +218,7 @@ def ubicaciones_vehiculos_json(request):
 
     return JsonResponse(vehiculos, safe=False)
 
+@log_view
 def direccion_por_coordenadas(request):    
 
     lat = request.GET.get("lat")
