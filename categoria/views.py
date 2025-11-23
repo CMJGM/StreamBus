@@ -2,8 +2,9 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from .models import Categorias
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
-class ListaCategoriasView(ListView):
+class ListaCategoriasView(LoggingMixin, ListView):
     model = Categorias
     template_name = 'categoria/lista.html'
     context_object_name = 'categorias'
@@ -25,19 +26,19 @@ class ListaCategoriasView(ListView):
         
         return queryset
 
-class CrearCategoriaView(CreateView):
+class CrearCategoriaView(LoggingMixin, CreateView):
     model = Categorias
     fields = ['descripcion']
     template_name = 'categoria/form_categoria.html'
     success_url = reverse_lazy('lista_categorias')
 
-class EditarCategoriaView(UpdateView):
+class EditarCategoriaView(DetailedLoggingMixin, UpdateView):
     model = Categorias
     fields = ['descripcion']
     template_name = 'categoria/form_categoria.html'
     success_url = reverse_lazy('lista_categorias')
 
-class EliminarCategoriaView(DeleteView):
+class EliminarCategoriaView(DetailedLoggingMixin, DeleteView):
     model = Categorias
     template_name = 'categoria/confirmar_eliminar.html'
     success_url = reverse_lazy('lista_categorias')

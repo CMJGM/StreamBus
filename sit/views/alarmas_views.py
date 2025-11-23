@@ -31,10 +31,12 @@ from ..utils import obtener_vehiculos, crear_nombre_archivo_foto
 from ..utils import crear_nombre_carpeta_vehiculo
 from ..utils import get_performance_report_photos, download_and_save_image
 from ..utils import make_request, AlarmAPIError
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
 
 BASE_URL = "http://190.183.254.253:8088"
 
+@log_view
 def alarmas_view(request):
     photos = []
     error_message = None
@@ -147,8 +149,8 @@ def alarmas_view(request):
 # -----------------------------------------------------------------------------
 # Nueva Vista AJAX para obtener fotos paginadas
 # -----------------------------------------------------------------------------
+@log_view
 @require_GET
-
 def get_security_photos_ajax(request):
 
     # Recuperar los parámetros base de la sesión

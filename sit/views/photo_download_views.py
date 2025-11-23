@@ -31,6 +31,7 @@ from ..utils import obtener_vehiculos, crear_nombre_archivo_foto
 from ..utils import crear_nombre_carpeta_vehiculo
 from ..utils import get_performance_report_photos, download_and_save_image
 from ..utils import make_request, AlarmAPIError
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
 
 BASE_URL = "http://190.183.254.253:8088"
@@ -42,6 +43,7 @@ from .stats import DownloadStatistics, BasicOptimizedStats
 #Para la descarga de imagenes
 download_jobs = {}
 
+@log_view
 def security_photos_progress(request):
     """
     Vista para mostrar el progreso de descarga de fotos.
@@ -69,6 +71,7 @@ def security_photos_progress(request):
     # Si está en proceso o cualquier otro estado, mostrar la página de progreso
     return render(request, 'sit\security_photos_progress.html', {'job_info': job_info})
 
+@log_view
 def view_security_photos(request):
     job_id = 'default_job'
     job_info = download_jobs.get(job_id, {})
@@ -95,6 +98,7 @@ def view_security_photos(request):
     }
     return render(request, 'sit/view_security_photos.html', context)
 
+@log_view_detailed
 def clear_security_photos_session(request):
     job_id = 'default_job'
     if job_id in download_jobs:
@@ -108,6 +112,7 @@ def clear_security_photos_session(request):
     messages.success(request, "Datos de fotos de seguridad eliminados correctamente.")
     return redirect('sit:security_photos_form')
 
+@log_view
 def check_download_progress(request):
     job_id = 'default_job'
     job_info = download_jobs.get(job_id, request.session.get('security_photos_job', {}))
@@ -131,6 +136,7 @@ def check_download_progress(request):
         'downloaded_photos': job_info.get('downloaded_photos', 0)
     })
 
+@log_view
 def security_photos_form(request):
 
     """
@@ -624,8 +630,8 @@ def background_download_process(job_id, job_info):
     job_info['status'] = 'completed'
     download_jobs[job_id] = job_info
 
+@log_view
 @require_POST
-
 def fetch_security_photos(request):
     """
     VERSIÓN CORREGIDA - Pasa filtro al job_info para background process
@@ -697,6 +703,7 @@ def fetch_security_photos(request):
 # VERSIONES BÁSICAS OPTIMIZADAS para agregar a views.py
 # Reemplaza gradualmente las funciones existentes
 
+@log_view
 def basic_optimized_check_progress(request):
     """
     Versión básica optimizada del check progress

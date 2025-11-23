@@ -8,8 +8,9 @@ from django.core.paginator import Paginator
 
 from django.db.models import Q
 from django.utils.functional import cached_property
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
-class BusListView(ListView):
+class BusListView(LoggingMixin, ListView):
     model = Buses
     template_name = 'buses/lista_buses.html'
     context_object_name = 'buses'
@@ -69,7 +70,7 @@ class BusListView(ListView):
 
 
 
-class BusCreateView(CreateView):
+class BusCreateView(LoggingMixin, CreateView):
     model = Buses
     form_class = BusesForm
     template_name = 'buses/form_buses.html'
@@ -77,9 +78,9 @@ class BusCreateView(CreateView):
 
     def form_valid(self, form):
         messages.success(self.request, 'Bus creado exitosamente.')
-        return super().form_valid(form)    
+        return super().form_valid(form)
 
-class BusUpdateView(UpdateView):
+class BusUpdateView(DetailedLoggingMixin, UpdateView):
     model = Buses
     form_class = BusesForm
     template_name = 'buses/form_buses.html'
@@ -87,29 +88,29 @@ class BusUpdateView(UpdateView):
 
     def form_valid(self, form):
         messages.success(self.request, 'Bus actualizado correctamente.')
-        return super().form_valid(form)    
+        return super().form_valid(form)
 
 # --- MARCAS ---
-class MarcaCreateView(CreateView):
+class MarcaCreateView(LoggingMixin, CreateView):
     model = Marca
     form_class = MarcaForm
     template_name = 'buses/form_marca.html'
-    success_url = reverse_lazy('crear_modelo')  
+    success_url = reverse_lazy('crear_modelo')
 
-class MarcaUpdateView(UpdateView):  # ← esta es la que está faltando
+class MarcaUpdateView(DetailedLoggingMixin, UpdateView):  # ← esta es la que está faltando
     model = Marca
     form_class = MarcaForm
     template_name = 'buses/form_marca.html'
-    success_url = reverse_lazy('lista_buses')    
+    success_url = reverse_lazy('lista_buses')
 
 # --- MODELOS ---
-class ModeloCreateView(CreateView):
+class ModeloCreateView(LoggingMixin, CreateView):
     model = Modelo
     form_class = ModeloForm
     template_name = 'buses/form_modelo.html'
-    success_url = reverse_lazy('crear_bus')  
+    success_url = reverse_lazy('crear_bus')
 
-class ModeloUpdateView(UpdateView):
+class ModeloUpdateView(DetailedLoggingMixin, UpdateView):
     model = Modelo
     form_class = ModeloForm
     template_name = 'buses/form_modelo.html'

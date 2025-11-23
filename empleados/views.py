@@ -10,9 +10,10 @@ from .forms import EmpleadoForm
 from usuarios.mixins import EmpleadoFilterMixin, SucursalAccessMixin
 from sucursales.models import Sucursales
 from django import forms
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 
 
-class SeleccionarSucursalEmpleadosView(LoginRequiredMixin, View):
+class SeleccionarSucursalEmpleadosView(LoggingMixin, LoginRequiredMixin, View):
     """Vista para seleccionar la sucursal antes de ver empleados"""
     template_name = 'empleados/seleccionar_sucursal.html'
 
@@ -33,7 +34,7 @@ class SeleccionarSucursalEmpleadosView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class EmpleadoListView(LoginRequiredMixin, ListView):
+class EmpleadoListView(LoggingMixin, LoginRequiredMixin, ListView):
     model = Empleado
     template_name = 'empleados/lista_empleados.html'
     context_object_name = 'empleados'
@@ -88,7 +89,7 @@ class EmpleadoListView(LoginRequiredMixin, ListView):
         return context
 
 
-class EmpleadoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class EmpleadoCreateView(LoggingMixin, LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Empleado
     form_class = EmpleadoForm
     template_name = 'empleados/form_empleado.html'
@@ -143,7 +144,7 @@ class EmpleadoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_invalid(form)
 
 
-class EmpleadoUpdateView(SucursalAccessMixin, SuccessMessageMixin, UpdateView):
+class EmpleadoUpdateView(DetailedLoggingMixin, SucursalAccessMixin, SuccessMessageMixin, UpdateView):
     model = Empleado
     form_class = EmpleadoForm
     template_name = 'empleados/form_empleado.html'
