@@ -1,0 +1,6 @@
+# Ignorar todos los archivos de log
+*.log
+*.log.*
+
+# Pero mantener este archivo para que la carpeta se cree en git
+!.gitignore
