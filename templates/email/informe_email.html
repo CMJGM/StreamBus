@@ -2,57 +2,140 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Informe N°{{ informe.id|stringformat:"010d" }} - {{ informe.titulo }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 ALARMA - Ficha {{ informe.bus.ficha }} - {{ informe.titulo }}</title>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 30px; font-size: 16px;">
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px;">
 
-    <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); padding: 30px;">
-        <h2 style="color: #003366; margin-top: 0;">📝 Informe N°{{ informe.id|stringformat:"010d" }}</h2>
+    <div style="max-width: 650px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow: hidden;">
 
-        <p style="font-size: 18px;"><strong>Título:</strong> {{ informe.titulo }}</p>
-        <p><strong>Fecha y Hora:</strong> {{ informe.fecha_hora }}</p>
-        <p><strong>Empleado:</strong> {{ informe.empleado }}</p>
-        <p><strong>Sucursal:</strong> {{ informe.sucursal }}</p>
+        <!-- Header con alerta -->
+        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; text-align: center; color: white;">
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
+                🚨 ALARMA - INFORME CRÍTICO
+            </h1>
+            <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.95;">
+                Informe N° <strong>{{ informe.id|stringformat:"010d" }}</strong>
+            </p>
+        </div>
 
-        <hr style="margin: 20px 0;">
+        <!-- Información principal -->
+        <div style="padding: 30px;">
 
-        <h3 style="color: #003366;">🚌 Datos del Bus</h3>
-        <ul style="list-style: none; padding-left: 0; font-size: 16px;">
-            <li><strong>N° de Ficha:</strong> {{ informe.bus.ficha }}</li>
-            <li><strong>Patente:</strong> {{ informe.bus.dominio }}</li>
-            <li><strong>Marca:</strong> {{ informe.bus.modelo.marca.nombre }}</li>
-            <li><strong>Modelo:</strong> {{ informe.bus.modelo.nombre }}</li>
-            <li><strong>Año:</strong> {{ informe.bus.ano }}</li>
-        </ul>
-
-        <hr style="margin: 20px 0;">
-
-        <h3 style="color: #003366;">📋 Descripción</h3>
-        <p style="white-space: pre-line;">{{ informe.descripcion }}</p>
-
-        <hr style="margin: 20px 0;">
-
-        {% if fotos_con_cid %}
-            <h3 style="color: #003366;">📸 Imágenes del Informe</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-                {% for item in fotos_con_cid %}
-                    <div style="flex: 1 1 45%;">
-                        <img src="cid:{{ item.cid }}" alt="Foto {{ forloop.counter }}" style="max-width: 100%; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    </div>
-                {% endfor %}
+            <!-- Título y datos básicos -->
+            <div style="background: #f8f9fa; border-left: 5px solid #f5576c; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <h2 style="margin: 0 0 15px 0; color: #2d3748; font-size: 22px;">{{ informe.titulo }}</h2>
+                <table style="width: 100%; font-size: 15px; color: #4a5568;">
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>📅 Fecha y Hora:</strong></td>
+                        <td style="padding: 8px 0;">{{ informe.fecha_hora|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>👤 Empleado:</strong></td>
+                        <td style="padding: 8px 0;">{{ informe.empleado }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>🏢 Sucursal:</strong></td>
+                        <td style="padding: 8px 0;">{{ informe.sucursal }}</td>
+                    </tr>
+                </table>
             </div>
-        {% endif %}
 
-        <hr style="margin: 20px 0;">
+            <!-- Datos del Bus -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                <h3 style="margin: 0 0 15px 0; font-size: 20px; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px;">
+                    🚌 DATOS DEL VEHÍCULO
+                </h3>
+                <table style="width: 100%; font-size: 15px;">
+                    <tr>
+                        <td style="padding: 6px 0; width: 40%;"><strong>Ficha:</strong></td>
+                        <td style="padding: 6px 0; font-size: 18px; font-weight: bold;">{{ informe.bus.ficha }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px 0;"><strong>Patente:</strong></td>
+                        <td style="padding: 6px 0; font-weight: bold;">{{ informe.bus.dominio }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px 0;"><strong>Marca:</strong></td>
+                        <td style="padding: 6px 0;">{{ informe.bus.modelo.marca.nombre }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px 0;"><strong>Modelo:</strong></td>
+                        <td style="padding: 6px 0;">{{ informe.bus.modelo.nombre }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px 0;"><strong>Año:</strong></td>
+                        <td style="padding: 6px 0;">{{ informe.bus.ano }}</td>
+                    </tr>
+                </table>
+            </div>
 
-        <h4 style="color: #666; font-size: 14px;">📑 Últimos 10 informes del empleado</h4>
-        <ul style="font-size: 12px; color: #333; padding-left: 18px; list-style-type: none; margin: 0;">
-            {% for inf in ultimos_informes %}
-                <li style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #ddd;">
-                    <strong>{{ inf.id|stringformat:"010d" }}</strong> - {{ inf.titulo }} - ({{ inf.fecha_hora|date:"d/m/Y H:i" }}) -  {{ inf.descripcion }}
-                </li>
-            {% endfor %}
-        </ul>
+            <!-- Descripción -->
+            <div style="background: #fff3cd; border-left: 5px solid #ffc107; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <h3 style="margin: 0 0 12px 0; color: #856404; font-size: 18px;">📋 DESCRIPCIÓN DEL INCIDENTE</h3>
+                <p style="margin: 0; white-space: pre-line; color: #333; font-size: 15px; line-height: 1.6;">{{ informe.descripcion }}</p>
+            </div>
+
+            <!-- Fotos -->
+            {% if fotos_con_cid %}
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #2d3748; font-size: 18px; margin: 0 0 15px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+                    📸 EVIDENCIA FOTOGRÁFICA
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    {% for item in fotos_con_cid %}
+                        <div style="border: 2px solid #e2e8f0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <img src="cid:{{ item.cid }}" alt="Foto {{ forloop.counter }}" style="width: 100%; height: auto; display: block;">
+                            <div style="background: #f7fafc; padding: 8px; text-align: center; font-size: 12px; color: #718096;">
+                                Foto {{ forloop.counter }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Historial de informes del empleado en este bus -->
+            {% if ultimos_informes %}
+            <div style="background: #f7fafc; border: 2px solid #cbd5e0; border-radius: 12px; padding: 20px; margin-top: 30px;">
+                <h3 style="margin: 0 0 15px 0; color: #2d3748; font-size: 17px; display: flex; align-items: center;">
+                    📑 HISTORIAL - Últimos 10 informes del empleado en esta ficha
+                </h3>
+                <div style="background: white; border-radius: 8px; overflow: hidden;">
+                    {% for inf in ultimos_informes %}
+                        <div style="padding: 15px; border-bottom: 1px solid #e2e8f0; {% if forloop.last %}border-bottom: none;{% endif %}">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                                <span style="background: #667eea; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                                    #{{ inf.id|stringformat:"010d" }}
+                                </span>
+                                <span style="color: #718096; font-size: 13px;">
+                                    {{ inf.fecha_hora|date:"d/m/Y H:i" }}
+                                </span>
+                            </div>
+                            <div style="color: #2d3748; font-weight: 600; font-size: 14px; margin-bottom: 5px;">
+                                {{ inf.titulo }}
+                            </div>
+                            <div style="color: #4a5568; font-size: 13px; line-height: 1.5;">
+                                {{ inf.descripcion|truncatewords:30 }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- Footer -->
+        <div style="background: #2d3748; color: #cbd5e0; padding: 20px; text-align: center; font-size: 13px;">
+            <p style="margin: 0 0 5px 0;">
+                <strong>StreamBus - Sistema de Gestión de Flota</strong>
+            </p>
+            <p style="margin: 0; opacity: 0.8;">
+                Este es un mensaje automático generado por el sistema. Por favor no responder.
+            </p>
+        </div>
+
     </div>
 
 </body>

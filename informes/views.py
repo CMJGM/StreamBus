@@ -1036,7 +1036,11 @@ class EnviarInformeEmailView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         correos_raw = form.cleaned_data['destinatarios']
         correos = [c.strip() for c in correos_raw.split(",") if c.strip()]
-        ultimos_informes = Informe.objects.filter(empleado=self.informe.empleado).exclude(id=self.informe.id).order_by('-fecha_hora')[:10]
+        # CORREGIDO: Filtrar por empleado Y bus (no solo empleado)
+        ultimos_informes = Informe.objects.filter(
+            empleado=self.informe.empleado,
+            bus=self.informe.bus  # Mismo bus
+        ).exclude(id=self.informe.id).order_by('-fecha_hora')[:10]
 
         try:
             enviar_informe_por_mail(self.informe, correos, ultimos_informes=list(ultimos_informes))
