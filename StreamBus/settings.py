@@ -233,7 +233,8 @@ LOGGING = {
             'formatter': 'verbose',
             'filters': ['add_user'],
             'encoding': 'utf-8',
-            'suffix': '.%Y%m%d',  # Formato: streambus.log.20251130
+            # Nota: suffix no disponible en Python < 3.9
+            # Formato: streambus.log.YYYY-MM-DD (con guiones)
         },
     },
     'loggers': {
