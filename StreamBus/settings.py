@@ -374,7 +374,7 @@ if not hasattr(locals(), 'FILE_UPLOAD_MAX_MEMORY_SIZE'):
 # Logging básico para downloads (si no existe ya)
 if 'sit.download_manager' not in LOGGING.get('loggers', {}):
     LOGGING['loggers']['sit.download_manager'] = {
-        'handlers': ['console', 'file'],
+        'handlers': ['console', 'file_daily'],
         'level': 'INFO',
         'propagate': False,
     }
