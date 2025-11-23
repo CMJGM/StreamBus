@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 
 logger = logging.getLogger('informes.views')
+from StreamBus.logging_mixins import LoggingMixin, DetailedLoggingMixin, log_view, log_view_detailed
 from django.utils.timezone import now
 from django.utils.crypto import get_random_string
 from django.utils.text import slugify
@@ -52,7 +53,7 @@ except locale.Error:
 
 from calendar import month_name
 
-class ListaInformesBorrarView(LoginRequiredMixin, View):
+class ListaInformesBorrarView(LoggingMixin, LoginRequiredMixin, View):
    template_name = 'informes/lista_borrar.html'
 
    def get(self, request):
@@ -73,7 +74,7 @@ class ListaInformesBorrarView(LoginRequiredMixin, View):
        context = {'informes': informes}
        return render(request, self.template_name, context)
 
-class InformeCreateSistemas(SucursalFormMixin, CreateView):
+class InformeCreateSistemas(LoggingMixin, SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_sistemas.html"
@@ -181,7 +182,7 @@ class InformeCreateSistemas(SucursalFormMixin, CreateView):
         messages.success(self.request, f"Informe #{informe.id} creado correctamente.")
         return super().form_valid(form)
 
-class InformeCreateGuardia(SucursalFormMixin, CreateView):
+class InformeCreateGuardia(LoggingMixin, SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_guardia.html"
@@ -278,7 +279,7 @@ class InformeCreateGuardia(SucursalFormMixin, CreateView):
 
         return super().form_valid(form)
 
-class InformeCreateSiniestros(SucursalFormMixin, CreateView):
+class InformeCreateSiniestros(LoggingMixin, SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_siniestro.html"
@@ -375,7 +376,7 @@ class InformeCreateSiniestros(SucursalFormMixin, CreateView):
 
         return super().form_valid(form)
 
-class InformeCreateTaller(SucursalFormMixin, CreateView):
+class InformeCreateTaller(LoggingMixin, SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeGuardia
     template_name = "informes/informe_taller.html"
@@ -472,7 +473,7 @@ class InformeCreateTaller(SucursalFormMixin, CreateView):
 
         return super().form_valid(form)
 
-class InformeListViewTaller(InformeFilterMixin, ListView):
+class InformeListViewTaller(LoggingMixin, InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_taller.html'
     context_object_name = 'informes'
@@ -522,7 +523,7 @@ class InformeListViewTaller(InformeFilterMixin, ListView):
 
         return context
 
-class InformeListViewSiniestro(InformeFilterMixin, ListView):
+class InformeListViewSiniestro(LoggingMixin, InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_siniestros.html'
     context_object_name = 'informes'
@@ -572,7 +573,7 @@ class InformeListViewSiniestro(InformeFilterMixin, ListView):
 
         return context
 
-class InformeListViewGuardia(InformeFilterMixin, ListView):
+class InformeListViewGuardia(LoggingMixin, InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_guardia.html'
     context_object_name = 'informes'
@@ -622,7 +623,7 @@ class InformeListViewGuardia(InformeFilterMixin, ListView):
 
         return context
 
-class InformeListView(InformeFilterMixin, ListView):
+class InformeListView(LoggingMixin, InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_informes.html'
     context_object_name = 'informes'
@@ -669,13 +670,13 @@ class InformeListView(InformeFilterMixin, ListView):
 
         return context
 
-class InformeCreateView(SucursalFormMixin, CreateView):
+class InformeCreateView(LoggingMixin, SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeForm
     template_name = 'informes/crear_informe.html'
     success_url = reverse_lazy('informes:lista_informes')
 
-class InformeUpdateView(SucursalAccessMixin, UpdateView):
+class InformeUpdateView(DetailedLoggingMixin, SucursalAccessMixin, UpdateView):
     model = Informe
     form_class = InformeForm
     template_name = 'informes/editar_informe.html'
@@ -696,12 +697,14 @@ class InformeUpdateView(SucursalAccessMixin, UpdateView):
         return context
 
 @login_required
+@log_view
 def lista_informes(request):
     informes = Informe.objects.all().order_by('-fecha_hora')
     logger.debug(informes)
     return render(request, 'informes/lista_informes.html', {'informes': informes})
 
 @login_required
+@log_view
 def buscar_informes(request):
     informes = Informe.objects.all().order_by('-fecha_hora')
 
@@ -983,6 +986,7 @@ def ver_foto(request, foto_id):
     }
     return render(request, 'informes/ver_foto.html', contexto)
 
+@log_view
 @login_required
 def informes_sin_legajo(request, sucursal_id=None):
     """Vista para mostrar informes sin empleado asignado, filtrados por sucursal."""
@@ -1021,7 +1025,7 @@ def informes_sin_legajo(request, sucursal_id=None):
         'sucursales': sucursales
     })
 
-class EnviarInformeEmailView(LoginRequiredMixin, FormView):
+class EnviarInformeEmailView(LoggingMixin, LoginRequiredMixin, FormView):
     template_name = 'informes/enviar_email.html'
     form_class = EnviarInformeEmailForm
 
@@ -1059,6 +1063,7 @@ class EnviarInformeEmailView(LoginRequiredMixin, FormView):
         context['next'] = self.next_url  
         return context
 
+@log_view
 @login_required
 def informes_no_enviados(request, sucursal_id=None):
     """Vista para mostrar informes no enviados por email, filtrados por sucursal."""
@@ -1111,6 +1116,7 @@ def informes_no_enviados(request, sucursal_id=None):
         "sucursales": sucursales,
     })
 
+@log_view
 @login_required
 def informes_asociar_sitinforme(request, sucursal_id=None):
     """Vista para asociar informes a expedientes SIT, filtrados por sucursal."""
@@ -1176,6 +1182,7 @@ def informes_asociar_sitinforme(request, sucursal_id=None):
         'sucursales': sucursales,
     })
 
+@log_view
 @login_required
 def informes_asociar_sitsiniestro(request):
     if request.method == 'POST':
@@ -1210,6 +1217,7 @@ def informes_asociar_sitsiniestro(request):
     informes_no_generados = Informe.objects.filter(generado=False).select_related('sucursal', 'bus', 'empleado').prefetch_related('fotos')
     return render(request, 'informes/sit_asociarsiniestro.html', { 'informes_no_generados': informes_no_generados })
 
+@log_view
 @login_required
 def informes_desestimar(request):
     if request.method == 'POST':
@@ -1253,7 +1261,7 @@ def informes_desestimar(request):
     desestimar = Informe.objects.filter(generado=False).select_related('sucursal', 'bus', 'empleado').prefetch_related('fotos')
     return render(request, 'informes/desestimar.html', { 'desestimar': desestimar })
 
-class InformesPorEmpleadoView(LoginRequiredMixin, View):
+class InformesPorEmpleadoView(LoggingMixin, LoginRequiredMixin, View):
     def get(self, request):
         empleado_id = request.GET.get('empleado')
         informes = []
@@ -1270,7 +1278,7 @@ class InformesPorEmpleadoView(LoginRequiredMixin, View):
             'empleados': empleados,
         })
 
-class InformeBorrarView(LoginRequiredMixin, View):
+class InformeBorrarView(DetailedLoggingMixin, LoginRequiredMixin, View):
     template_name = 'informes/borrar_informe.html'
     success_url = reverse_lazy('informes:lista_informes')
 
@@ -1285,6 +1293,7 @@ class InformeBorrarView(LoginRequiredMixin, View):
         messages.success(request, f'El informe con ID {pk} ha sido borrado correctamente.')
         return redirect(self.success_url)
 
+@log_view
 @login_required
 def estadisticas_informes(request):
 
@@ -1336,6 +1345,7 @@ def estadisticas_informes(request):
 
     return render(request, 'informes/dashboard.html', context)
 
+@log_view
 @login_required
 def informes_disciplinarios(request):
     informes = Informe.objects.filter(expediente__isnull=False).select_related('bus', 'empleado', 'expediente').prefetch_related('fotos')
@@ -1389,7 +1399,7 @@ def descargar_expediente_pdf(request, expediente_id):
         return HttpResponse(f"Error al generar PDF: {response.status_code}", status=500)
     pass
 
-class InformeCreateInspectores(SucursalFormMixin, CreateView):
+class InformeCreateInspectores(LoggingMixin, SucursalFormMixin, CreateView):
     model = Informe
     form_class = InformeForm
     template_name = 'informes/informe_inspectores.html'
@@ -1400,7 +1410,7 @@ class InformeCreateInspectores(SucursalFormMixin, CreateView):
         messages.success(self.request, "✅ Informe de Inspectores creado correctamente")
         return super().form_valid(form)
 
-class InformeListViewInspectores(InformeFilterMixin, ListView):
+class InformeListViewInspectores(LoggingMixin, InformeFilterMixin, ListView):
     model = Informe
     template_name = 'informes/lista_inspectores.html'
     context_object_name = 'informes'
@@ -1413,6 +1423,7 @@ class InformeListViewInspectores(InformeFilterMixin, ListView):
         return queryset.filter(origen='Inspectores')
 
 
+@log_view
 @login_required
 def buscar_empleados_ajax(request):
     """
@@ -1469,6 +1480,7 @@ def buscar_empleados_ajax(request):
     return JsonResponse(data)
 
 
+@log_view
 @login_required
 def buscar_buses_ajax(request):
     """

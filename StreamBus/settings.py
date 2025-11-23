@@ -218,6 +218,17 @@ LOGGING = {
             'formatter': 'verbose',
             'filters': ['add_user'],
         },
+        'file_daily': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'streambus.log'),
+            'when': 'midnight',  # Rotar a medianoche
+            'interval': 1,  # Cada 1 día
+            'backupCount': 30,  # Mantener 30 días de logs
+            'formatter': 'verbose',
+            'filters': ['add_user'],
+            'encoding': 'utf-8',
+        },
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
@@ -230,31 +241,56 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'file_daily'],
             'level': 'INFO',
         },
         'sit': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'file_daily'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         'informes': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'file_daily'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         'inicio': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'file_daily'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         'usuarios': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'file_daily'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'empleados': {
+            'handlers': ['console', 'file', 'file_daily'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'buses': {
+            'handlers': ['console', 'file', 'file_daily'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'sucursales': {
+            'handlers': ['console', 'file', 'file_daily'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'siniestros': {
+            'handlers': ['console', 'file', 'file_daily'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'categoria': {
+            'handlers': ['console', 'file', 'file_daily'],
             'level': 'DEBUG' if DEBUG else 'INFO',
             'propagate': False,
         },
         '': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'file_daily'],
             'level': 'DEBUG',
         },
     },
